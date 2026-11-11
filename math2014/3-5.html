@@ -1,0 +1,288 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow">
+<title>3.5 Eigenvalues · MATH2014</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b2a4a'/%3E%3Cg stroke='%23ffb703' stroke-width='2.2' fill='none' stroke-linecap='round'%3E%3Cpath d='M9 8v16M23 8v16'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Ccircle cx='14' cy='11' r='1.5'/%3E%3Ccircle cx='18' cy='11' r='1.5'/%3E%3Ccircle cx='14' cy='16' r='1.5'/%3E%3Ccircle cx='18' cy='16' r='1.5'/%3E%3Ccircle cx='14' cy='21' r='1.5'/%3E%3Ccircle cx='18' cy='21' r='1.5'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --bg:#f3f5f8; --grid:rgba(27,42,74,.055); --surface:#ffffff; --surface-2:#e9eef6;
+  --ink:#17202e; --muted:#53617a; --line:#ccd5e4;
+  --accent:#1b3a7a; --hot:#d97706; --ok:#1f7a4d; --bad:#b42334; --info:#1b62b0;
+  --hot-soft:color-mix(in srgb,var(--hot) 11%,var(--surface));
+  --f-display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;
+  --f-body:'Atkinson Hyperlegible','Segoe UI',system-ui,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --grid:rgba(220,232,250,.05); --surface:#161d27; --surface-2:#1f2835;
+  --ink:#e7eef6; --muted:#9dabbe; --line:#2d3848;
+  --accent:#7ba2e8; --hot:#ffb04d; --ok:#5fcf93; --bad:#ff8a8a; --info:#74b4f5;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px;-webkit-text-size-adjust:100%}
+body{margin:0;background-color:var(--bg);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;color:var(--ink);font:400 18px/1.62 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 72px}
+.wrap{max-width:1180px;margin:0 auto}
+p{margin:0 0 1em}
+a{color:var(--info);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.14;margin:0;text-wrap:balance}
+h2{font-size:clamp(1.7rem,3.6vw,2.3rem);font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.32rem;font-weight:700;margin:2em 0 .5em}
+h4{font:700 1.04rem var(--f-body);margin:1.4em 0 .35em}
+strong{font-weight:700}
+.mu{color:var(--muted)}
+ul,ol{padding-left:1.3em;margin:0 0 1em}li{margin:.3em 0}
+code,.mono{font-family:var(--f-mono);font-size:.86em;background:var(--surface-2);padding:.08em .36em;border-radius:3px;border:1px solid var(--line)}
+/* top bar */
+.bar{position:sticky;top:0;z-index:40;background:var(--surface);border-bottom:1.5px solid var(--line);margin:0 -16px;padding:9px 16px;display:flex;align-items:center;gap:10px}
+.bar .brand{display:flex;align-items:center;gap:9px;font:800 1.02rem var(--f-display);text-decoration:none;color:var(--ink)}
+.bar .brand svg{width:28px;height:28px}
+.bar .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.bar a.home,.bar button.tg{font:700 .76rem var(--f-mono);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);padding:5px 10px;border-radius:5px;cursor:pointer;text-decoration:none}
+.bar .prog{position:absolute;left:0;bottom:-1.5px;height:3px;width:calc(var(--p,0)*100%);background:var(--hot);transition:width .1s}
+/* hero */
+.hero{padding:52px 0 26px;max-width:880px}
+.eyebrow{font:700 .74rem var(--f-mono);letter-spacing:.11em;text-transform:uppercase;color:var(--hot);margin:0 0 .8em}
+.hero h1{font-size:clamp(2.4rem,6.6vw,4.2rem);font-weight:800;letter-spacing:-.02em;margin-bottom:.3em;line-height:1.04}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{font-size:1.24rem;max-width:36em;margin-bottom:1em;color:var(--ink)}
+.hero .lede2{font-size:1.02rem;color:var(--muted);max-width:40em}
+/* layout */
+main{min-width:0;max-width:820px}
+.toc{background:var(--surface);border:1.5px solid var(--line);border-radius:7px;padding:15px 15px 9px;margin:0 0 36px}
+.toc h2{font-size:.82rem;font-family:var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.7em}
+.toc ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px 14px}
+.toc a{display:grid;grid-template-columns:2.3em 1fr;gap:3px;text-decoration:none;color:var(--ink);padding:6px 6px;border-radius:5px;font-size:.93rem;line-height:1.3}
+.toc a:hover{background:var(--surface-2)}
+.toc .n{font:700 .78rem var(--f-mono);color:var(--hot);padding-top:1px}
+.toc small{display:block;color:var(--muted);font:400 .74rem var(--f-mono);margin-top:1px}
+@media(min-width:1080px){
+  .layout{display:grid;grid-template-columns:252px minmax(0,1fr);gap:52px;align-items:start}
+  .toc{position:sticky;top:66px;margin:0;max-height:calc(100vh - 86px);overflow:auto}
+  .toc ol{display:block}
+}
+/* sections */
+.sec{margin:0 0 76px;scroll-margin-top:70px}
+.sec-h{margin:0 0 1em;padding-top:26px;border-top:3px solid var(--accent)}
+.sec-h .tag{display:inline-block;font:700 .72rem var(--f-mono);letter-spacing:.06em;color:var(--hot);margin-bottom:.4em}
+.sub{font-family:var(--f-display);font-weight:700;font-size:1.28rem;margin:2.1em 0 .5em;color:var(--accent);padding-bottom:.2em;border-bottom:2px solid var(--surface-2)}
+/* callouts */
+.box{position:relative;margin:1.9em 0 1.5em;padding:1.3em 1.2em .85em;border:1.5px solid var(--line);background:var(--surface);border-radius:7px}
+.box>.lab{position:absolute;top:-.78em;left:14px;padding:2px 11px;font:700 .68rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;border-radius:4px;background:var(--ink);color:var(--bg)}
+.box>:last-child{margin-bottom:.15em}
+.box.def{border-color:var(--info);background:color-mix(in srgb,var(--info) 6%,var(--surface))}
+.box.def>.lab{background:var(--info);color:#fff}
+.box.idea{border-color:var(--hot);background:var(--hot-soft)}
+.box.idea>.lab{background:var(--hot);color:#fff}
+.box.tip{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 8%,var(--surface))}
+.box.tip>.lab{background:var(--ok);color:#fff}
+.box.warn{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 7%,var(--surface))}
+.box.warn>.lab{background:var(--bad);color:#fff}
+.box.ex{border-color:var(--accent);border-width:1.5px;background:var(--surface);box-shadow:var(--shadow,0 1px 3px rgba(0,0,0,.05))}
+.box.ex>.lab{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .box>.lab{color:#0f141b}
+.steps{counter-reset:st;list-style:none;padding:0;margin:1em 0}
+.steps>li{counter-increment:st;position:relative;padding:.1em 0 .9em 2.4em;margin:0}
+.steps>li::before{content:counter(st);position:absolute;left:0;top:.05em;width:1.7em;height:1.7em;display:grid;place-items:center;background:var(--accent);color:#fff;border-radius:50%;font:700 .82rem var(--f-mono)}
+:root[data-theme="dark"] .steps>li::before{color:#0f141b}
+.steps>li:last-child{padding-bottom:0}
+.katex{font-size:1.02em}
+.katex-display{margin:.8em 0;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.scroll{overflow-x:auto;overflow-y:hidden}
+.q{font-style:italic;color:var(--muted)}
+.tl{font:700 .7rem var(--f-mono);text-transform:uppercase;letter-spacing:.07em;color:var(--hot);margin:.2em 0 .3em}
+table.gt{border-collapse:collapse;font-size:.92rem;margin:1em 0;width:100%}
+table.gt th,table.gt td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+table.gt th{background:var(--surface-2);font-weight:700}
+.pill{display:inline-block;font:700 .72rem var(--f-mono);padding:1px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+hr.soft{border:none;border-top:1.5px dashed var(--line);margin:2.2em 0}
+.endnote{margin-top:60px;padding:22px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);font-size:.95rem;color:var(--muted)}
+
+/* ---- multi-page additions ---- */
+.toc a.active{background:var(--surface-2)}
+.toc a.active .n{color:var(--accent)}
+.toc a.active>span:nth-child(2){font-weight:700}
+.backlink{display:inline-flex;align-items:center;gap:6px;font:700 .78rem var(--f-mono);color:var(--muted);text-decoration:none;margin:14px 2px 2px;padding:6px}
+.backlink:hover{color:var(--accent)}
+/* landing section cards */
+.cards{list-style:none;padding:0;margin:8px 0 10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:18px}
+.cards>li{min-width:0}
+.scard{display:flex;flex-direction:column;height:100%;background:var(--surface);border:1.5px solid var(--line);border-top:4px solid var(--accent);border-radius:9px;text-decoration:none;color:var(--ink);padding:17px 18px 15px;transition:transform .15s ease,box-shadow .15s ease}
+.scard:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(22,30,43,.13)}
+.scard .k{font:700 .73rem var(--f-mono);letter-spacing:.07em;color:var(--hot)}
+.scard h3{margin:.25em 0 .06em;font-size:1.26rem;line-height:1.14;color:var(--ink)}
+.scard .st{font:400 .8rem var(--f-mono);color:var(--muted);margin-bottom:.65em}
+.scard p{font-size:.95rem;color:var(--muted);margin:0 0 .8em}
+.scard .ex{font:700 .72rem var(--f-mono);color:var(--muted);margin-bottom:.7em}
+.scard .go{margin-top:auto;font-weight:700;color:var(--accent);font-size:.93rem}
+.scard .go span{display:inline-block;transition:transform .15s}
+.scard:hover .go span{transform:translateX(4px)}
+/* prev / next */
+.pn{display:flex;gap:12px;margin:54px 0 0;border-top:1.5px solid var(--line);padding-top:22px}
+.pn a{flex:1 1 0;min-width:0;text-decoration:none;border:1.5px solid var(--line);border-radius:8px;padding:11px 15px;background:var(--surface);color:var(--ink);transition:border-color .15s,transform .15s}
+.pn a:hover{border-color:var(--accent);transform:translateY(-2px)}
+.pn a.next{text-align:right}
+.pn .d{font:700 .68rem var(--f-mono);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.pn .t{font-family:var(--f-display);font-weight:700;font-size:1.04rem;color:var(--accent);margin-top:3px;line-height:1.15}
+@media(max-width:560px){.pn{flex-direction:column}}
+</style></head><body><div class="wrap">
+<div class="bar"><a class="brand" href="index.html"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="var(--accent)"/><g stroke="var(--hot)" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M9 8v16M23 8v16"/></g><g fill="#fff"><circle cx="14" cy="11" r="1.5"/><circle cx="18" cy="11" r="1.5"/><circle cx="14" cy="16" r="1.5"/><circle cx="18" cy="16" r="1.5"/><circle cx="14" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/></g></svg>MATH2014 · Linear Algebra</a><div class="right"><a class="home" href="../">All courses</a><button class="tg" id="tg" aria-label="Toggle dark mode">Dark</button></div><div class="prog" id="prog"></div></div>
+<a id="top"></a>
+<div class="layout">
+<nav class="toc" aria-label="Contents"><h2>Contents</h2><ol><li><a href="3-1.html"><span class="n">3.1</span><span>Systems &amp; Matrices<small>the whole engine</small></span></a></li><li><a href="3-2.html"><span class="n">3.2</span><span>Vectors<small>combinations, span, independence</small></span></a></li><li><a href="3-3.html"><span class="n">3.3</span><span>Matrices<small>algebra, determinants, inverses</small></span></a></li><li><a href="3-4.html"><span class="n">3.4</span><span>Dot &amp; Cross Product<small>angles, length, area</small></span></a></li><li><a href="3-5.html" class="active"><span class="n">3.5</span><span>Eigenvalues<small>special directions, diagonalization</small></span></a></li></ol><a class="backlink" href="index.html">← Course home</a></nav>
+<main>
+<section class="sec" id="s35" data-n="3.5" data-t="Eigenvalues" data-s="special directions, diagonalization">
+<div class="sec-h"><span class="tag">SECTION 3.5</span><h2>The Eigenvalue Problem</h2></div>
+
+<p>Multiplying a vector by a matrix usually <em>rotates and stretches</em> it into a new direction. But for most matrices there are a few special directions that the matrix leaves <strong>pointing the same way</strong> — it only stretches or shrinks them. Those magic directions are <strong>eigenvectors</strong>, and the stretch factors are <strong>eigenvalues</strong>. They are the deepest idea in the chapter and the key to understanding what a matrix "really does", plus a slick way to compute huge powers $A^k$.</p>
+
+<h3 class="sub">1 · What eigenvectors and eigenvalues are</h3>
+
+<div class="box def"><p class="lab">Definition · eigenvector &amp; eigenvalue</p>
+<p>For a square $n\times n$ matrix $A$, a <strong>nonzero</strong> vector $\vec x$ is an <strong>eigenvector</strong> of $A$ if</p>
+$$A\vec x=\lambda\vec x$$
+<p>for some scalar $\lambda$. That scalar $\lambda$ is the <strong>eigenvalue</strong> attached to $\vec x$; we say $\vec x$ is an eigenvector <em>corresponding to</em> $\lambda$. (The zero vector is excluded — $A\mathbf 0=\lambda\mathbf 0$ holds for every $\lambda$ and would tell us nothing.)</p></div>
+
+<div class="box idea"><p class="lab">Intuition · "the matrix doesn't turn this vector, it just scales it"</p>
+<p>$A\vec x=\lambda\vec x$ says: feeding $\vec x$ through $A$ gives back the <em>same direction</em>, merely multiplied by $\lambda$. If $\lambda=3$, $A$ triples $\vec x$; if $\lambda=-1$, $A$ flips it; if $\lambda=0$, $A$ crushes it to $\mathbf 0$ (so $\vec x$ is a nonzero solution of $A\vec x=\mathbf 0$). These invariant directions are the "grain" of the matrix — the axes along which its action is simplest.</p></div>
+
+<div class="box ex"><p class="lab">Example 1 · verifying an eigenvector</p>
+<p>Is $\vec v=\begin{bmatrix}1\\2\end{bmatrix}$ an eigenvector of $A=\begin{bmatrix}3&0\\8&-1\end{bmatrix}$? Just multiply and see if the output is a multiple of $\vec v$:</p>
+$$A\vec v=\begin{bmatrix}3&0\\8&-1\end{bmatrix}\begin{bmatrix}1\\2\end{bmatrix}=\begin{bmatrix}3\\6\end{bmatrix}=3\begin{bmatrix}1\\2\end{bmatrix}=3\vec v.$$
+<p>Yes — the output $(3,6)$ is exactly $3$ times the input, so $\vec v$ is an eigenvector with eigenvalue $\lambda=3$.</p></div>
+
+<h3 class="sub">2 · Finding eigenvalues: the characteristic equation</h3>
+
+<p>Verifying is easy; <em>finding</em> eigenvalues from scratch needs one clever rearrangement. Move everything to one side: $A\vec x=\lambda\vec x$ becomes $A\vec x-\lambda\vec x=\mathbf 0$, i.e. $(A-\lambda I)\vec x=\mathbf 0$ (we insert $I$ so the "$\lambda$" becomes a matrix we can subtract).</p>
+
+<div class="box def"><p class="lab">Definition · characteristic equation</p>
+<p>$\lambda$ is an eigenvalue of $A$ $\iff$ the homogeneous system $(A-\lambda I)\vec x=\mathbf 0$ has a <strong>nontrivial</strong> solution $\iff$ the matrix $A-\lambda I$ is singular $\iff$</p>
+$$\boxed{\;\det(A-\lambda I)=0.\;}$$
+<p>This is the <strong>characteristic equation</strong>. Its left side is a degree-$n$ polynomial in $\lambda$ (the <em>characteristic polynomial</em>); its roots are precisely the eigenvalues.</p></div>
+
+<div class="box idea"><p class="lab">Intuition · why the determinant must vanish</p>
+<p>We need a <em>nonzero</em> $\vec x$ with $(A-\lambda I)\vec x=\mathbf 0$. A homogeneous system has nonzero solutions exactly when its matrix is singular (§3.3), and singular exactly when its determinant is $0$. So eigenvalues are the special $\lambda$'s that make $A-\lambda I$ "collapse" (lose invertibility). Find those $\lambda$'s first, then for each one solve $(A-\lambda I)\vec x=\mathbf 0$ to get its eigenvectors.</p></div>
+
+<div class="box def"><p class="lab">The recipe</p>
+<ol class="steps">
+<li>Form $A-\lambda I$ (subtract $\lambda$ from each diagonal entry).</li>
+<li>Set $\det(A-\lambda I)=0$ and solve the polynomial for $\lambda$ — these are the eigenvalues.</li>
+<li>For <em>each</em> eigenvalue $\lambda$, solve the homogeneous system $(A-\lambda I)\vec x=\mathbf 0$; its nonzero solutions are the eigenvectors (a free variable always appears, since the matrix is singular).</li>
+</ol></div>
+
+<h3 class="sub">3 · Worked examples: $2\times2$</h3>
+
+<div class="box ex"><p class="lab">Example 2 · full eigen-analysis of a $2\times2$</p>
+<p>Find eigenvalues and eigenvectors of $A=\begin{bmatrix}1&6\\5&2\end{bmatrix}$.</p>
+<p><strong>Eigenvalues.</strong> $\det(A-\lambda I)=\det\begin{bmatrix}1-\lambda&6\\5&2-\lambda\end{bmatrix}=(1-\lambda)(2-\lambda)-30=\lambda^2-3\lambda-28=0.$ Factor: $(\lambda-7)(\lambda+4)=0$, so $\lambda=7$ or $\lambda=-4$.</p>
+<p><strong>Eigenvector for $\lambda_1=7$:</strong> solve $(A-7I)\vec v=\mathbf 0$, i.e. $\begin{bmatrix}-6&6\\5&-5\end{bmatrix}\vec v=\mathbf 0$. Both rows say $v_1=v_2$, so pick $\vec v_1=\begin{bmatrix}1\\1\end{bmatrix}$.</p>
+<p><strong>Eigenvector for $\lambda_2=-4$:</strong> solve $(A+4I)\vec v=\mathbf 0$, i.e. $\begin{bmatrix}5&6\\5&6\end{bmatrix}\vec v=\mathbf 0$, giving $5v_1+6v_2=0$, so $\vec v_2=\begin{bmatrix}1\\-5/6\end{bmatrix}$ (or the cleaner $\begin{bmatrix}6\\-5\end{bmatrix}$).</p>
+<p>So $\lambda_1=7\leftrightarrow\begin{bmatrix}1\\1\end{bmatrix}$ and $\lambda_2=-4\leftrightarrow\begin{bmatrix}6\\-5\end{bmatrix}$.</p></div>
+
+<div class="box tip"><p class="lab">Tip · eigenvectors come in families — any nonzero multiple works</p>
+<p>Because $(A-\lambda I)\vec x=\mathbf 0$ is homogeneous, if $\vec v$ is an eigenvector then so is every nonzero scalar multiple of $\vec v$ (they all point along the same special direction). So $\begin{bmatrix}6\\-5\end{bmatrix}$ and $\begin{bmatrix}1\\-5/6\end{bmatrix}$ are the "same" eigenvector. Just report one convenient representative, ideally with whole-number entries.</p></div>
+
+<div class="box ex"><p class="lab">Example 3 · another $2\times2$</p>
+<p>For $A=\begin{bmatrix}5&4\\1&2\end{bmatrix}$: $\det(A-\lambda I)=(5-\lambda)(2-\lambda)-4=\lambda^2-7\lambda+6=0=(\lambda-6)(\lambda-1)$, so $\lambda=6$ or $1$. For $\lambda=6$: $(A-6I)\vec v=\mathbf 0$ gives $\vec v_1=\begin{bmatrix}1\\1/4\end{bmatrix}$ (i.e. $\begin{bmatrix}4\\1\end{bmatrix}$). For $\lambda=1$: $(A-I)\vec v=\mathbf 0$ gives $\vec v_2=\begin{bmatrix}1\\-1\end{bmatrix}$.</p></div>
+
+<h3 class="sub">4 · Worked examples: $3\times3$ (and a shortcut)</h3>
+
+<div class="box ex"><p class="lab">Example 4 · four $3\times3$ matrices</p>
+<p><strong>Matrix $A=\begin{bmatrix}0&1&0\\0&0&1\\6&-11&6\end{bmatrix}$ (a companion matrix).</strong> Expanding $\det(A-\lambda I)$ gives $-\lambda^3+6\lambda^2-11\lambda+6=-(\lambda-1)(\lambda-2)(\lambda-3)$, so $\lambda=1,2,3$. Solving each $(A-\lambda I)\vec v=\mathbf 0$:</p>
+$$\lambda=1:\begin{bmatrix}1\\1\\1\end{bmatrix},\qquad \lambda=2:\begin{bmatrix}1\\2\\4\end{bmatrix},\qquad \lambda=3:\begin{bmatrix}1\\3\\9\end{bmatrix}.$$
+<p>Three distinct eigenvalues, three independent eigenvectors — the ideal case.</p>
+<p><strong>Matrix $B=\begin{bmatrix}3&-2&0\\-2&3&0\\0&0&5\end{bmatrix}$ (symmetric).</strong> $\det(B-\lambda I)=(5-\lambda)^2(1-\lambda)$, so $\lambda_1=1$ and $\lambda_2=\lambda_3=5$ (a <strong>repeated</strong> eigenvalue). For $\lambda=1$: $\vec v_1=\begin{bmatrix}1\\1\\0\end{bmatrix}$. For $\lambda=5$ the system has <em>two</em> free variables, giving two independent eigenvectors $\begin{bmatrix}1\\-1\\0\end{bmatrix}$ and $\begin{bmatrix}0\\0\\1\end{bmatrix}$ — so even the repeated eigenvalue supplies its full quota.</p>
+<p><strong>Matrix $C=\begin{bmatrix}1&1&-1\\-1&3&-1\\-1&2&0\end{bmatrix}$.</strong> $\det(C-\lambda I)=-(1-\lambda)^2(2-\lambda)$, so $\lambda_1=2$, $\lambda_2=\lambda_3=1$. For $\lambda=2$: $\vec v_1=\begin{bmatrix}0\\1\\1\end{bmatrix}$. For the <em>repeated</em> $\lambda=1$ here, the system has only <em>one</em> free variable, yielding a single direction $\begin{bmatrix}1\\1\\1\end{bmatrix}$ — a warning sign we'll return to (this matrix is "defective").</p>
+<p><strong>Matrix $D=\begin{bmatrix}-1&2&2\\2&2&2\\-3&-6&-6\end{bmatrix}$.</strong> $\det(D-\lambda I)=-\lambda(\lambda+2)(\lambda+3)$, so $\lambda=0,-2,-3$ (note $\lambda=0$ is allowed — it signals $D$ is singular), with eigenvectors $\begin{bmatrix}0\\1\\-1\end{bmatrix},\begin{bmatrix}1\\-1/2\\0\end{bmatrix},\begin{bmatrix}1\\0\\-1\end{bmatrix}$.</p></div>
+
+<div class="box tip"><p class="lab">Tip · a triangular matrix wears its eigenvalues on its diagonal</p>
+<p><strong>Theorem:</strong> the eigenvalues of a triangular (or diagonal) matrix are exactly its main-diagonal entries. Reason: $A-\lambda I$ is still triangular, so $\det(A-\lambda I)=(a_{11}-\lambda)(a_{22}-\lambda)\cdots(a_{nn}-\lambda)$, whose roots are the $a_{ii}$. So if you spot a triangular matrix, <em>read the eigenvalues straight off the diagonal</em> — no characteristic polynomial needed.</p></div>
+
+<h3 class="sub">5 · Diagonalization: the eigen-payoff</h3>
+
+<p>If an $n\times n$ matrix has enough independent eigenvectors, we can rewrite it as $A=PDP^{-1}$ with $D$ <em>diagonal</em>. This "diagonalization" turns hard matrix questions (especially powers) into trivial ones.</p>
+
+<div class="box def"><p class="lab">Definition · diagonalizable; how to build $P$ and $D$</p>
+<p>$A$ is <strong>diagonalizable</strong> if $A=PDP^{-1}$ for some invertible $P$ and diagonal $D$. The construction: put $n$ independent eigenvectors as the <em>columns</em> of $P$, and put their eigenvalues (in the matching order) on the diagonal of $D$:</p>
+$$P=[\,\vec v_1\ \vec v_2\ \cdots\ \vec v_n\,],\qquad D=\begin{bmatrix}\lambda_1&&\\&\ddots&\\&&\lambda_n\end{bmatrix}.$$</p></div>
+
+<div class="box idea"><p class="lab">Intuition · change to the "eigen-coordinates" where $A$ is just scaling</p>
+<p>$A=PDP^{-1}$ reads right-to-left as a three-step process: $P^{-1}$ rewrites a vector in the eigenvector coordinate system, $D$ simply scales each coordinate by its eigenvalue, and $P$ translates back. In the right coordinates, the complicated matrix $A$ is <em>nothing but independent stretches</em>. That's why eigenvectors matter: they're the coordinate axes that make $A$ diagonal.</p></div>
+
+<div class="box ex"><p class="lab">Example 5 · computing $A^k$ painlessly</p>
+<p>For $A=\begin{bmatrix}7&2\\-4&1\end{bmatrix}$ you're told $A=PDP^{-1}$ with $P=\begin{bmatrix}1&1\\-1&-2\end{bmatrix}$, $D=\begin{bmatrix}5&0\\0&3\end{bmatrix}$. (Indeed the characteristic equation $\lambda^2-8\lambda+15=0$ gives $\lambda=3,5$.) The magic: in $A^k=(PDP^{-1})^k$, every interior $P^{-1}P$ cancels to $I$, leaving</p>
+$$A^k=PD^kP^{-1},\qquad D^k=\begin{bmatrix}5^k&0\\0&3^k\end{bmatrix}.$$
+<p>Diagonal powers are trivial (just raise each diagonal entry). With $P^{-1}=\begin{bmatrix}2&1\\-1&-1\end{bmatrix}$, multiplying out gives the closed form</p>
+$$A^k=\begin{bmatrix}2\cdot5^k-3^k & 5^k-3^k\\ 2\cdot3^k-2\cdot5^k & 2\cdot3^k-5^k\end{bmatrix}.$$
+<p>No repeated matrix multiplication — one formula valid for <em>every</em> $k\ge1$. This is the headline application of diagonalization.</p></div>
+
+<div class="box tip"><p class="lab">Tip · verify without computing $P^{-1}$</p>
+<p>To check $A=PDP^{-1}$ you don't need the inverse: just confirm $AP=PD$ (multiply both sides of $A=PDP^{-1}$ by $P$ on the right). Column by column this is exactly "$A\vec v_i=\lambda_i\vec v_i$", the eigenvector equations — a quick sanity check.</p></div>
+
+<h3 class="sub">6 · When is a matrix diagonalizable?</h3>
+
+<div class="box def"><p class="lab">Theorem · the diagonalizability criterion</p>
+<p>An $n\times n$ matrix $A$ is diagonalizable <strong>if and only if $A$ has $n$ linearly independent eigenvectors</strong>. In that case, those eigenvectors are the columns of $P$ and the corresponding eigenvalues are the diagonal of $D$.</p></div>
+
+<div class="box ex"><p class="lab">Example 6 · diagonalizing despite a repeated eigenvalue</p>
+<p>Diagonalize $A=\begin{bmatrix}1&3&3\\-3&-5&-3\\3&3&1\end{bmatrix}$.</p>
+<p><strong>Step 1 — eigenvalues:</strong> $\det(A-\lambda I)=-(\lambda-1)(\lambda+2)^2$, so $\lambda=1$ and $\lambda=-2$ (doubled).</p>
+<p><strong>Step 2 — eigenvectors:</strong> $\lambda=1$ gives $\vec v_1=\begin{bmatrix}1\\-1\\1\end{bmatrix}$; the repeated $\lambda=-2$ gives <em>two</em> independent ones $\vec v_2=\begin{bmatrix}-1\\1\\0\end{bmatrix},\vec v_3=\begin{bmatrix}-1\\0\\1\end{bmatrix}$. That's $3$ independent eigenvectors in total — enough!</p>
+<p><strong>Steps 3–4 — assemble:</strong> $P=\begin{bmatrix}1&-1&-1\\-1&1&0\\1&0&1\end{bmatrix}$, $D=\begin{bmatrix}1&0&0\\0&-2&0\\0&0&-2\end{bmatrix}$. Verify with $AP=PD$ (both equal $\begin{bmatrix}1&2&2\\-1&-2&0\\1&0&-2\end{bmatrix}$) — no need to find $P^{-1}$. So $A$ is diagonalizable.</p></div>
+
+<div class="box def"><p class="lab">Definition · algebraic vs geometric multiplicity</p>
+<ul>
+<li>The <strong>algebraic multiplicity (AM)</strong> of $\lambda$ is how many times it appears as a root of the characteristic polynomial.</li>
+<li>The <strong>geometric multiplicity (GM)</strong> of $\lambda$ is the number of independent eigenvectors for $\lambda$ (the number of free variables in $(A-\lambda I)\vec x=\mathbf 0$).</li>
+</ul>
+<p>Always $1\le\text{GM}\le\text{AM}$. The eigenvalue "demands" AM eigenvectors but only "supplies" GM of them.</p></div>
+
+<div class="box def"><p class="lab">Theorem · the clean diagonalizability test</p>
+<p>$A$ is diagonalizable $\iff$ for <em>every</em> eigenvalue, $\text{GM}=\text{AM}$. (Equivalently, the independent eigenvectors total $n$.) Since GM=AM automatically when AM=1, <strong>you only need to check the repeated eigenvalues</strong>.</p></div>
+
+<div class="box warn"><p class="lab">Trap · a repeated eigenvalue can starve you of eigenvectors</p>
+<p>Compare Example 4's matrices $B$ and $C$: both had a doubled eigenvalue. $B$ supplied <em>two</em> independent eigenvectors for it (GM=AM=2 → diagonalizable). $C$ supplied only <em>one</em> (GM=1 &lt; AM=2 → <strong>not</strong> diagonalizable, "defective"). The lesson: a repeated eigenvalue is a red flag — you must actually count its eigenvectors. It's only when GM falls short of AM that diagonalization fails.</p></div>
+
+<div class="box idea"><p class="lab">A sufficient (not necessary) shortcut</p>
+<p><strong>Theorem:</strong> eigenvectors for <em>distinct</em> eigenvalues are automatically linearly independent. <strong>Corollary:</strong> if an $n\times n$ matrix has $n$ <em>distinct</em> eigenvalues, it has $n$ independent eigenvectors and is <strong>guaranteed diagonalizable</strong> (as in Example 4's matrix $A$, with eigenvalues $1,2,3$). Caution: this is sufficient but not necessary — a matrix with repeated eigenvalues can still be diagonalizable (matrix $B$), as long as each repeated eigenvalue supplies enough eigenvectors.</p></div>
+
+<div class="box idea"><p class="lab">Why distinct eigenvalues force independence (idea)</p>
+<p>Suppose eigenvectors $\vec x_1,\dots,\vec x_k$ for distinct $\lambda_1,\dots,\lambda_k$ satisfied a dependence $c_1\vec x_1+\cdots+c_k\vec x_k=\mathbf 0$. Applying $A$ multiplies each term by its $\lambda_i$; subtracting a suitable multiple of the original relation cancels one vector and leaves a shorter relation whose coefficients carry factors $(\lambda_i-\lambda_j)\ne0$. Induction forces all $c_i=0$. So no nontrivial dependence exists — the eigenvectors are independent. $\blacksquare$</p></div>
+
+<h3 class="sub">7 · Section recap &amp; the big picture</h3>
+
+<div class="box tip"><p class="lab">The §3.5 playbook</p>
+<ul>
+<li><strong>Eigen-equation:</strong> $A\vec x=\lambda\vec x$, $\vec x\ne\mathbf 0$. $\vec x$ = eigenvector (a direction $A$ only scales), $\lambda$ = eigenvalue (the scale factor).</li>
+<li><strong>Find $\lambda$:</strong> solve the characteristic equation $\det(A-\lambda I)=0$. <strong>Find $\vec x$:</strong> for each $\lambda$, solve $(A-\lambda I)\vec x=\mathbf 0$ (report whole-number representatives; multiples are the same eigenvector).</li>
+<li><strong>Triangular/diagonal</strong> → eigenvalues are the diagonal entries, free.</li>
+<li><strong>Diagonalize</strong> if you have $n$ independent eigenvectors: $A=PDP^{-1}$ with eigenvectors as columns of $P$, eigenvalues on $D$. Then $A^k=PD^kP^{-1}$ makes powers trivial. Check via $AP=PD$.</li>
+<li><strong>Diagonalizable $\iff$ GM = AM for every eigenvalue</strong> (only repeated eigenvalues need checking). $n$ <em>distinct</em> eigenvalues guarantee it; a repeated eigenvalue short on eigenvectors (GM &lt; AM) breaks it.</li>
+</ul></div>
+
+<div class="box idea"><p class="lab">How §3.5 ties the whole chapter together</p>
+<p>Eigenvalues sit at the crossroads of everything you've learned: finding them needs <strong>determinants</strong> (§3.3); finding eigenvectors is solving a <strong>homogeneous system</strong> (§3.1); counting independent eigenvectors is a <strong>linear-independence</strong> question (§3.2); and $\lambda=0$ being an eigenvalue is exactly the statement that $A$ is <strong>singular</strong> (§3.3). Master eigenvalues and you've genuinely understood what a matrix <em>does</em> — not just how to compute with it.</p></div>
+</section>
+
+<nav class="pn" aria-label="Section navigation"><a class="prev" href="3-4.html"><div class="d">← Previous</div><div class="t">3.4 Dot &amp; Cross Product</div></a><a class="next" href="index.html"><div class="d">Done →</div><div class="t">Back to contents</div></a></nav>
+</main>
+</div>
+</div>
+<script>
+var root=document.documentElement,tg=document.getElementById('tg');
+function setT(t){root.setAttribute('data-theme',t);tg.textContent=t==='dark'?'Light':'Dark';try{localStorage.setItem('m2014t',t)}catch(e){}}
+try{var s=localStorage.getItem('m2014t');if(s)setT(s);else if(matchMedia('(prefers-color-scheme:dark)').matches)setT('dark')}catch(e){}
+tg.onclick=function(){setT(root.getAttribute('data-theme')==='dark'?'light':'dark')};
+var prog=document.getElementById('prog');
+if(prog)addEventListener('scroll',function(){var h=document.documentElement;var p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);prog.style.setProperty('--p',Math.max(0,Math.min(1,p)))},{passive:true});
+function render(){renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false,macros:{"\\R":"\\mathbb{R}","\\C":"\\mathbb{C}","\\vec":"\\mathbf{#1}"}})}
+if(window.renderMathInElement)render();else addEventListener('load',render);
+</script>
+</body></html>

@@ -1,0 +1,320 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow">
+<title>3.4 Dot & Cross Product · MATH2014</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b2a4a'/%3E%3Cg stroke='%23ffb703' stroke-width='2.2' fill='none' stroke-linecap='round'%3E%3Cpath d='M9 8v16M23 8v16'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Ccircle cx='14' cy='11' r='1.5'/%3E%3Ccircle cx='18' cy='11' r='1.5'/%3E%3Ccircle cx='14' cy='16' r='1.5'/%3E%3Ccircle cx='18' cy='16' r='1.5'/%3E%3Ccircle cx='14' cy='21' r='1.5'/%3E%3Ccircle cx='18' cy='21' r='1.5'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --bg:#f3f5f8; --grid:rgba(27,42,74,.055); --surface:#ffffff; --surface-2:#e9eef6;
+  --ink:#17202e; --muted:#53617a; --line:#ccd5e4;
+  --accent:#1b3a7a; --hot:#d97706; --ok:#1f7a4d; --bad:#b42334; --info:#1b62b0;
+  --hot-soft:color-mix(in srgb,var(--hot) 11%,var(--surface));
+  --f-display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;
+  --f-body:'Atkinson Hyperlegible','Segoe UI',system-ui,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --grid:rgba(220,232,250,.05); --surface:#161d27; --surface-2:#1f2835;
+  --ink:#e7eef6; --muted:#9dabbe; --line:#2d3848;
+  --accent:#7ba2e8; --hot:#ffb04d; --ok:#5fcf93; --bad:#ff8a8a; --info:#74b4f5;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px;-webkit-text-size-adjust:100%}
+body{margin:0;background-color:var(--bg);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;color:var(--ink);font:400 18px/1.62 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 72px}
+.wrap{max-width:1180px;margin:0 auto}
+p{margin:0 0 1em}
+a{color:var(--info);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.14;margin:0;text-wrap:balance}
+h2{font-size:clamp(1.7rem,3.6vw,2.3rem);font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.32rem;font-weight:700;margin:2em 0 .5em}
+h4{font:700 1.04rem var(--f-body);margin:1.4em 0 .35em}
+strong{font-weight:700}
+.mu{color:var(--muted)}
+ul,ol{padding-left:1.3em;margin:0 0 1em}li{margin:.3em 0}
+code,.mono{font-family:var(--f-mono);font-size:.86em;background:var(--surface-2);padding:.08em .36em;border-radius:3px;border:1px solid var(--line)}
+/* top bar */
+.bar{position:sticky;top:0;z-index:40;background:var(--surface);border-bottom:1.5px solid var(--line);margin:0 -16px;padding:9px 16px;display:flex;align-items:center;gap:10px}
+.bar .brand{display:flex;align-items:center;gap:9px;font:800 1.02rem var(--f-display);text-decoration:none;color:var(--ink)}
+.bar .brand svg{width:28px;height:28px}
+.bar .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.bar a.home,.bar button.tg{font:700 .76rem var(--f-mono);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);padding:5px 10px;border-radius:5px;cursor:pointer;text-decoration:none}
+.bar .prog{position:absolute;left:0;bottom:-1.5px;height:3px;width:calc(var(--p,0)*100%);background:var(--hot);transition:width .1s}
+/* hero */
+.hero{padding:52px 0 26px;max-width:880px}
+.eyebrow{font:700 .74rem var(--f-mono);letter-spacing:.11em;text-transform:uppercase;color:var(--hot);margin:0 0 .8em}
+.hero h1{font-size:clamp(2.4rem,6.6vw,4.2rem);font-weight:800;letter-spacing:-.02em;margin-bottom:.3em;line-height:1.04}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{font-size:1.24rem;max-width:36em;margin-bottom:1em;color:var(--ink)}
+.hero .lede2{font-size:1.02rem;color:var(--muted);max-width:40em}
+/* layout */
+main{min-width:0;max-width:820px}
+.toc{background:var(--surface);border:1.5px solid var(--line);border-radius:7px;padding:15px 15px 9px;margin:0 0 36px}
+.toc h2{font-size:.82rem;font-family:var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.7em}
+.toc ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px 14px}
+.toc a{display:grid;grid-template-columns:2.3em 1fr;gap:3px;text-decoration:none;color:var(--ink);padding:6px 6px;border-radius:5px;font-size:.93rem;line-height:1.3}
+.toc a:hover{background:var(--surface-2)}
+.toc .n{font:700 .78rem var(--f-mono);color:var(--hot);padding-top:1px}
+.toc small{display:block;color:var(--muted);font:400 .74rem var(--f-mono);margin-top:1px}
+@media(min-width:1080px){
+  .layout{display:grid;grid-template-columns:252px minmax(0,1fr);gap:52px;align-items:start}
+  .toc{position:sticky;top:66px;margin:0;max-height:calc(100vh - 86px);overflow:auto}
+  .toc ol{display:block}
+}
+/* sections */
+.sec{margin:0 0 76px;scroll-margin-top:70px}
+.sec-h{margin:0 0 1em;padding-top:26px;border-top:3px solid var(--accent)}
+.sec-h .tag{display:inline-block;font:700 .72rem var(--f-mono);letter-spacing:.06em;color:var(--hot);margin-bottom:.4em}
+.sub{font-family:var(--f-display);font-weight:700;font-size:1.28rem;margin:2.1em 0 .5em;color:var(--accent);padding-bottom:.2em;border-bottom:2px solid var(--surface-2)}
+/* callouts */
+.box{position:relative;margin:1.9em 0 1.5em;padding:1.3em 1.2em .85em;border:1.5px solid var(--line);background:var(--surface);border-radius:7px}
+.box>.lab{position:absolute;top:-.78em;left:14px;padding:2px 11px;font:700 .68rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;border-radius:4px;background:var(--ink);color:var(--bg)}
+.box>:last-child{margin-bottom:.15em}
+.box.def{border-color:var(--info);background:color-mix(in srgb,var(--info) 6%,var(--surface))}
+.box.def>.lab{background:var(--info);color:#fff}
+.box.idea{border-color:var(--hot);background:var(--hot-soft)}
+.box.idea>.lab{background:var(--hot);color:#fff}
+.box.tip{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 8%,var(--surface))}
+.box.tip>.lab{background:var(--ok);color:#fff}
+.box.warn{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 7%,var(--surface))}
+.box.warn>.lab{background:var(--bad);color:#fff}
+.box.ex{border-color:var(--accent);border-width:1.5px;background:var(--surface);box-shadow:var(--shadow,0 1px 3px rgba(0,0,0,.05))}
+.box.ex>.lab{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .box>.lab{color:#0f141b}
+.steps{counter-reset:st;list-style:none;padding:0;margin:1em 0}
+.steps>li{counter-increment:st;position:relative;padding:.1em 0 .9em 2.4em;margin:0}
+.steps>li::before{content:counter(st);position:absolute;left:0;top:.05em;width:1.7em;height:1.7em;display:grid;place-items:center;background:var(--accent);color:#fff;border-radius:50%;font:700 .82rem var(--f-mono)}
+:root[data-theme="dark"] .steps>li::before{color:#0f141b}
+.steps>li:last-child{padding-bottom:0}
+.katex{font-size:1.02em}
+.katex-display{margin:.8em 0;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.scroll{overflow-x:auto;overflow-y:hidden}
+.q{font-style:italic;color:var(--muted)}
+.tl{font:700 .7rem var(--f-mono);text-transform:uppercase;letter-spacing:.07em;color:var(--hot);margin:.2em 0 .3em}
+table.gt{border-collapse:collapse;font-size:.92rem;margin:1em 0;width:100%}
+table.gt th,table.gt td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+table.gt th{background:var(--surface-2);font-weight:700}
+.pill{display:inline-block;font:700 .72rem var(--f-mono);padding:1px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+hr.soft{border:none;border-top:1.5px dashed var(--line);margin:2.2em 0}
+.endnote{margin-top:60px;padding:22px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);font-size:.95rem;color:var(--muted)}
+
+/* ---- multi-page additions ---- */
+.toc a.active{background:var(--surface-2)}
+.toc a.active .n{color:var(--accent)}
+.toc a.active>span:nth-child(2){font-weight:700}
+.backlink{display:inline-flex;align-items:center;gap:6px;font:700 .78rem var(--f-mono);color:var(--muted);text-decoration:none;margin:14px 2px 2px;padding:6px}
+.backlink:hover{color:var(--accent)}
+/* landing section cards */
+.cards{list-style:none;padding:0;margin:8px 0 10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:18px}
+.cards>li{min-width:0}
+.scard{display:flex;flex-direction:column;height:100%;background:var(--surface);border:1.5px solid var(--line);border-top:4px solid var(--accent);border-radius:9px;text-decoration:none;color:var(--ink);padding:17px 18px 15px;transition:transform .15s ease,box-shadow .15s ease}
+.scard:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(22,30,43,.13)}
+.scard .k{font:700 .73rem var(--f-mono);letter-spacing:.07em;color:var(--hot)}
+.scard h3{margin:.25em 0 .06em;font-size:1.26rem;line-height:1.14;color:var(--ink)}
+.scard .st{font:400 .8rem var(--f-mono);color:var(--muted);margin-bottom:.65em}
+.scard p{font-size:.95rem;color:var(--muted);margin:0 0 .8em}
+.scard .ex{font:700 .72rem var(--f-mono);color:var(--muted);margin-bottom:.7em}
+.scard .go{margin-top:auto;font-weight:700;color:var(--accent);font-size:.93rem}
+.scard .go span{display:inline-block;transition:transform .15s}
+.scard:hover .go span{transform:translateX(4px)}
+/* prev / next */
+.pn{display:flex;gap:12px;margin:54px 0 0;border-top:1.5px solid var(--line);padding-top:22px}
+.pn a{flex:1 1 0;min-width:0;text-decoration:none;border:1.5px solid var(--line);border-radius:8px;padding:11px 15px;background:var(--surface);color:var(--ink);transition:border-color .15s,transform .15s}
+.pn a:hover{border-color:var(--accent);transform:translateY(-2px)}
+.pn a.next{text-align:right}
+.pn .d{font:700 .68rem var(--f-mono);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.pn .t{font-family:var(--f-display);font-weight:700;font-size:1.04rem;color:var(--accent);margin-top:3px;line-height:1.15}
+@media(max-width:560px){.pn{flex-direction:column}}
+</style></head><body><div class="wrap">
+<div class="bar"><a class="brand" href="index.html"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="var(--accent)"/><g stroke="var(--hot)" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M9 8v16M23 8v16"/></g><g fill="#fff"><circle cx="14" cy="11" r="1.5"/><circle cx="18" cy="11" r="1.5"/><circle cx="14" cy="16" r="1.5"/><circle cx="18" cy="16" r="1.5"/><circle cx="14" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/></g></svg>MATH2014 · Linear Algebra</a><div class="right"><a class="home" href="../">All courses</a><button class="tg" id="tg" aria-label="Toggle dark mode">Dark</button></div><div class="prog" id="prog"></div></div>
+<a id="top"></a>
+<div class="layout">
+<nav class="toc" aria-label="Contents"><h2>Contents</h2><ol><li><a href="3-1.html"><span class="n">3.1</span><span>Systems &amp; Matrices<small>the whole engine</small></span></a></li><li><a href="3-2.html"><span class="n">3.2</span><span>Vectors<small>combinations, span, independence</small></span></a></li><li><a href="3-3.html"><span class="n">3.3</span><span>Matrices<small>algebra, determinants, inverses</small></span></a></li><li><a href="3-4.html" class="active"><span class="n">3.4</span><span>Dot &amp; Cross Product<small>angles, length, area</small></span></a></li><li><a href="3-5.html"><span class="n">3.5</span><span>Eigenvalues<small>special directions, diagonalization</small></span></a></li></ol><a class="backlink" href="index.html">← Course home</a></nav>
+<main>
+<section class="sec" id="s34" data-n="3.4" data-t="Dot &amp; cross product" data-s="angles, length, area">
+<div class="sec-h"><span class="tag">SECTION 3.4</span><h2>Inner Product &amp; Cross Product</h2></div>
+
+<p>We can already add vectors and scale them. Now we ask: <em>can we multiply two vectors, and get something useful?</em> There are two famous answers, and they're wonderfully different in flavour. The <strong>dot product</strong> eats two vectors and spits out a single <em>number</em> — it measures length and angle. The <strong>cross product</strong> (only in 3-D) eats two vectors and returns a <em>new vector</em> perpendicular to both — it measures area and gives directions. Between them they power nearly all of the geometry in this course.</p>
+
+<h3 class="sub">1 · The dot product: multiply, then add</h3>
+
+<div class="box def"><p class="lab">Definition · dot (inner, scalar) product</p>
+<p>For $\vec a=[a_1,a_2,\dots,a_n]$ and $\vec b=[b_1,b_2,\dots,b_n]$ (same size), the <strong>dot product</strong> is the <em>number</em></p>
+$$\vec a\cdot\vec b=a_1b_1+a_2b_2+\cdots+a_nb_n.$$
+<p>The result is a <strong>scalar</strong> (a single real number), not a vector — which is why it's also called the <strong>scalar product</strong> or <strong>inner product</strong>, written $\langle\vec a,\vec b\rangle$.</p></div>
+
+<div class="box idea"><p class="lab">Intuition · "line them up, multiply matching entries, total it"</p>
+<p>It's the same "multiply corresponding things and add" move you used inside matrix multiplication (every entry of $AB$ was a dot product of a row with a column). Here it stands alone. The payoff, coming in part 4, is that this plain arithmetic secretly encodes the <em>angle</em> between the two vectors.</p></div>
+
+<div class="box ex"><p class="lab">Example 1 · a dot product in $\R^5$</p>
+<p>$\vec w=[2,4,-3,2,8]$, $\vec x=[3,1,0,-1,-2]$. Multiply matching entries and sum:</p>
+$$\vec w\cdot\vec x=2(3)+4(1)+(-3)(0)+2(-1)+8(-2)=6+4+0-2-16=-8.$$
+<p>One number out. (The negative sign will mean something in part 5: these two vectors point in <em>generally opposite</em> directions.)</p></div>
+
+<h3 class="sub">2 · The norm: a vector's length</h3>
+
+<div class="box def"><p class="lab">Definition · norm (length/magnitude)</p>
+<p>The <strong>norm</strong> $\lVert\vec u\rVert$ of a vector is the square root of the dot product of the vector with itself:</p>
+$$\lVert\vec u\rVert=\sqrt{u_1^2+u_2^2+\cdots+u_n^2}=\sqrt{\vec u\cdot\vec u}.$$</p></div>
+
+<div class="box idea"><p class="lab">Intuition · it's just Pythagoras, in any dimension</p>
+<p>In the plane, the length of the arrow to $(u_1,u_2)$ is $\sqrt{u_1^2+u_2^2}$ by the Pythagorean theorem. The norm simply extends that to $n$ entries: square every component, add, square-root. The key identity $\lVert\vec u\rVert^2=\vec u\cdot\vec u$ links length and dot product — it's the bridge we'll cross constantly.</p></div>
+
+<div class="box ex"><p class="lab">Example 2 · norms of two vectors</p>
+<p>For $\vec w=[2,4,-3,2,8]$ and $\vec x=[3,1,0,-1,-2]$:</p>
+$$\lVert\vec w\rVert=\sqrt{2^2+4^2+(-3)^2+2^2+8^2}=\sqrt{4+16+9+4+64}=\sqrt{97},$$
+$$\lVert\vec x\rVert=\sqrt{3^2+1^2+0^2+(-1)^2+(-2)^2}=\sqrt{9+1+0+1+4}=\sqrt{15}.$$</p></div>
+
+<div class="box def"><p class="lab">Properties of the dot product</p>
+<p>For vectors $\vec a,\vec b,\vec c$ and scalar $c$: (1) $\vec a\cdot\vec a=\lVert\vec a\rVert^2$; (2) $\vec a\cdot\vec b=\vec b\cdot\vec a$ (symmetric); (3) $\vec a\cdot(\vec b+\vec c)=\vec a\cdot\vec b+\vec a\cdot\vec c$ (distributes); (4) $(c\vec a)\cdot\vec b=c(\vec a\cdot\vec b)=\vec a\cdot(c\vec b)$; (5) $\mathbf 0\cdot\vec a=0$.</p></div>
+
+<h3 class="sub">3 · The dot product knows the angle</h3>
+
+<p>Here's the beautiful fact that makes the dot product so useful: it equals the product of the two lengths times the cosine of the angle between the vectors.</p>
+
+<div class="box def"><p class="lab">Geometric formula</p>
+<p>If $\theta$ is the angle between nonzero vectors $\vec a$ and $\vec b$ (with $0\le\theta\le\pi$), then</p>
+$$\boxed{\;\vec a\cdot\vec b=\lVert\vec a\rVert\,\lVert\vec b\rVert\cos\theta.\;}$$
+<p>Rearranged, this <em>finds</em> the angle: $\displaystyle\cos\theta=\frac{\vec a\cdot\vec b}{\lVert\vec a\rVert\,\lVert\vec b\rVert}$.</p></div>
+
+<div class="box idea"><p class="lab">Why it's true · the Law of Cosines in disguise</p>
+<p>Place $\vec a$ and $\vec b$ as arrows from the origin, reaching points $A$ and $B$; the third side of the triangle is $\vec a-\vec b$. The Law of Cosines on triangle $OAB$ says $\lVert\vec a-\vec b\rVert^2=\lVert\vec a\rVert^2+\lVert\vec b\rVert^2-2\lVert\vec a\rVert\lVert\vec b\rVert\cos\theta$. But expand the left side with dot-product algebra: $\lVert\vec a-\vec b\rVert^2=(\vec a-\vec b)\cdot(\vec a-\vec b)=\lVert\vec a\rVert^2-2\,\vec a\cdot\vec b+\lVert\vec b\rVert^2$. Compare the two: the $\lVert\vec a\rVert^2$ and $\lVert\vec b\rVert^2$ cancel, leaving $-2\,\vec a\cdot\vec b=-2\lVert\vec a\rVert\lVert\vec b\rVert\cos\theta$, i.e. $\vec a\cdot\vec b=\lVert\vec a\rVert\lVert\vec b\rVert\cos\theta$. $\blacksquare$</p></div>
+
+<div class="box ex"><p class="lab">Example 3 · dot product from lengths and angle</p>
+<p>If $\lVert\vec a\rVert=4$, $\lVert\vec b\rVert=6$, and the angle between them is $\theta=\pi/3$ (so $\cos\theta=\tfrac12$), then</p>
+$$\vec a\cdot\vec b=\lVert\vec a\rVert\,\lVert\vec b\rVert\cos\theta=4\cdot6\cdot\tfrac12=12.$$</p></div>
+
+<div class="box ex"><p class="lab">Example 4 · the angle between two vectors</p>
+<p>Find the angle between $\vec a=[2,2,-1]$ and $\vec b=[5,-3,2]$. Compute the three ingredients:</p>
+$$\vec a\cdot\vec b=2(5)+2(-3)+(-1)(2)=10-6-2=2,\quad \lVert\vec a\rVert=\sqrt{4+4+1}=3,\quad \lVert\vec b\rVert=\sqrt{25+9+4}=\sqrt{38}.$$
+$$\cos\theta=\frac{\vec a\cdot\vec b}{\lVert\vec a\rVert\lVert\vec b\rVert}=\frac{2}{3\sqrt{38}}\quad\Rightarrow\quad \theta=\arccos\frac{2}{3\sqrt{38}}\approx84.8^\circ.$$</p></div>
+
+<h3 class="sub">4 · Orthogonality: the dot product's party trick</h3>
+
+<div class="box def"><p class="lab">Definition · orthogonal (perpendicular) vectors</p>
+<p>Two nonzero vectors are <strong>orthogonal</strong> (perpendicular) if the angle between them is $\theta=\pi/2$. Since $\cos(\pi/2)=0$, the formula collapses to the cleanest test in the whole chapter:</p>
+$$\vec a\perp\vec b\iff \vec a\cdot\vec b=0.$$</p></div>
+
+<div class="box idea"><p class="lab">Intuition · the <em>sign</em> of the dot product tells you the general direction</p>
+<p>Because $\vec a\cdot\vec b=\lVert\vec a\rVert\lVert\vec b\rVert\cos\theta$ and the lengths are positive, the sign of $\vec a\cdot\vec b$ is the sign of $\cos\theta$:</p>
+<ul>
+<li><strong>$\vec a\cdot\vec b>0$</strong>: angle is acute, the vectors point in <em>roughly the same</em> direction.</li>
+<li><strong>$\vec a\cdot\vec b=0$</strong>: angle is exactly $90^\circ$, <em>perpendicular</em>.</li>
+<li><strong>$\vec a\cdot\vec b<0$</strong>: angle is obtuse, they point in <em>roughly opposite</em> directions.</li>
+</ul>
+<p>(That's why Example 1's $-8$ meant "generally opposing.") No need to compute the actual angle to read off this qualitative relationship.</p></div>
+
+<div class="box ex"><p class="lab">Example 5 · a perpendicularity check</p>
+<p>Show $[2,2,-1]\perp[5,-4,2]$. Just dot them: $\;[2,2,-1]\cdot[5,-4,2]=2(5)+2(-4)+(-1)(2)=10-8-2=0$. The dot product is $0$, so the vectors are perpendicular. (No angle computation needed — zero <em>is</em> the certificate.)</p></div>
+
+<h3 class="sub">5 · The cross product: a vector perpendicular to two others</h3>
+
+<p>The cross product is special to <strong>three dimensions</strong>. Given two vectors in $\R^3$, it produces a third vector that is perpendicular to both — exactly what you need to find a normal direction to a plane, or the area of a parallelogram.</p>
+
+<div class="box def"><p class="lab">Definition · cross (vector) product</p>
+<p>For $\vec x=(x_1,x_2,x_3)$ and $\vec y=(y_1,y_2,y_3)$ in $\R^3$,</p>
+$$\vec x\times\vec y=(x_2y_3-x_3y_2,\;\; x_3y_1-x_1y_3,\;\; x_1y_2-x_2y_1).$$
+<p>The result is a <strong>vector</strong> (hence "vector product"), and it's defined <em>only</em> for 3-D vectors.</p></div>
+
+<div class="box tip"><p class="lab">Tip · the determinant mnemonic (how everyone actually computes it)</p>
+<p>Nobody memorises those three formulas. Instead, write a "formal determinant" with the unit vectors $\hat i,\hat j,\hat k$ on top and expand along row 1:</p>
+$$\vec x\times\vec y=\det\begin{bmatrix}\hat i&\hat j&\hat k\\ x_1&x_2&x_3\\ y_1&y_2&y_3\end{bmatrix}=\begin{vmatrix}x_2&x_3\\y_2&y_3\end{vmatrix}\hat i-\begin{vmatrix}x_1&x_3\\y_1&y_3\end{vmatrix}\hat j+\begin{vmatrix}x_1&x_2\\y_1&y_2\end{vmatrix}\hat k.$$
+<p><strong>Watch the minus sign on the middle ($\hat j$) term</strong> — it's the single most common cross-product mistake.</p></div>
+
+<div class="box ex"><p class="lab">Example 6 · a cross product by the determinant trick</p>
+<p>For $\vec a=(1,3,4)$ and $\vec b=(2,7,-5)$:</p>
+$$\vec a\times\vec b=\begin{vmatrix}\hat i&\hat j&\hat k\\1&3&4\\2&7&-5\end{vmatrix}=\begin{vmatrix}3&4\\7&-5\end{vmatrix}\hat i-\begin{vmatrix}1&4\\2&-5\end{vmatrix}\hat j+\begin{vmatrix}1&3\\2&7\end{vmatrix}\hat k.$$
+<p>Each $2\times2$ via $ad-bc$: $\;(3\cdot-5-4\cdot7)=-43$; $\;(1\cdot-5-4\cdot2)=-13$; $\;(1\cdot7-3\cdot2)=1$. With the middle sign flip:</p>
+$$\vec a\times\vec b=-43\hat i-(-13)\hat j+1\hat k=-43\hat i+13\hat j+\hat k=(-43,13,1).$$</p></div>
+
+<div class="box ex"><p class="lab">Example 7 · a vector crossed with itself is zero</p>
+<p>For any $\vec a=(a_1,a_2,a_3)$, the determinant for $\vec a\times\vec a$ has two <em>identical</em> rows, so it's $\mathbf 0$. Directly: each component like $a_2a_3-a_3a_2=0$. Hence $\vec a\times\vec a=\mathbf 0$. (Makes sense: a vector can't be perpendicular to itself, and the "parallelogram" it spans with itself is flat.)</p></div>
+
+<h3 class="sub">6 · What the cross product means geometrically</h3>
+
+<div class="box def"><p class="lab">Theorem · $\vec a\times\vec b$ is perpendicular to both $\vec a$ and $\vec b$</p>
+<p>The vector $\vec a\times\vec b$ is orthogonal to $\vec a$ and to $\vec b$ (so it's perpendicular to the whole plane they span).</p></div>
+
+<div class="box ex"><p class="lab">Example 8 · proof that $(\vec a\times\vec b)\cdot\vec a=0$</p>
+<p>Dot $\vec a\times\vec b$ with $\vec a=(a_1,a_2,a_3)$:</p>
+$$(\vec a\times\vec b)\cdot\vec a=a_1(a_2b_3-a_3b_2)-a_2(a_1b_3-a_3b_1)+a_3(a_1b_2-a_2b_1).$$
+<p>Multiply out: $\;a_1a_2b_3-a_1a_3b_2-a_2a_1b_3+a_2a_3b_1+a_3a_1b_2-a_3a_2b_1$. Every term cancels with another ($a_1a_2b_3$ with $-a_2a_1b_3$, etc.), giving $0$. The same computation shows $(\vec a\times\vec b)\cdot\vec b=0$. So $\vec a\times\vec b\perp\vec a$ and $\perp\vec b$. $\blacksquare$</p></div>
+
+<div class="box idea"><p class="lab">Intuition · direction by the right-hand rule, length by $\sin\theta$</p>
+<p>Perpendicularity leaves two choices of direction (up or down); the <strong>right-hand rule</strong> picks one: point your right hand's fingers along $\vec a$, curl them toward $\vec b$, and your thumb points along $\vec a\times\vec b$. For the <em>length</em>:</p>
+$$\lVert\vec a\times\vec b\rVert=\lVert\vec a\rVert\,\lVert\vec b\rVert\sin\theta,$$
+<p>which is exactly the <strong>area of the parallelogram</strong> spanned by $\vec a$ and $\vec b$ (base times height, height $=\lVert\vec b\rVert\sin\theta$). Compare the dot product's $\cos\theta$: dot uses the <em>aligned</em> part, cross uses the <em>perpendicular</em> part.</p></div>
+
+<div class="box idea"><p class="lab">Why $\lVert\vec a\times\vec b\rVert=\lVert\vec a\rVert\lVert\vec b\rVert\sin\theta$ (sketch)</p>
+<p>Expanding $\lVert\vec a\times\vec b\rVert^2$ and regrouping gives the identity $\lVert\vec a\times\vec b\rVert^2=\lVert\vec a\rVert^2\lVert\vec b\rVert^2-(\vec a\cdot\vec b)^2$. Substitute $\vec a\cdot\vec b=\lVert\vec a\rVert\lVert\vec b\rVert\cos\theta$: the right side becomes $\lVert\vec a\rVert^2\lVert\vec b\rVert^2(1-\cos^2\theta)=\lVert\vec a\rVert^2\lVert\vec b\rVert^2\sin^2\theta$. Take square roots (and $\sin\theta\ge0$ on $[0,\pi]$). $\blacksquare$</p></div>
+
+<div class="box def"><p class="lab">Parallel test</p>
+<p>Two nonzero vectors are <strong>parallel</strong> $\iff\vec a\times\vec b=\mathbf 0$. (Parallel means $\theta=0$ or $\pi$, so $\sin\theta=0$, so the cross product has zero length.) Neat contrast: dot product $=0$ detects <em>perpendicular</em>; cross product $=\mathbf 0$ detects <em>parallel</em>.</p></div>
+
+<h3 class="sub">7 · Two signature applications: normals and areas</h3>
+
+<div class="box ex"><p class="lab">Example 9 · a vector perpendicular to a plane through three points</p>
+<p>Find a vector perpendicular to the plane through $P(1,4,6)$, $Q(-2,5,-1)$, $R(1,-1,1)$.</p>
+<p><strong>Idea:</strong> build two vectors lying <em>in</em> the plane, then cross them — the result is perpendicular to both, hence to the plane. Use edges from $P$:</p>
+$$\overrightarrow{PQ}=Q-P=(-3,1,-7),\qquad \overrightarrow{PR}=R-P=(0,-5,-5).$$
+$$\overrightarrow{PQ}\times\overrightarrow{PR}=\begin{vmatrix}\hat i&\hat j&\hat k\\-3&1&-7\\0&-5&-5\end{vmatrix}=(-5-35)\hat i-(15-0)\hat j+(15-0)\hat k=(-40,-15,15).$$
+<p>So $(-40,-15,15)$ is perpendicular to the plane — and so is any scalar multiple, e.g. the tidier $(8,3,-3)$ (divide by $-5$).</p></div>
+
+<div class="box ex"><p class="lab">Example 10 · area of a triangle in 3-D</p>
+<p>Find the area of triangle $PQR$ with the same $P,Q,R$. The parallelogram on $\overrightarrow{PQ},\overrightarrow{PR}$ has area $\lVert\overrightarrow{PQ}\times\overrightarrow{PR}\rVert$; a triangle is <em>half</em> of it. From Example 9, $\overrightarrow{PQ}\times\overrightarrow{PR}=(-40,-15,15)$, so</p>
+$$\lVert\overrightarrow{PQ}\times\overrightarrow{PR}\rVert=\sqrt{(-40)^2+(-15)^2+15^2}=\sqrt{1600+225+225}=\sqrt{2050}=5\sqrt{82}.$$
+$$\text{Area of }\triangle PQR=\tfrac12\cdot5\sqrt{82}=\frac{5}{2}\sqrt{82}.$$</p></div>
+
+<h3 class="sub">8 · Algebra of the cross product (and the scalar triple product)</h3>
+
+<div class="box def"><p class="lab">Properties of the cross product</p>
+<p>For vectors $\vec a,\vec b,\vec c$ and scalar $c$:</p>
+<ol>
+<li>$\vec a\times\vec b=-(\vec b\times\vec a)$ &nbsp;(<strong>anti</strong>-commutative — order flips the sign!)</li>
+<li>$(c\vec a)\times\vec b=c(\vec a\times\vec b)=\vec a\times(c\vec b)$</li>
+<li>$\vec a\times(\vec b+\vec c)=\vec a\times\vec b+\vec a\times\vec c$</li>
+<li>$(\vec a+\vec b)\times\vec c=\vec a\times\vec c+\vec b\times\vec c$</li>
+<li>$\vec a\cdot(\vec b\times\vec c)=(\vec a\times\vec b)\cdot\vec c$ &nbsp;(the <strong>scalar triple product</strong>)</li>
+<li>$\vec a\times(\vec b\times\vec c)=(\vec a\cdot\vec c)\vec b-(\vec a\cdot\vec b)\vec c$ &nbsp;("BAC−CAB")</li>
+</ol></div>
+
+<div class="box warn"><p class="lab">Trap · the cross product is anti-commutative, not commutative</p>
+<p>Property 1 says swapping the order <em>negates</em> the result: $\vec b\times\vec a=-(\vec a\times\vec b)$. This fits the right-hand rule (flip the order, your thumb points the opposite way). Don't ever assume $\vec a\times\vec b=\vec b\times\vec a$. Also note the cross product is <em>not</em> associative in general: $\vec a\times(\vec b\times\vec c)\ne(\vec a\times\vec b)\times\vec c$.</p></div>
+
+<div class="box idea"><p class="lab">The scalar triple product is a determinant (Property 5 proof)</p>
+<p>Writing $\vec a\cdot(\vec b\times\vec c)$ out and regrouping gives exactly the $3\times3$ determinant with the three vectors as rows:</p>
+$$\vec a\cdot(\vec b\times\vec c)=\det\begin{bmatrix}a_1&a_2&a_3\\b_1&b_2&b_3\\c_1&c_2&c_3\end{bmatrix}.$$
+<p>Regrouping the same expression the other way shows it also equals $(\vec a\times\vec b)\cdot\vec c$, proving Property 5. Geometrically its absolute value is the <strong>volume of the parallelepiped</strong> spanned by $\vec a,\vec b,\vec c$ — and it's $0$ exactly when the three vectors are coplanar (linearly dependent). A lovely closing link: the determinant from §3.3 measures 3-D volume.</p></div>
+
+<h3 class="sub">9 · Section recap</h3>
+
+<div class="box tip"><p class="lab">Dot vs cross, side by side</p>
+<ul>
+<li><strong>Dot product</strong> $\vec a\cdot\vec b=\sum a_ib_i$ → a <em>number</em>; equals $\lVert\vec a\rVert\lVert\vec b\rVert\cos\theta$; detects <strong>perpendicular</strong> ($=0$); sign gives same/opposite direction; gives length via $\lVert\vec u\rVert=\sqrt{\vec u\cdot\vec u}$ and angle via $\cos\theta=\dfrac{\vec a\cdot\vec b}{\lVert\vec a\rVert\lVert\vec b\rVert}$.</li>
+<li><strong>Cross product</strong> (3-D only) $\vec a\times\vec b$ → a <em>vector</em> perpendicular to both; compute by the $\hat i\hat j\hat k$ determinant (mind the middle minus); length $\lVert\vec a\rVert\lVert\vec b\rVert\sin\theta=$ parallelogram area; detects <strong>parallel</strong> ($=\mathbf 0$); anti-commutative.</li>
+<li><strong>Uses:</strong> normal to a plane = cross of two in-plane edges; triangle area = ½‖cross‖; volume / coplanarity = scalar triple product = determinant.</li>
+</ul></div>
+</section>
+
+<nav class="pn" aria-label="Section navigation"><a class="prev" href="3-3.html"><div class="d">← Previous</div><div class="t">3.3 Matrices</div></a><a class="next" href="3-5.html"><div class="d">Next →</div><div class="t">3.5 Eigenvalues</div></a></nav>
+</main>
+</div>
+</div>
+<script>
+var root=document.documentElement,tg=document.getElementById('tg');
+function setT(t){root.setAttribute('data-theme',t);tg.textContent=t==='dark'?'Light':'Dark';try{localStorage.setItem('m2014t',t)}catch(e){}}
+try{var s=localStorage.getItem('m2014t');if(s)setT(s);else if(matchMedia('(prefers-color-scheme:dark)').matches)setT('dark')}catch(e){}
+tg.onclick=function(){setT(root.getAttribute('data-theme')==='dark'?'light':'dark')};
+var prog=document.getElementById('prog');
+if(prog)addEventListener('scroll',function(){var h=document.documentElement;var p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);prog.style.setProperty('--p',Math.max(0,Math.min(1,p)))},{passive:true});
+function render(){renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false,macros:{"\\R":"\\mathbb{R}","\\C":"\\mathbb{C}","\\vec":"\\mathbf{#1}"}})}
+if(window.renderMathInElement)render();else addEventListener('load',render);
+</script>
+</body></html>

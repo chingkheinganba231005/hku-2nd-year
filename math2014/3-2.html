@@ -1,0 +1,362 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow">
+<title>3.2 Vectors · MATH2014</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b2a4a'/%3E%3Cg stroke='%23ffb703' stroke-width='2.2' fill='none' stroke-linecap='round'%3E%3Cpath d='M9 8v16M23 8v16'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Ccircle cx='14' cy='11' r='1.5'/%3E%3Ccircle cx='18' cy='11' r='1.5'/%3E%3Ccircle cx='14' cy='16' r='1.5'/%3E%3Ccircle cx='18' cy='16' r='1.5'/%3E%3Ccircle cx='14' cy='21' r='1.5'/%3E%3Ccircle cx='18' cy='21' r='1.5'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --bg:#f3f5f8; --grid:rgba(27,42,74,.055); --surface:#ffffff; --surface-2:#e9eef6;
+  --ink:#17202e; --muted:#53617a; --line:#ccd5e4;
+  --accent:#1b3a7a; --hot:#d97706; --ok:#1f7a4d; --bad:#b42334; --info:#1b62b0;
+  --hot-soft:color-mix(in srgb,var(--hot) 11%,var(--surface));
+  --f-display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;
+  --f-body:'Atkinson Hyperlegible','Segoe UI',system-ui,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --grid:rgba(220,232,250,.05); --surface:#161d27; --surface-2:#1f2835;
+  --ink:#e7eef6; --muted:#9dabbe; --line:#2d3848;
+  --accent:#7ba2e8; --hot:#ffb04d; --ok:#5fcf93; --bad:#ff8a8a; --info:#74b4f5;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px;-webkit-text-size-adjust:100%}
+body{margin:0;background-color:var(--bg);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;color:var(--ink);font:400 18px/1.62 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 72px}
+.wrap{max-width:1180px;margin:0 auto}
+p{margin:0 0 1em}
+a{color:var(--info);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.14;margin:0;text-wrap:balance}
+h2{font-size:clamp(1.7rem,3.6vw,2.3rem);font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.32rem;font-weight:700;margin:2em 0 .5em}
+h4{font:700 1.04rem var(--f-body);margin:1.4em 0 .35em}
+strong{font-weight:700}
+.mu{color:var(--muted)}
+ul,ol{padding-left:1.3em;margin:0 0 1em}li{margin:.3em 0}
+code,.mono{font-family:var(--f-mono);font-size:.86em;background:var(--surface-2);padding:.08em .36em;border-radius:3px;border:1px solid var(--line)}
+/* top bar */
+.bar{position:sticky;top:0;z-index:40;background:var(--surface);border-bottom:1.5px solid var(--line);margin:0 -16px;padding:9px 16px;display:flex;align-items:center;gap:10px}
+.bar .brand{display:flex;align-items:center;gap:9px;font:800 1.02rem var(--f-display);text-decoration:none;color:var(--ink)}
+.bar .brand svg{width:28px;height:28px}
+.bar .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.bar a.home,.bar button.tg{font:700 .76rem var(--f-mono);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);padding:5px 10px;border-radius:5px;cursor:pointer;text-decoration:none}
+.bar .prog{position:absolute;left:0;bottom:-1.5px;height:3px;width:calc(var(--p,0)*100%);background:var(--hot);transition:width .1s}
+/* hero */
+.hero{padding:52px 0 26px;max-width:880px}
+.eyebrow{font:700 .74rem var(--f-mono);letter-spacing:.11em;text-transform:uppercase;color:var(--hot);margin:0 0 .8em}
+.hero h1{font-size:clamp(2.4rem,6.6vw,4.2rem);font-weight:800;letter-spacing:-.02em;margin-bottom:.3em;line-height:1.04}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{font-size:1.24rem;max-width:36em;margin-bottom:1em;color:var(--ink)}
+.hero .lede2{font-size:1.02rem;color:var(--muted);max-width:40em}
+/* layout */
+main{min-width:0;max-width:820px}
+.toc{background:var(--surface);border:1.5px solid var(--line);border-radius:7px;padding:15px 15px 9px;margin:0 0 36px}
+.toc h2{font-size:.82rem;font-family:var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.7em}
+.toc ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px 14px}
+.toc a{display:grid;grid-template-columns:2.3em 1fr;gap:3px;text-decoration:none;color:var(--ink);padding:6px 6px;border-radius:5px;font-size:.93rem;line-height:1.3}
+.toc a:hover{background:var(--surface-2)}
+.toc .n{font:700 .78rem var(--f-mono);color:var(--hot);padding-top:1px}
+.toc small{display:block;color:var(--muted);font:400 .74rem var(--f-mono);margin-top:1px}
+@media(min-width:1080px){
+  .layout{display:grid;grid-template-columns:252px minmax(0,1fr);gap:52px;align-items:start}
+  .toc{position:sticky;top:66px;margin:0;max-height:calc(100vh - 86px);overflow:auto}
+  .toc ol{display:block}
+}
+/* sections */
+.sec{margin:0 0 76px;scroll-margin-top:70px}
+.sec-h{margin:0 0 1em;padding-top:26px;border-top:3px solid var(--accent)}
+.sec-h .tag{display:inline-block;font:700 .72rem var(--f-mono);letter-spacing:.06em;color:var(--hot);margin-bottom:.4em}
+.sub{font-family:var(--f-display);font-weight:700;font-size:1.28rem;margin:2.1em 0 .5em;color:var(--accent);padding-bottom:.2em;border-bottom:2px solid var(--surface-2)}
+/* callouts */
+.box{position:relative;margin:1.9em 0 1.5em;padding:1.3em 1.2em .85em;border:1.5px solid var(--line);background:var(--surface);border-radius:7px}
+.box>.lab{position:absolute;top:-.78em;left:14px;padding:2px 11px;font:700 .68rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;border-radius:4px;background:var(--ink);color:var(--bg)}
+.box>:last-child{margin-bottom:.15em}
+.box.def{border-color:var(--info);background:color-mix(in srgb,var(--info) 6%,var(--surface))}
+.box.def>.lab{background:var(--info);color:#fff}
+.box.idea{border-color:var(--hot);background:var(--hot-soft)}
+.box.idea>.lab{background:var(--hot);color:#fff}
+.box.tip{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 8%,var(--surface))}
+.box.tip>.lab{background:var(--ok);color:#fff}
+.box.warn{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 7%,var(--surface))}
+.box.warn>.lab{background:var(--bad);color:#fff}
+.box.ex{border-color:var(--accent);border-width:1.5px;background:var(--surface);box-shadow:var(--shadow,0 1px 3px rgba(0,0,0,.05))}
+.box.ex>.lab{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .box>.lab{color:#0f141b}
+.steps{counter-reset:st;list-style:none;padding:0;margin:1em 0}
+.steps>li{counter-increment:st;position:relative;padding:.1em 0 .9em 2.4em;margin:0}
+.steps>li::before{content:counter(st);position:absolute;left:0;top:.05em;width:1.7em;height:1.7em;display:grid;place-items:center;background:var(--accent);color:#fff;border-radius:50%;font:700 .82rem var(--f-mono)}
+:root[data-theme="dark"] .steps>li::before{color:#0f141b}
+.steps>li:last-child{padding-bottom:0}
+.katex{font-size:1.02em}
+.katex-display{margin:.8em 0;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.scroll{overflow-x:auto;overflow-y:hidden}
+.q{font-style:italic;color:var(--muted)}
+.tl{font:700 .7rem var(--f-mono);text-transform:uppercase;letter-spacing:.07em;color:var(--hot);margin:.2em 0 .3em}
+table.gt{border-collapse:collapse;font-size:.92rem;margin:1em 0;width:100%}
+table.gt th,table.gt td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+table.gt th{background:var(--surface-2);font-weight:700}
+.pill{display:inline-block;font:700 .72rem var(--f-mono);padding:1px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+hr.soft{border:none;border-top:1.5px dashed var(--line);margin:2.2em 0}
+.endnote{margin-top:60px;padding:22px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);font-size:.95rem;color:var(--muted)}
+
+/* ---- multi-page additions ---- */
+.toc a.active{background:var(--surface-2)}
+.toc a.active .n{color:var(--accent)}
+.toc a.active>span:nth-child(2){font-weight:700}
+.backlink{display:inline-flex;align-items:center;gap:6px;font:700 .78rem var(--f-mono);color:var(--muted);text-decoration:none;margin:14px 2px 2px;padding:6px}
+.backlink:hover{color:var(--accent)}
+/* landing section cards */
+.cards{list-style:none;padding:0;margin:8px 0 10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:18px}
+.cards>li{min-width:0}
+.scard{display:flex;flex-direction:column;height:100%;background:var(--surface);border:1.5px solid var(--line);border-top:4px solid var(--accent);border-radius:9px;text-decoration:none;color:var(--ink);padding:17px 18px 15px;transition:transform .15s ease,box-shadow .15s ease}
+.scard:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(22,30,43,.13)}
+.scard .k{font:700 .73rem var(--f-mono);letter-spacing:.07em;color:var(--hot)}
+.scard h3{margin:.25em 0 .06em;font-size:1.26rem;line-height:1.14;color:var(--ink)}
+.scard .st{font:400 .8rem var(--f-mono);color:var(--muted);margin-bottom:.65em}
+.scard p{font-size:.95rem;color:var(--muted);margin:0 0 .8em}
+.scard .ex{font:700 .72rem var(--f-mono);color:var(--muted);margin-bottom:.7em}
+.scard .go{margin-top:auto;font-weight:700;color:var(--accent);font-size:.93rem}
+.scard .go span{display:inline-block;transition:transform .15s}
+.scard:hover .go span{transform:translateX(4px)}
+/* prev / next */
+.pn{display:flex;gap:12px;margin:54px 0 0;border-top:1.5px solid var(--line);padding-top:22px}
+.pn a{flex:1 1 0;min-width:0;text-decoration:none;border:1.5px solid var(--line);border-radius:8px;padding:11px 15px;background:var(--surface);color:var(--ink);transition:border-color .15s,transform .15s}
+.pn a:hover{border-color:var(--accent);transform:translateY(-2px)}
+.pn a.next{text-align:right}
+.pn .d{font:700 .68rem var(--f-mono);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.pn .t{font-family:var(--f-display);font-weight:700;font-size:1.04rem;color:var(--accent);margin-top:3px;line-height:1.15}
+@media(max-width:560px){.pn{flex-direction:column}}
+</style></head><body><div class="wrap">
+<div class="bar"><a class="brand" href="index.html"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="var(--accent)"/><g stroke="var(--hot)" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M9 8v16M23 8v16"/></g><g fill="#fff"><circle cx="14" cy="11" r="1.5"/><circle cx="18" cy="11" r="1.5"/><circle cx="14" cy="16" r="1.5"/><circle cx="18" cy="16" r="1.5"/><circle cx="14" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/></g></svg>MATH2014 · Linear Algebra</a><div class="right"><a class="home" href="../">All courses</a><button class="tg" id="tg" aria-label="Toggle dark mode">Dark</button></div><div class="prog" id="prog"></div></div>
+<a id="top"></a>
+<div class="layout">
+<nav class="toc" aria-label="Contents"><h2>Contents</h2><ol><li><a href="3-1.html"><span class="n">3.1</span><span>Systems &amp; Matrices<small>the whole engine</small></span></a></li><li><a href="3-2.html" class="active"><span class="n">3.2</span><span>Vectors<small>combinations, span, independence</small></span></a></li><li><a href="3-3.html"><span class="n">3.3</span><span>Matrices<small>algebra, determinants, inverses</small></span></a></li><li><a href="3-4.html"><span class="n">3.4</span><span>Dot &amp; Cross Product<small>angles, length, area</small></span></a></li><li><a href="3-5.html"><span class="n">3.5</span><span>Eigenvalues<small>special directions, diagonalization</small></span></a></li></ol><a class="backlink" href="index.html">← Course home</a></nav>
+<main>
+<section class="sec" id="s32" data-n="3.2" data-t="Vectors" data-s="combinations, span, independence">
+<div class="sec-h"><span class="tag">SECTION 3.2</span><h2>Vectors, Linear Combinations, Span &amp; Independence</h2></div>
+
+<p>In §3.1 a column of numbers was just "the answer, stacked up." In §3.2 those columns become the <strong>main characters</strong>. We stop asking "what solves this system?" and start asking richer questions: <em>can I build this vector out of those vectors? which directions can I reach? is one of my vectors secretly redundant?</em> Remarkably, every one of these questions turns back into "solve a linear system", so you already own the tool. This section is where linear algebra stops being bookkeeping and starts being geometry.</p>
+
+<h3 class="sub">1 · Vectors in $\R^2$: lists you can add and stretch</h3>
+
+<p>A <strong>column vector</strong> (or just <strong>vector</strong>) is a matrix with a single column, an ordered list of numbers written vertically. The simplest live in $\R^2$ ("r-two"), with two entries each.</p>
+
+<div class="box def"><p class="lab">Definition · $\R^2$ and the two operations</p>
+<p>A vector in $\R^2$ is $\displaystyle \vec w=\begin{bmatrix}w_1\\w_2\end{bmatrix}$ with $w_1,w_2$ real numbers. The symbol $\R^2$ means the set of <em>all</em> such two-entry vectors. Two vectors are <strong>equal</strong> exactly when their entries match position by position. There are two operations:</p>
+<ul>
+<li><strong>Addition:</strong> add entrywise. $\begin{bmatrix}u_1\\u_2\end{bmatrix}+\begin{bmatrix}v_1\\v_2\end{bmatrix}=\begin{bmatrix}u_1+v_1\\u_2+v_2\end{bmatrix}$.</li>
+<li><strong>Scalar multiple:</strong> multiply every entry by a number $c$ (a <em>scalar</em>). $c\begin{bmatrix}u_1\\u_2\end{bmatrix}=\begin{bmatrix}cu_1\\cu_2\end{bmatrix}$.</li>
+</ul></div>
+
+<div class="box idea"><p class="lab">Intuition · a vector is an arrow; the two operations are "slide" and "stretch"</p>
+<p>Picture $\vec w$ as an arrow from the origin to the point $(w_1,w_2)$. Then <strong>scalar multiplication stretches or flips</strong> the arrow: $2\vec w$ is twice as long, same direction; $-\vec w$ is the same length pointing backwards; $0\vec w$ collapses to the origin. <strong>Addition slides</strong> one arrow onto the tip of the other. These two moves, stretch and slide, are the <em>only</em> things we ever do to vectors, and the whole section is about what you can build with them.</p></div>
+
+<div class="box ex"><p class="lab">Example 1 · scaling and combining two vectors</p>
+<p>Given $\vec u=\begin{bmatrix}1\\-2\end{bmatrix}$ and $\vec v=\begin{bmatrix}2\\-5\end{bmatrix}$, find $4\vec u$, $(-3)\vec v$, and $4\vec u+(-3)\vec v$.</p>
+<p>Scale each entry, then add entrywise:</p>
+$$4\vec u=\begin{bmatrix}4\\-8\end{bmatrix},\qquad -3\vec v=\begin{bmatrix}-6\\15\end{bmatrix},\qquad 4\vec u-3\vec v=\begin{bmatrix}4+(-6)\\-8+15\end{bmatrix}=\begin{bmatrix}-2\\7\end{bmatrix}.$$
+<p>That's it, scale first, then add position by position. No new rules, just the two operations applied carefully.</p></div>
+
+<h3 class="sub">2 · Vectors <em>are</em> points: the geometric picture</h3>
+
+<p>Set up ordinary $xy$-axes. Every point $(a,b)$ in the plane corresponds to exactly one vector $\begin{bmatrix}a\\b\end{bmatrix}$, and vice versa. So we are free to think of $\R^2$ either as "all two-entry columns" <em>or</em> as "all points in the plane", whichever is more helpful. This dictionary between <strong>algebra (columns of numbers)</strong> and <strong>geometry (points and arrows)</strong> is the heart of the subject.</p>
+
+<div class="box idea"><p class="lab">Intuition · the parallelogram rule for addition</p>
+<p>Draw $\vec u$ and $\vec v$ as arrows from the origin $\mathbf 0$. Then $\vec u+\vec v$ is the arrow to the <strong>fourth corner of the parallelogram</strong> whose other three corners are $\vec u$, $\mathbf 0$, and $\vec v$. In words: addition "completes the parallelogram". This picture is why vector addition feels like combining two movements, go along $\vec u$, then along $\vec v$, and you land at $\vec u+\vec v$, no matter which you do first (that's why $\vec u+\vec v=\vec v+\vec u$).</p></div>
+
+<h3 class="sub">3 · Up to $\R^3$ and $\R^n$: more entries, same rules</h3>
+
+<p>Nothing special happened because we had two entries. Everything generalises directly.</p>
+
+<div class="box def"><p class="lab">Definition · $\R^n$</p>
+<p>Vectors in $\R^3$ are $3\times1$ columns (three entries), pictured as arrows from the origin in 3-D space. For any positive integer $n$, $\R^n$ ("r-n") is the set of all <strong>ordered $n$-tuples</strong> of real numbers, written as $n\times1$ columns $\vec u=\begin{bmatrix}u_1\\u_2\\\vdots\\u_n\end{bmatrix}$. Addition is still entrywise, scalar multiplication still scales every entry. The <strong>zero vector</strong> $\mathbf 0$ has every entry $0$.</p></div>
+
+<div class="box tip"><p class="lab">Tip · you can't picture $\R^5$, and you don't need to</p>
+<p>Beyond $\R^3$ there's no literal picture, but <em>all the algebra is identical</em> and the 2-D/3-D intuition keeps working as a metaphor. When a problem lives in $\R^6$, reason as if the arrows were in the plane, "stretch", "slide", "same direction", the conclusions carry over because they only ever used the two operations, never the drawing.</p></div>
+
+<div class="box def"><p class="lab">Algebraic properties of $\R^n$ (the vector-space laws)</p>
+<p>For all $\vec u,\vec v,\vec w$ in $\R^n$ and all scalars $c,d$:</p>
+<table class="gt"><tbody>
+<tr><td>(i)</td><td>$\vec u+\vec v=\vec v+\vec u$</td><td>(addition order doesn't matter)</td></tr>
+<tr><td>(ii)</td><td>$(\vec u+\vec v)+\vec w=\vec u+(\vec v+\vec w)$</td><td>(grouping doesn't matter)</td></tr>
+<tr><td>(iii)</td><td>$\vec u+\mathbf 0=\mathbf 0+\vec u=\vec u$</td><td>($\mathbf 0$ changes nothing)</td></tr>
+<tr><td>(iv)</td><td>$\vec u+(-\vec u)=\mathbf 0$, where $-\vec u=(-1)\vec u$</td><td>(every vector has an opposite)</td></tr>
+<tr><td>(v)</td><td>$c(\vec u+\vec v)=c\vec u+c\vec v$</td><td>(scaling distributes over vectors)</td></tr>
+<tr><td>(vi)</td><td>$(c+d)\vec u=c\vec u+d\vec u$</td><td>(scaling distributes over scalars)</td></tr>
+</tbody></table></div>
+
+<div class="box idea"><p class="lab">Intuition · these six laws are just "common sense, made official"</p>
+<p>You already expect all six, that's the point. They say vectors behave like ordinary numbers for the purposes of adding and scaling. They matter because <em>every</em> later theorem is built only from these laws, so anything that obeys them (not just columns, functions and polynomials too) is a "vector space" and inherits the whole theory for free. For this course, just use them without fuss when rearranging vector equations.</p></div>
+
+<h3 class="sub">4 · Linear combinations: the one idea everything rests on</h3>
+
+<p>Here is the central construction of the whole chapter. Take some vectors, scale each by a number, add the results. That's a linear combination, the <em>only</em> way we're allowed to build new vectors from old ones.</p>
+
+<div class="box def"><p class="lab">Definition · Linear combination</p>
+<p>Given vectors $\vec u_1,\vec u_2,\dots,\vec u_n$ (all the same size) and scalars $\alpha_1,\alpha_2,\dots,\alpha_n$ (the <strong>weights</strong>), the vector</p>
+$$\alpha_1\vec u_1+\alpha_2\vec u_2+\cdots+\alpha_n\vec u_n$$
+<p>is called a <strong>linear combination</strong> of $\vec u_1,\dots,\vec u_n$ with those weights. The weights can be <em>any</em> numbers, positive, negative, zero, fractions.</p></div>
+
+<div class="box ex"><p class="lab">Example 2 · same vectors, different weights, different results</p>
+<p>Let $\vec u_1=\begin{bmatrix}2\\4\\-3\\1\\2\\9\end{bmatrix},\ \vec u_2=\begin{bmatrix}6\\3\\0\\-2\\1\\4\end{bmatrix},\ \vec u_3=\begin{bmatrix}-5\\2\\1\\1\\-3\\0\end{bmatrix},\ \vec u_4=\begin{bmatrix}3\\2\\-5\\7\\1\\3\end{bmatrix}$ (vectors in $\R^6$).</p>
+<p><strong>(1)</strong> With weights $\alpha_1=1,\ \alpha_2=-4,\ \alpha_3=2,\ \alpha_4=-1$, compute $\alpha_1\vec u_1+\alpha_2\vec u_2+\alpha_3\vec u_3+\alpha_4\vec u_4$. Work one entry at a time, e.g. the first entry is $1(2)+(-4)(6)+2(-5)+(-1)(3)=2-24-10-3=-35$. Doing all six entries:</p>
+$$1\vec u_1-4\vec u_2+2\vec u_3-\vec u_4=\begin{bmatrix}-35\\-6\\4\\4\\-9\\-10\end{bmatrix}.$$
+<p><strong>(2)</strong> Keep the <em>same four vectors</em> but take new weights $\beta_1=3,\ \beta_2=0,\ \beta_3=5,\ \beta_4=-1$. (Weight $0$ means $\vec u_2$ simply doesn't contribute.) Then</p>
+$$3\vec u_1+0\vec u_2+5\vec u_3-\vec u_4=\begin{bmatrix}-22\\20\\1\\1\\-10\\24\end{bmatrix}.$$
+<p><strong>The lesson:</strong> fix a set of vectors, and by turning the weight-knobs you manufacture a whole universe of new vectors. Which vectors you can reach this way is precisely the idea of <em>span</em> (part 6).</p></div>
+
+<div class="box tip"><p class="lab">Tip · compute linear combinations entry-by-entry, with a column of scratch</p>
+<p>For a 6-entry combination, don't try to do it in your head. Write the weight times each vector's first entry in a row and sum; then the second entries; and so on. It's slow but bullet-proof. A single sign slip ruins the whole vector, and these appear constantly, so trade a little speed for accuracy.</p></div>
+
+<h3 class="sub">5 · The key question: is $\vec b$ a linear combination of given vectors?</h3>
+
+<p>Example 2 built vectors by choosing weights. Now reverse it: you're <em>handed</em> a target vector $\vec b$ and asked whether <em>some</em> choice of weights produces it. This "can I build $\vec b$?" question is the bridge back to §3.1.</p>
+
+<div class="box ex"><p class="lab">Example 3 · can $\vec b$ be written as a combination of $\vec a_1,\vec a_2$?</p>
+<p>Let $\vec a_1=\begin{bmatrix}1\\-2\\-5\end{bmatrix},\ \vec a_2=\begin{bmatrix}2\\5\\6\end{bmatrix},\ \vec b=\begin{bmatrix}7\\4\\-3\end{bmatrix}$. Do weights $x_1,x_2$ exist with $x_1\vec a_1+x_2\vec a_2=\vec b$? If so, find them.</p>
+<p><strong>Turn the vector equation into a system.</strong> The left side is</p>
+$$x_1\begin{bmatrix}1\\-2\\-5\end{bmatrix}+x_2\begin{bmatrix}2\\5\\6\end{bmatrix}=\begin{bmatrix}x_1+2x_2\\-2x_1+5x_2\\-5x_1+6x_2\end{bmatrix}.$$
+<p>Setting this equal to $\vec b$ entry-by-entry gives three ordinary equations:</p>
+$$x_1+2x_2=7,\qquad -2x_1+5x_2=4,\qquad -5x_1+6x_2=-3.$$
+<p>Solve by row reduction (exactly §3.1). The system is consistent with the unique solution $x_1=3,\ x_2=2$. <strong>So yes:</strong> $\vec b=3\vec a_1+2\vec a_2$. (Quick check: $3\begin{bmatrix}1\\-2\\-5\end{bmatrix}+2\begin{bmatrix}2\\5\\6\end{bmatrix}=\begin{bmatrix}3+4\\-6+10\\-15+12\end{bmatrix}=\begin{bmatrix}7\\4\\-3\end{bmatrix}=\vec b$. ✓)</p></div>
+
+<div class="box idea"><p class="lab">Intuition · the vectors you combine are literally the columns of the matrix</p>
+<p>Look where the numbers landed: $\vec a_1$, $\vec a_2$, and $\vec b$ became the <em>columns</em> of the augmented matrix $\left[\begin{array}{cc|c}1&2&7\\-2&5&4\\-5&6&-3\end{array}\right]=[\,\vec a_1\ \vec a_2\mid\vec b\,]$. That's not a coincidence, it's the whole trick.</p></div>
+
+<div class="box def"><p class="lab">The fundamental correspondence</p>
+<p>The vector equation $\;x_1\vec a_1+x_2\vec a_2+\cdots+x_n\vec a_n=\vec b\;$ has <strong>exactly the same solution set</strong> as the linear system whose augmented matrix is</p>
+$$[\,\vec a_1\ \ \vec a_2\ \cdots\ \vec a_n\mid\vec b\,].$$
+<p>In particular: <strong>$\vec b$ is a linear combination of $\vec a_1,\dots,\vec a_n$ if and only if that system is consistent</strong> (has at least one solution).</p></div>
+
+<div class="box tip"><p class="lab">Tip · "linear combination?" is a consistency question in disguise</p>
+<p>Whenever a problem asks "is $\vec b$ a combination of these vectors?", your move is automatic: <strong>stack the vectors as columns, tack $\vec b$ on as the last column, row-reduce, check consistency.</strong> Consistent → yes (and the solution gives the weights); a $0=\text{nonzero}$ row → no. You never need a new technique; §3.1 already answers every such question.</p></div>
+
+<h3 class="sub">6 · Span: the set of <em>everything</em> you can reach</h3>
+
+<p>Fix some vectors. As you let the weights range over all numbers, the linear combinations sweep out a set of reachable vectors. That set has a name.</p>
+
+<div class="box def"><p class="lab">Definition · Span</p>
+<p>If $\vec v_1,\dots,\vec v_p$ are in $\R^n$, then <strong>$\operatorname{Span}\{\vec v_1,\dots,\vec v_p\}$</strong> is the set of <em>all</em> linear combinations $c_1\vec v_1+c_2\vec v_2+\cdots+c_p\vec v_p$ as the scalars $c_1,\dots,c_p$ range over all real numbers. We say this set is <strong>spanned (or generated) by</strong> $\vec v_1,\dots,\vec v_p$.</p></div>
+
+<div class="box idea"><p class="lab">Intuition · span = "all the places these arrows can take you"</p>
+<p>Think of the $\vec v_i$ as the only moves you're allowed (in any amount, forward or backward). The span is every destination reachable by combining those moves. Asking "<strong>is $\vec b$ in $\operatorname{Span}\{\vec v_1,\dots,\vec v_p\}$?</strong>" is <em>the same</em> question as "is $\vec b$ a linear combination of the $\vec v_i$?", which (part 5) is just "is $[\,\vec v_1\ \cdots\ \vec v_p\mid\vec b\,]$ consistent?". Three phrasings, one computation.</p></div>
+
+<div class="box tip"><p class="lab">Tip · the geometry of small spans (memorise these pictures)</p>
+<ul>
+<li><strong>$\operatorname{Span}\{\vec v\}$ for one nonzero $\vec v$</strong>: all scalar multiples of $\vec v$, a <strong>line</strong> through the origin in the direction of $\vec v$.</li>
+<li><strong>$\operatorname{Span}\{\vec u,\vec v\}$ for two nonzero vectors, neither a multiple of the other</strong>: the whole <strong>plane</strong> through the origin containing both arrows.</li>
+<li><strong>If $\vec v$ <em>is</em> a multiple of $\vec u$</strong>: they point along the same line, so $\operatorname{Span}\{\vec u,\vec v\}$ collapses back to just that <strong>line</strong>, the second vector added nothing.</li>
+</ul>
+<p>Every span contains $\mathbf 0$ (take all weights $0$) and is "flat" through the origin, a point, line, plane, or higher-dimensional flat. That last bullet is your first hint that some vectors can be <em>redundant</em>, which is exactly linear dependence.</p></div>
+
+<h3 class="sub">7 · Linear independence: are any of my vectors redundant?</h3>
+
+<p>If one vector in a set is already reachable from the others, it adds no new directions, it's dead weight. "Linear independence" is the precise way to say "no dead weight." The cleanest test uses the zero vector.</p>
+
+<div class="box def"><p class="lab">Definition · Linearly independent / dependent</p>
+<p>A set $\{\vec v_1,\dots,\vec v_p\}$ in $\R^n$ is <strong>linearly independent</strong> if the vector equation</p>
+$$x_1\vec v_1+x_2\vec v_2+\cdots+x_p\vec v_p=\mathbf 0$$
+<p>has <strong>only the trivial solution</strong> $x_1=\cdots=x_p=0$. The set is <strong>linearly dependent</strong> if there exist weights $c_1,\dots,c_p$, <em>not all zero</em>, with $c_1\vec v_1+\cdots+c_p\vec v_p=\mathbf 0$. Such an equation (with not-all-zero weights) is a <strong>linear dependence relation</strong>. A set is dependent exactly when it is not independent.</p></div>
+
+<div class="box idea"><p class="lab">Intuition · "the only way to get zero is to use nothing"</p>
+<p>There's always one boring way to combine vectors into $\mathbf 0$: multiply them all by $0$. The question is whether that's the <em>only</em> way. If some <em>nonzero</em> mix also cancels to $\mathbf 0$, then you can solve that relation for one of the vectors, showing it's a combination of the others, <strong>redundant</strong>. So:</p>
+<ul>
+<li><strong>Independent</strong> = the only way to reach $\mathbf 0$ is the trivial way = <em>no</em> vector is redundant.</li>
+<li><strong>Dependent</strong> = there's a sneaky nonzero cancellation = <em>at least one</em> vector is a combination of the rest.</li>
+</ul></div>
+
+<div class="box def"><p class="lab">Matrix form · independence $\Leftrightarrow$ only the trivial solution of $A\vec x=\mathbf 0$</p>
+<p>Put the vectors as columns: $A=[\,\vec a_1\ \cdots\ \vec a_n\,]$. Then $x_1\vec a_1+\cdots+x_n\vec a_n=\mathbf 0$ is exactly the homogeneous system $A\vec x=\mathbf 0$. Therefore:</p>
+<p style="text-align:center"><strong>The columns of $A$ are linearly independent $\iff$ $A\vec x=\mathbf 0$ has only the trivial solution $\iff$ there are no free variables.</strong></p>
+<p>So testing independence is just reducing the coefficient matrix and counting free variables, zero free variables means independent; any free variable means dependent.</p></div>
+
+<div class="box ex"><p class="lab">Example 4 · test three vectors, and exhibit a dependence relation</p>
+<p>Let $\vec v_1=\begin{bmatrix}1\\2\\3\end{bmatrix},\ \vec v_2=\begin{bmatrix}4\\5\\6\end{bmatrix},\ \vec v_3=\begin{bmatrix}2\\1\\0\end{bmatrix}$.</p>
+<p><strong>(a) Independent?</strong> Set $\alpha_1\vec v_1+\alpha_2\vec v_2+\alpha_3\vec v_3=\mathbf 0$, which is the homogeneous system</p>
+$$\alpha_1+4\alpha_2+2\alpha_3=0,\qquad 2\alpha_1+5\alpha_2+\alpha_3=0,\qquad 3\alpha_1+6\alpha_2=0.$$
+<p>Row-reduce the coefficient matrix. It reduces to the two relations $\alpha_1+2\alpha_3=0$ and $\alpha_2+\alpha_3=0$, with $\alpha_3$ <strong>free</strong>, so there are <em>nontrivial</em> solutions. For instance $\alpha_3=-1$ gives $\alpha_1=2,\ \alpha_2=1$, i.e. $(\alpha_1,\alpha_2,\alpha_3)=(-2,1,-1)$ also works (scaling the free choice). Because a nonzero solution exists, <strong>the set is linearly dependent</strong> (not independent).</p>
+<p><strong>(b) A dependence relation.</strong> Using $(\alpha_1,\alpha_2,\alpha_3)=(-2,1,-1)$: $\;-2\vec v_1+\vec v_2-\vec v_3=\mathbf 0$, which rearranges to the tidy fact</p>
+$$2\vec v_1=\vec v_2-\vec v_3.$$
+<p>Check: $\vec v_2-\vec v_3=\begin{bmatrix}4-2\\5-1\\6-0\end{bmatrix}=\begin{bmatrix}2\\4\\6\end{bmatrix}=2\vec v_1$. ✓ So $\vec v_1$ really is built from the other two, that's the redundancy made explicit.</p></div>
+
+<h3 class="sub">8 · Fast rules for small or special sets</h3>
+
+<p>Some cases you should recognise instantly without any row reduction.</p>
+
+<div class="box def"><p class="lab">One or two vectors</p>
+<ul>
+<li><strong>One vector $\{\vec v\}$:</strong> independent $\iff$ $\vec v\ne\mathbf 0$. (If $\vec v\ne\mathbf 0$ then $x_1\vec v=\mathbf 0$ forces $x_1=0$.)</li>
+<li><strong>The zero vector alone $\{\mathbf 0\}$:</strong> dependent, since $x_1\mathbf 0=\mathbf 0$ holds for <em>every</em> $x_1$, including nonzero ones.</li>
+<li><strong>Two vectors $\{\vec v_1,\vec v_2\}$:</strong> dependent $\iff$ one is a scalar multiple of the other. Independent $\iff$ neither is a multiple of the other. (For two vectors you can often just eyeball this.)</li>
+</ul></div>
+
+<div class="box def"><p class="lab">Theorem* · characterization of dependent sets</p>
+<p>A set $S=\{\vec v_1,\dots,\vec v_p\}$ of two or more vectors is linearly dependent <strong>if and only if</strong> at least one vector in $S$ is a linear combination of the others. Moreover, if $S$ is dependent and $\vec v_1\ne\mathbf 0$, then some $\vec v_j$ (with $j>1$) is a combination of the <em>preceding</em> vectors $\vec v_1,\dots,\vec v_{j-1}$.</p></div>
+
+<div class="box idea"><p class="lab">Why Theorem* is true (both directions, in plain words)</p>
+<p><strong>If one vector is a combination of the others</strong>, say $\vec v_1=c_2\vec v_2+c_3\vec v_3$, move everything to one side: $\;(-1)\vec v_1+c_2\vec v_2+c_3\vec v_3+0\vec v_4+\cdots=\mathbf 0$. The weight $-1$ on $\vec v_1$ is nonzero, so that's a genuine dependence relation, $S$ is dependent.</p>
+<p><strong>Conversely, if $S$ is dependent</strong>, there's a relation $c_1\vec v_1+\cdots+c_p\vec v_p=\mathbf 0$ with not all $c_i$ zero. Let $j$ be the <em>largest</em> index with $c_j\ne 0$. If $j=1$ the relation says $c_1\vec v_1=\mathbf 0$ with $c_1\ne0$, forcing $\vec v_1=\mathbf 0$ (handled as the trivial case). Otherwise $j>1$, and we can divide by $c_j$ and solve:</p>
+$$\vec v_j=\left(-\frac{c_1}{c_j}\right)\vec v_1+\cdots+\left(-\frac{c_{j-1}}{c_j}\right)\vec v_{j-1},$$
+<p>so $\vec v_j$ is a combination of the vectors before it. $\blacksquare$</p></div>
+
+<div class="box warn"><p class="lab">Trap · "dependent" does <em>not</em> mean "every vector is redundant"</p>
+<p>Theorem* promises <em>at least one</em> vector is a combination of the others, not <em>all</em> of them. A particular vector in a dependent set may still fail to be a combination of the rest (e.g. if it points in a brand-new direction while two <em>other</em> vectors duplicate each other). Don't over-claim: dependence is a statement about the set, not a licence to delete any vector you like.</p></div>
+
+<div class="box ex"><p class="lab">Example 5 · when is $\vec w$ in $\operatorname{Span}\{\vec u,\vec v\}$?</p>
+<p>Let $\vec u=\begin{bmatrix}3\\1\\0\end{bmatrix},\ \vec v=\begin{bmatrix}1\\6\\0\end{bmatrix}$. Describe $\operatorname{Span}\{\vec u,\vec v\}$, and explain why a vector $\vec w$ lies in it exactly when $\{\vec u,\vec v,\vec w\}$ is linearly dependent.</p>
+<p>Neither $\vec u$ nor $\vec v$ is a multiple of the other, so they're independent and span a <strong>plane</strong> through the origin, here the $x_1x_2$-plane (both have third entry $0$, so every combination does too). Now:</p>
+<ul>
+<li><strong>If $\vec w$ is in the plane</strong> ($\vec w=c_1\vec u+c_2\vec v$ for some weights), then $\vec w$ is a combination of $\vec u,\vec v$, so by Theorem* the set $\{\vec u,\vec v,\vec w\}$ is <strong>dependent</strong>.</li>
+<li><strong>Conversely, if $\{\vec u,\vec v,\vec w\}$ is dependent</strong>, Theorem* (with $\vec u\ne\mathbf 0$) says some vector is a combination of the preceding ones. It can't be $\vec v$ (not a multiple of $\vec u$), so it must be $\vec w$, i.e. $\vec w$ is a combination of $\vec u,\vec v$, so $\vec w$ <strong>is in the plane</strong>.</li>
+</ul>
+<p>So "$\vec w\in\operatorname{Span}\{\vec u,\vec v\}$" and "$\{\vec u,\vec v,\vec w\}$ dependent" are the same condition: geometrically, $\vec w$ lies <em>in the plane</em> spanned by $\vec u$ and $\vec v$. If $\vec w$ pokes out of the plane, the three are independent.</p></div>
+
+<h3 class="sub">9 · Two theorems that let you conclude dependence instantly</h3>
+
+<p>Sometimes you can declare a set dependent <em>without any computation at all</em>, just by counting or spotting a zero. Keep these two in your back pocket for exams.</p>
+
+<div class="box def"><p class="lab">Theorem** · too many vectors must be dependent</p>
+<p>If a set contains <strong>more vectors than there are entries in each vector</strong>, the set is automatically linearly dependent. That is, any set $\{\vec v_1,\dots,\vec v_p\}$ in $\R^n$ with $p>n$ is linearly dependent.</p></div>
+
+<div class="box idea"><p class="lab">Why Theorem** holds · more unknowns than equations</p>
+<p>Form $A=[\,\vec v_1\ \cdots\ \vec v_p\,]$, which is $n\times p$. The equation $A\vec x=\mathbf 0$ is a homogeneous system of $n$ equations in $p$ unknowns. If $p>n$ there are more variables than equations, so there <em>must</em> be a free variable, hence a nontrivial solution, hence dependence. <strong>Example:</strong> any 3 vectors in $\R^2$, or any 5 vectors in $\R^4$, are dependent before you even look at the numbers. (Careful: the theorem says nothing when $p\le n$, then you must actually test.)</p></div>
+
+<div class="box def"><p class="lab">Theorem*** · a set containing $\mathbf 0$ is dependent</p>
+<p>If a set $S=\{\vec v_1,\dots,\vec v_p\}$ in $\R^n$ contains the zero vector, it is linearly dependent.</p></div>
+
+<div class="box idea"><p class="lab">Why Theorem*** holds · put all the weight on the zero vector</p>
+<p>Say $\vec v_1=\mathbf 0$. Then $1\vec v_1+0\vec v_2+\cdots+0\vec v_p=\mathbf 0$ is a dependence relation with a nonzero weight (the $1$ on $\vec v_1$) that costs nothing, because $1\cdot\mathbf 0=\mathbf 0$. A nonzero weight exists, so the set is dependent. <strong>Spot a zero vector → declare dependent immediately.</strong></p></div>
+
+<h3 class="sub">10 · Section recap &amp; exam tactics</h3>
+
+<div class="box tip"><p class="lab">The §3.2 playbook</p>
+<ul>
+<li><strong>Everything is one system.</strong> "Is $\vec b$ a combination / in the span?" → reduce $[\,\vec v_1\cdots\vec v_p\mid\vec b\,]$ and check <em>consistency</em>. "Are they independent?" → reduce the coefficient matrix $[\,\vec v_1\cdots\vec v_p\,]$ and count <em>free variables</em> (the constant column is all zeros, so you can omit it).</li>
+<li><strong>Consistency vs free variables are different questions.</strong> Combination/span cares whether a solution <em>exists</em>; independence cares whether the solution is <em>unique</em>. Don't mix them up.</li>
+<li><strong>Use the free shortcuts first:</strong> more vectors than entries → dependent (Theorem**); a zero vector present → dependent (Theorem***); two vectors with one a multiple of the other → dependent.</li>
+<li><strong>To exhibit a dependence relation</strong>, solve the homogeneous system, pick a convenient nonzero value for a free variable, and write out $c_1\vec v_1+\cdots=\mathbf 0$. Then rearrange to show one vector built from the others, and <em>verify</em> by direct computation.</li>
+<li><strong>Geometry anchors the algebra:</strong> one vector spans a line, two independent vectors span a plane, a vector is in a span exactly when it lies in that line/plane. Picture it to sanity-check your arithmetic.</li>
+</ul></div>
+</section>
+
+<nav class="pn" aria-label="Section navigation"><a class="prev" href="3-1.html"><div class="d">← Previous</div><div class="t">3.1 Systems &amp; Matrices</div></a><a class="next" href="3-3.html"><div class="d">Next →</div><div class="t">3.3 Matrices</div></a></nav>
+</main>
+</div>
+</div>
+<script>
+var root=document.documentElement,tg=document.getElementById('tg');
+function setT(t){root.setAttribute('data-theme',t);tg.textContent=t==='dark'?'Light':'Dark';try{localStorage.setItem('m2014t',t)}catch(e){}}
+try{var s=localStorage.getItem('m2014t');if(s)setT(s);else if(matchMedia('(prefers-color-scheme:dark)').matches)setT('dark')}catch(e){}
+tg.onclick=function(){setT(root.getAttribute('data-theme')==='dark'?'light':'dark')};
+var prog=document.getElementById('prog');
+if(prog)addEventListener('scroll',function(){var h=document.documentElement;var p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);prog.style.setProperty('--p',Math.max(0,Math.min(1,p)))},{passive:true});
+function render(){renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false,macros:{"\\R":"\\mathbb{R}","\\C":"\\mathbb{C}","\\vec":"\\mathbf{#1}"}})}
+if(window.renderMathInElement)render();else addEventListener('load',render);
+</script>
+</body></html>

@@ -1,0 +1,390 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow">
+<title>3.3 Matrices · MATH2014</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b2a4a'/%3E%3Cg stroke='%23ffb703' stroke-width='2.2' fill='none' stroke-linecap='round'%3E%3Cpath d='M9 8v16M23 8v16'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Ccircle cx='14' cy='11' r='1.5'/%3E%3Ccircle cx='18' cy='11' r='1.5'/%3E%3Ccircle cx='14' cy='16' r='1.5'/%3E%3Ccircle cx='18' cy='16' r='1.5'/%3E%3Ccircle cx='14' cy='21' r='1.5'/%3E%3Ccircle cx='18' cy='21' r='1.5'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --bg:#f3f5f8; --grid:rgba(27,42,74,.055); --surface:#ffffff; --surface-2:#e9eef6;
+  --ink:#17202e; --muted:#53617a; --line:#ccd5e4;
+  --accent:#1b3a7a; --hot:#d97706; --ok:#1f7a4d; --bad:#b42334; --info:#1b62b0;
+  --hot-soft:color-mix(in srgb,var(--hot) 11%,var(--surface));
+  --f-display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;
+  --f-body:'Atkinson Hyperlegible','Segoe UI',system-ui,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --grid:rgba(220,232,250,.05); --surface:#161d27; --surface-2:#1f2835;
+  --ink:#e7eef6; --muted:#9dabbe; --line:#2d3848;
+  --accent:#7ba2e8; --hot:#ffb04d; --ok:#5fcf93; --bad:#ff8a8a; --info:#74b4f5;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px;-webkit-text-size-adjust:100%}
+body{margin:0;background-color:var(--bg);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;color:var(--ink);font:400 18px/1.62 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 72px}
+.wrap{max-width:1180px;margin:0 auto}
+p{margin:0 0 1em}
+a{color:var(--info);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.14;margin:0;text-wrap:balance}
+h2{font-size:clamp(1.7rem,3.6vw,2.3rem);font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.32rem;font-weight:700;margin:2em 0 .5em}
+h4{font:700 1.04rem var(--f-body);margin:1.4em 0 .35em}
+strong{font-weight:700}
+.mu{color:var(--muted)}
+ul,ol{padding-left:1.3em;margin:0 0 1em}li{margin:.3em 0}
+code,.mono{font-family:var(--f-mono);font-size:.86em;background:var(--surface-2);padding:.08em .36em;border-radius:3px;border:1px solid var(--line)}
+/* top bar */
+.bar{position:sticky;top:0;z-index:40;background:var(--surface);border-bottom:1.5px solid var(--line);margin:0 -16px;padding:9px 16px;display:flex;align-items:center;gap:10px}
+.bar .brand{display:flex;align-items:center;gap:9px;font:800 1.02rem var(--f-display);text-decoration:none;color:var(--ink)}
+.bar .brand svg{width:28px;height:28px}
+.bar .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.bar a.home,.bar button.tg{font:700 .76rem var(--f-mono);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);padding:5px 10px;border-radius:5px;cursor:pointer;text-decoration:none}
+.bar .prog{position:absolute;left:0;bottom:-1.5px;height:3px;width:calc(var(--p,0)*100%);background:var(--hot);transition:width .1s}
+/* hero */
+.hero{padding:52px 0 26px;max-width:880px}
+.eyebrow{font:700 .74rem var(--f-mono);letter-spacing:.11em;text-transform:uppercase;color:var(--hot);margin:0 0 .8em}
+.hero h1{font-size:clamp(2.4rem,6.6vw,4.2rem);font-weight:800;letter-spacing:-.02em;margin-bottom:.3em;line-height:1.04}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{font-size:1.24rem;max-width:36em;margin-bottom:1em;color:var(--ink)}
+.hero .lede2{font-size:1.02rem;color:var(--muted);max-width:40em}
+/* layout */
+main{min-width:0;max-width:820px}
+.toc{background:var(--surface);border:1.5px solid var(--line);border-radius:7px;padding:15px 15px 9px;margin:0 0 36px}
+.toc h2{font-size:.82rem;font-family:var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.7em}
+.toc ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px 14px}
+.toc a{display:grid;grid-template-columns:2.3em 1fr;gap:3px;text-decoration:none;color:var(--ink);padding:6px 6px;border-radius:5px;font-size:.93rem;line-height:1.3}
+.toc a:hover{background:var(--surface-2)}
+.toc .n{font:700 .78rem var(--f-mono);color:var(--hot);padding-top:1px}
+.toc small{display:block;color:var(--muted);font:400 .74rem var(--f-mono);margin-top:1px}
+@media(min-width:1080px){
+  .layout{display:grid;grid-template-columns:252px minmax(0,1fr);gap:52px;align-items:start}
+  .toc{position:sticky;top:66px;margin:0;max-height:calc(100vh - 86px);overflow:auto}
+  .toc ol{display:block}
+}
+/* sections */
+.sec{margin:0 0 76px;scroll-margin-top:70px}
+.sec-h{margin:0 0 1em;padding-top:26px;border-top:3px solid var(--accent)}
+.sec-h .tag{display:inline-block;font:700 .72rem var(--f-mono);letter-spacing:.06em;color:var(--hot);margin-bottom:.4em}
+.sub{font-family:var(--f-display);font-weight:700;font-size:1.28rem;margin:2.1em 0 .5em;color:var(--accent);padding-bottom:.2em;border-bottom:2px solid var(--surface-2)}
+/* callouts */
+.box{position:relative;margin:1.9em 0 1.5em;padding:1.3em 1.2em .85em;border:1.5px solid var(--line);background:var(--surface);border-radius:7px}
+.box>.lab{position:absolute;top:-.78em;left:14px;padding:2px 11px;font:700 .68rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;border-radius:4px;background:var(--ink);color:var(--bg)}
+.box>:last-child{margin-bottom:.15em}
+.box.def{border-color:var(--info);background:color-mix(in srgb,var(--info) 6%,var(--surface))}
+.box.def>.lab{background:var(--info);color:#fff}
+.box.idea{border-color:var(--hot);background:var(--hot-soft)}
+.box.idea>.lab{background:var(--hot);color:#fff}
+.box.tip{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 8%,var(--surface))}
+.box.tip>.lab{background:var(--ok);color:#fff}
+.box.warn{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 7%,var(--surface))}
+.box.warn>.lab{background:var(--bad);color:#fff}
+.box.ex{border-color:var(--accent);border-width:1.5px;background:var(--surface);box-shadow:var(--shadow,0 1px 3px rgba(0,0,0,.05))}
+.box.ex>.lab{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .box>.lab{color:#0f141b}
+.steps{counter-reset:st;list-style:none;padding:0;margin:1em 0}
+.steps>li{counter-increment:st;position:relative;padding:.1em 0 .9em 2.4em;margin:0}
+.steps>li::before{content:counter(st);position:absolute;left:0;top:.05em;width:1.7em;height:1.7em;display:grid;place-items:center;background:var(--accent);color:#fff;border-radius:50%;font:700 .82rem var(--f-mono)}
+:root[data-theme="dark"] .steps>li::before{color:#0f141b}
+.steps>li:last-child{padding-bottom:0}
+.katex{font-size:1.02em}
+.katex-display{margin:.8em 0;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.scroll{overflow-x:auto;overflow-y:hidden}
+.q{font-style:italic;color:var(--muted)}
+.tl{font:700 .7rem var(--f-mono);text-transform:uppercase;letter-spacing:.07em;color:var(--hot);margin:.2em 0 .3em}
+table.gt{border-collapse:collapse;font-size:.92rem;margin:1em 0;width:100%}
+table.gt th,table.gt td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+table.gt th{background:var(--surface-2);font-weight:700}
+.pill{display:inline-block;font:700 .72rem var(--f-mono);padding:1px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+hr.soft{border:none;border-top:1.5px dashed var(--line);margin:2.2em 0}
+.endnote{margin-top:60px;padding:22px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);font-size:.95rem;color:var(--muted)}
+
+/* ---- multi-page additions ---- */
+.toc a.active{background:var(--surface-2)}
+.toc a.active .n{color:var(--accent)}
+.toc a.active>span:nth-child(2){font-weight:700}
+.backlink{display:inline-flex;align-items:center;gap:6px;font:700 .78rem var(--f-mono);color:var(--muted);text-decoration:none;margin:14px 2px 2px;padding:6px}
+.backlink:hover{color:var(--accent)}
+/* landing section cards */
+.cards{list-style:none;padding:0;margin:8px 0 10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:18px}
+.cards>li{min-width:0}
+.scard{display:flex;flex-direction:column;height:100%;background:var(--surface);border:1.5px solid var(--line);border-top:4px solid var(--accent);border-radius:9px;text-decoration:none;color:var(--ink);padding:17px 18px 15px;transition:transform .15s ease,box-shadow .15s ease}
+.scard:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(22,30,43,.13)}
+.scard .k{font:700 .73rem var(--f-mono);letter-spacing:.07em;color:var(--hot)}
+.scard h3{margin:.25em 0 .06em;font-size:1.26rem;line-height:1.14;color:var(--ink)}
+.scard .st{font:400 .8rem var(--f-mono);color:var(--muted);margin-bottom:.65em}
+.scard p{font-size:.95rem;color:var(--muted);margin:0 0 .8em}
+.scard .ex{font:700 .72rem var(--f-mono);color:var(--muted);margin-bottom:.7em}
+.scard .go{margin-top:auto;font-weight:700;color:var(--accent);font-size:.93rem}
+.scard .go span{display:inline-block;transition:transform .15s}
+.scard:hover .go span{transform:translateX(4px)}
+/* prev / next */
+.pn{display:flex;gap:12px;margin:54px 0 0;border-top:1.5px solid var(--line);padding-top:22px}
+.pn a{flex:1 1 0;min-width:0;text-decoration:none;border:1.5px solid var(--line);border-radius:8px;padding:11px 15px;background:var(--surface);color:var(--ink);transition:border-color .15s,transform .15s}
+.pn a:hover{border-color:var(--accent);transform:translateY(-2px)}
+.pn a.next{text-align:right}
+.pn .d{font:700 .68rem var(--f-mono);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.pn .t{font-family:var(--f-display);font-weight:700;font-size:1.04rem;color:var(--accent);margin-top:3px;line-height:1.15}
+@media(max-width:560px){.pn{flex-direction:column}}
+</style></head><body><div class="wrap">
+<div class="bar"><a class="brand" href="index.html"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="var(--accent)"/><g stroke="var(--hot)" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M9 8v16M23 8v16"/></g><g fill="#fff"><circle cx="14" cy="11" r="1.5"/><circle cx="18" cy="11" r="1.5"/><circle cx="14" cy="16" r="1.5"/><circle cx="18" cy="16" r="1.5"/><circle cx="14" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/></g></svg>MATH2014 · Linear Algebra</a><div class="right"><a class="home" href="../">All courses</a><button class="tg" id="tg" aria-label="Toggle dark mode">Dark</button></div><div class="prog" id="prog"></div></div>
+<a id="top"></a>
+<div class="layout">
+<nav class="toc" aria-label="Contents"><h2>Contents</h2><ol><li><a href="3-1.html"><span class="n">3.1</span><span>Systems &amp; Matrices<small>the whole engine</small></span></a></li><li><a href="3-2.html"><span class="n">3.2</span><span>Vectors<small>combinations, span, independence</small></span></a></li><li><a href="3-3.html" class="active"><span class="n">3.3</span><span>Matrices<small>algebra, determinants, inverses</small></span></a></li><li><a href="3-4.html"><span class="n">3.4</span><span>Dot &amp; Cross Product<small>angles, length, area</small></span></a></li><li><a href="3-5.html"><span class="n">3.5</span><span>Eigenvalues<small>special directions, diagonalization</small></span></a></li></ol><a class="backlink" href="index.html">← Course home</a></nav>
+<main>
+<section class="sec" id="s33" data-n="3.3" data-t="Matrices" data-s="algebra, determinants, inverses">
+<div class="sec-h"><span class="tag">SECTION 3.3</span><h2>Matrix Algebra, Determinants &amp; Inverses</h2></div>
+
+<p>So far matrices were just <em>storage</em>, a tidy way to hold a system's numbers. In §3.3 they become <strong>objects you can do arithmetic with</strong>: add them, scale them, multiply them, flip them, measure them (determinant), and even "divide" by them (inverse). Most rules feel like ordinary number algebra, but three or four are gloriously different, and those differences are exactly what exams probe. We'll flag every trap.</p>
+
+<h3 class="sub">1 · Notation: naming every part of a matrix</h3>
+
+<div class="box def"><p class="lab">Definition · entries, columns, diagonal</p>
+<p>For an $m\times n$ matrix $A$, the <strong>$(i,j)$-entry</strong> $a_{ij}$ sits in row $i$, column $j$. The columns are vectors $\vec a_1,\dots,\vec a_n$, and we write $A=[\,\vec a_1\ \vec a_2\ \cdots\ \vec a_n\,]$. The <strong>diagonal entries</strong> are $a_{11},a_{22},a_{33},\dots$ (row index = column index); together they form the <strong>main diagonal</strong>.</p>
+<ul>
+<li>A <strong>diagonal matrix</strong> is a square matrix whose off-diagonal entries are all $0$.</li>
+<li>The <strong>$n\times n$ identity matrix</strong> $I_n$ is the diagonal matrix with $1$'s on the main diagonal, $\;I_3=\begin{bmatrix}1&0&0\\0&1&0\\0&0&1\end{bmatrix}$. It's the matrix version of the number $1$.</li>
+<li>A <strong>zero matrix</strong> $0$ has every entry $0$ (the matrix version of the number $0$).</li>
+</ul></div>
+
+<div class="box tip"><p class="lab">Tip · "row $i$, column $j$" — the habit that prevents a hundred errors</p>
+<p>Every subscript, every size "$m\times n$", every entry $a_{ij}$ is <strong>rows first, columns second</strong>. Matrix multiplication (below) will punish any slip here instantly. Say it out loud until it's muscle memory.</p></div>
+
+<h3 class="sub">2 · Addition and scalar multiplication: the easy, entrywise operations</h3>
+
+<div class="box def"><p class="lab">Definition · equality, sum, scalar multiple</p>
+<ul>
+<li>Two matrices are <strong>equal</strong> if they have the <em>same size</em> and all corresponding entries match.</li>
+<li>If $A,B$ are the <strong>same size</strong>, their <strong>sum</strong> $A+B$ adds corresponding entries. If the sizes differ, $A+B$ is <strong>undefined</strong>.</li>
+<li>For a scalar $r$, the <strong>scalar multiple</strong> $rA$ multiplies <em>every</em> entry of $A$ by $r$.</li>
+</ul></div>
+
+<div class="box ex"><p class="lab">Example 1 · when addition works, and when it doesn't</p>
+<p>Let $A=\begin{bmatrix}4&0&5\\-1&3&2\end{bmatrix},\ B=\begin{bmatrix}1&1&1\\3&5&7\end{bmatrix},\ C=\begin{bmatrix}2&-3\\0&1\end{bmatrix}$.</p>
+<p>$A$ and $B$ are both $2\times3$, so add entrywise: $\;A+B=\begin{bmatrix}4+1&0+1&5+1\\-1+3&3+5&2+7\end{bmatrix}=\begin{bmatrix}5&1&6\\2&8&9\end{bmatrix}$.</p>
+<p>But $A$ is $2\times3$ while $C$ is $2\times2$ — different sizes — so <strong>$A+C$ is not defined</strong>. You can't add shapes that don't match.</p></div>
+
+<div class="box def"><p class="lab">Theorem · laws of addition &amp; scalar multiplication</p>
+<p>For same-size matrices $A,B,C$ and scalars $r,s$: (a) $A+B=B+A$; (b) $(A+B)+C=A+(B+C)$; (c) $A+0=A$; (d) $r(A+B)=rA+rB$; (e) $(r+s)A=rA+sA$; (f) $r(sA)=(rs)A$. These are identical to the vector laws of §3.2, and for the same reason: everything happens entrywise.</p></div>
+
+<h3 class="sub">3 · Matrix multiplication: the one rule that isn't entrywise</h3>
+
+<p>You might expect $AB$ to multiply entries position-by-position. It does <em>not</em>. Matrix multiplication is built so that it matches <strong>composing the systems/transformations</strong> the matrices represent, and that forces the "row-dot-column" rule.</p>
+
+<div class="box def"><p class="lab">Definition · the row–column rule for $AB$</p>
+<p>If $A$ is $m\times n$ and $B$ is $n\times p$ (so $A$'s column-count matches $B$'s row-count), the product $AB$ is the $m\times p$ matrix whose $(i,j)$-entry is the <strong>row $i$ of $A$ dotted with column $j$ of $B$</strong>:</p>
+$$(AB)_{ij}=a_{i1}b_{1j}+a_{i2}b_{2j}+\cdots+a_{in}b_{nj}.$$
+<p>If $A$'s columns don't match $B$'s rows in number, $AB$ is undefined.</p></div>
+
+<div class="box idea"><p class="lab">Intuition · "inner dimensions must match; outer dimensions give the size"</p>
+<p>Write the sizes next to each other: $(m\times \underline{n})(\underline{n}\times p)$. The two inner numbers must be <strong>equal</strong> (that's what lets a row of $A$ pair up with a column of $B$), and the two outer numbers give the <strong>result's size</strong> $m\times p$. To fill entry $(i,j)$, slide row $i$ of $A$ across column $j$ of $B$, multiply the overlapping pairs, and add. Every entry of the answer is one little dot product.</p></div>
+
+<div class="box ex"><p class="lab">Example 2 · a full $2\times2$ times $2\times3$ product</p>
+<p>Compute $AB$ for $A=\begin{bmatrix}2&3\\1&-5\end{bmatrix}$ (2×2) and $B=\begin{bmatrix}4&3&9\\1&-2&3\end{bmatrix}$ (2×3). Inner dims $2=2$ ✓; result is $2\times3$.</p>
+<p>Each entry is (a row of $A$) · (a column of $B$). For instance the $(1,1)$-entry is row 1 of $A$ = $(2,3)$ dotted with column 1 of $B$ = $(4,1)$: $\;2\cdot4+3\cdot1=11$. Doing all six:</p>
+$$AB=\begin{bmatrix}2\cdot4+3\cdot1 & 2\cdot3+3\cdot(-2) & 2\cdot9+3\cdot3\\[2pt]1\cdot4+(-5)\cdot1 & 1\cdot3+(-5)(-2) & 1\cdot9+(-5)\cdot3\end{bmatrix}=\begin{bmatrix}11&0&27\\9&-7&24\end{bmatrix}.$$</p></div>
+
+<div class="box def"><p class="lab">Theorem 2 · laws that <em>do</em> hold for multiplication</p>
+<p>Whenever the sizes make the products defined: (a) $A(BC)=(AB)C$ (associative); (b) $A(B+C)=AB+AC$ (left distributive); (c) $(B+C)A=BA+CA$ (right distributive); (d) $r(AB)=(rA)B=A(rB)$; (e) $I_mA=A=AI_n$ (identity does nothing).</p></div>
+
+<div class="box warn"><p class="lab">Trap · three ways matrix multiplication breaks your number-instincts</p>
+<ol>
+<li><strong>It is NOT commutative: $AB\ne BA$ in general.</strong> Even when both are defined they usually differ, and often one is defined while the other isn't. Example: $A=\begin{bmatrix}1&3\\-1&2\end{bmatrix},B=\begin{bmatrix}4&0\\5&1\end{bmatrix}$ give $AB=\begin{bmatrix}19&3\\6&2\end{bmatrix}$ but $BA=\begin{bmatrix}4&12\\4&17\end{bmatrix}$. When $AB=BA$ we say $A,B$ <strong>commute</strong> (special, not the norm).</li>
+<li><strong>No cancellation:</strong> $AB=AC$ does <em>not</em> let you conclude $B=C$.</li>
+<li><strong>Zero divisors:</strong> $AB=0$ does <em>not</em> force $A=0$ or $B=0$; two nonzero matrices can multiply to the zero matrix.</li>
+</ol>
+<p>Keep the order of factors sacred and never "cancel" a matrix. These three are exam favourites precisely because they violate habits from ordinary algebra.</p></div>
+
+<div class="box def"><p class="lab">Powers of a square matrix</p>
+<p>For square $A$ and a positive integer $k$, $A^k=\underbrace{A\,A\cdots A}_{k\text{ copies}}$. By convention $A^0=I$ (the identity), so that $A^0\vec x=\vec x$. Only square matrices have powers (you need $A$ times $A$ to be defined).</p></div>
+
+<h3 class="sub">4 · Transpose: flipping rows and columns</h3>
+
+<div class="box def"><p class="lab">Definition · transpose &amp; symmetric matrix</p>
+<p>The <strong>transpose</strong> $A^{\mathsf T}$ of an $m\times n$ matrix $A$ is the $n\times m$ matrix whose $(i,j)$-entry is $[A]_{ji}$: row $i$ of $A^{\mathsf T}$ is column $i$ of $A$. In words, <strong>flip $A$ across its main diagonal</strong> (rows become columns). A square matrix is <strong>symmetric</strong> if $A=A^{\mathsf T}$ (it's its own mirror image across the diagonal).</p></div>
+
+<div class="box ex"><p class="lab">Example 3 · transpose turns a $3\times4$ into a $4\times3$</p>
+<p>For $D=\begin{bmatrix}3&7&2&-3\\-1&4&2&8\\0&3&-2&5\end{bmatrix}$, read each <em>row</em> of $D$ and write it as a <em>column</em> of $D^{\mathsf T}$:</p>
+$$D^{\mathsf T}=\begin{bmatrix}3&-1&0\\7&4&3\\2&2&-2\\-3&8&5\end{bmatrix}.$$
+<p>(Row 1 of $D$ was $3,7,2,-3$; it became column 1 of $D^{\mathsf T}$. Size went $3\times4\to4\times3$.)</p></div>
+
+<div class="box def"><p class="lab">Theorem 3 · transpose rules (watch the reversal in (d))</p>
+<p>(a) $(A^{\mathsf T})^{\mathsf T}=A$; (b) $(A+B)^{\mathsf T}=A^{\mathsf T}+B^{\mathsf T}$; (c) $(rA)^{\mathsf T}=rA^{\mathsf T}$; (d) $\;(AB)^{\mathsf T}=B^{\mathsf T}A^{\mathsf T}$.</p></div>
+
+<div class="box warn"><p class="lab">Trap · transpose of a product <em>reverses the order</em></p>
+<p>Rule (d) is $(AB)^{\mathsf T}=B^{\mathsf T}A^{\mathsf T}$, not $A^{\mathsf T}B^{\mathsf T}$. The factors swap places. (You can see why from sizes: $AB$ is $m\times p$, so $(AB)^{\mathsf T}$ is $p\times m$, which only matches $B^{\mathsf T}$ (p×n) times $A^{\mathsf T}$ (n×m).) The same order-reversal will reappear for inverses: $(AB)^{-1}=B^{-1}A^{-1}$.</p></div>
+
+<h3 class="sub">5 · Submatrices and the determinant</h3>
+
+<p>The <strong>determinant</strong> is a single number squeezed out of a <em>square</em> matrix that answers one huge question: <em>is this matrix invertible?</em> (Determinant $\ne 0$ ⟺ invertible.) It's defined recursively, each $n\times n$ determinant is built from smaller ones.</p>
+
+<div class="box def"><p class="lab">Definition · submatrix $A(i\,|\,j)$</p>
+<p>For an $m\times n$ matrix $A$, the submatrix $A(i\,|\,j)$ is the $(m-1)\times(n-1)$ matrix left after <strong>deleting row $i$ and column $j$</strong>.</p></div>
+
+<div class="box ex"><p class="lab">Example 4 · deleting a row and a column</p>
+<p>For $A=\begin{bmatrix}1&-2&3&9\\4&-2&0&1\\3&5&2&1\end{bmatrix}$: $A(2\,|\,3)$ deletes row 2 and column 3, leaving $\begin{bmatrix}1&-2&9\\3&5&1\end{bmatrix}$; and $A(3\,|\,1)$ deletes row 3 and column 1, leaving $\begin{bmatrix}-2&3&9\\-2&0&1\end{bmatrix}$.</p></div>
+
+<div class="box def"><p class="lab">Definition · determinant (recursive, "cofactor" expansion along row 1)</p>
+<p>For a square matrix $A$ of size $n$, $\det(A)=|A|$ is:</p>
+<ul>
+<li>if $n=1$: $\det(A)=[A]_{11}$ (the single entry);</li>
+<li>if $n\ge2$: expand along the top row with <strong>alternating signs</strong>,
+$$\det(A)=[A]_{11}\det A(1|1)-[A]_{12}\det A(1|2)+[A]_{13}\det A(1|3)-\cdots+(-1)^{1+n}[A]_{1n}\det A(1|n).$$</li>
+</ul></div>
+
+<div class="box def"><p class="lab">The $2\times2$ shortcut (memorise this)</p>
+<p>$\displaystyle\det\begin{bmatrix}a&b\\c&d\end{bmatrix}=ad-bc$ (main-diagonal product minus anti-diagonal product). This drops out of the definition and is the base case you'll use constantly inside bigger determinants.</p></div>
+
+<div class="box ex"><p class="lab">Example 5 · a $3\times3$ determinant by expansion</p>
+<p>$A=\begin{bmatrix}3&2&-1\\4&1&6\\-3&-1&2\end{bmatrix}$. Expand along row 1, each $2\times2$ minor via $ad-bc$:</p>
+$$|A|=3\underbrace{\det\begin{bmatrix}1&6\\-1&2\end{bmatrix}}_{1\cdot2-6(-1)=8}-2\underbrace{\det\begin{bmatrix}4&6\\-3&2\end{bmatrix}}_{4\cdot2-6(-3)=26}+(-1)\underbrace{\det\begin{bmatrix}4&1\\-3&-1\end{bmatrix}}_{4(-1)-1(-3)=-1}.$$
+$$=3(8)-2(26)+(-1)(-1)=24-52+1=-27.$$</p></div>
+
+<h3 class="sub">6 · Expanding along <em>any</em> row or column — pick the lazy one</h3>
+
+<div class="box def"><p class="lab">Theorem · expansion about row $i$ or column $j$</p>
+<p>You may expand a determinant along <em>any</em> row or column, using the <strong>checkerboard sign</strong> $(-1)^{i+j}$ at position $(i,j)$:</p>
+$$\det(A)=\sum_{j}(-1)^{i+j}[A]_{ij}\det A(i|j)\quad(\text{row }i),\qquad \det(A)=\sum_{i}(-1)^{i+j}[A]_{ij}\det A(i|j)\quad(\text{col }j).$$
+<p>The sign pattern is $\begin{smallmatrix}+&-&+&-\\-&+&-&+\\+&-&+&-\end{smallmatrix}\cdots$</p></div>
+
+<div class="box tip"><p class="lab">Tip · expand along the row/column with the most zeros</p>
+<p>Every zero entry kills an entire minor computation (zero times anything is zero). So <strong>choose the row or column containing the most zeros</strong>, it can turn a four-term expansion into a one- or two-term one. This single habit saves enormous time on $4\times4$ determinants.</p></div>
+
+<div class="box ex"><p class="lab">Example 6 · a $4\times4$, expanded two ways (same answer: 92)</p>
+<p>$A=\begin{bmatrix}-2&3&0&1\\9&-2&0&1\\1&3&-2&-1\\4&1&2&6\end{bmatrix}$. <strong>Column 3</strong> is the smart choice, it has two zeros, so only two terms survive:</p>
+$$|A|=(-1)^{3+3}(-2)\det\begin{bmatrix}-2&3&1\\9&-2&1\\4&1&6\end{bmatrix}+(-1)^{4+3}(2)\det\begin{bmatrix}-2&3&1\\9&-2&1\\1&3&-1\end{bmatrix}.$$
+<p>The two $3\times3$ determinants work out to $-107$ and $61$, giving $|A|=(-2)(-107)-2(61)=214-122=92$. Expanding instead along <strong>row 4</strong> (four terms) gives the identical $-4\cdot10+(-22)-2\cdot61+6\cdot46=92$. Reassuring: the answer never depends on which line you expand along, only your effort does.</p></div>
+
+<div class="box ex"><p class="lab">Example 7 · triangular matrices — just multiply the diagonal</p>
+<p>$T=\begin{bmatrix}2&3&-1&3&3\\0&-1&5&2&-1\\0&0&3&9&2\\0&0&0&-1&3\\0&0&0&0&5\end{bmatrix}$ is <strong>upper triangular</strong> (zeros below the diagonal). Repeatedly expanding along the first column (always just one nonzero entry) collapses everything to the product of the diagonal:</p>
+$$|T|=2\times(-1)\times3\times(-1)\times5=30.$$</p></div>
+
+<div class="box idea"><p class="lab">Why triangular is a product of the diagonal</p>
+<p>Expand along column 1: the only nonzero entry is the top-left $a_{11}$, leaving $a_{11}$ times a smaller triangular determinant. Repeat. Each step peels off one diagonal entry, so $\det=a_{11}a_{22}\cdots a_{nn}$. This is the single most useful computational fact about determinants, and it's exactly <em>why</em> row-reducing to triangular form (next) lets you compute any determinant cheaply.</p></div>
+
+<h3 class="sub">7 · How row/column operations change a determinant</h3>
+
+<p>Instead of expanding a big messy determinant, you can row-reduce to triangular form, <em>if</em> you track how each operation scales the answer. Here are the rules.</p>
+
+<div class="box def"><p class="lab">Determinant behaviour under operations</p>
+<table class="gt"><thead><tr><th>Situation / operation</th><th>Effect on $\det$</th></tr></thead><tbody>
+<tr><td>A whole row (or column) is all zeros</td><td>$\det=0$</td></tr>
+<tr><td>Two rows (or columns) are equal</td><td>$\det=0$</td></tr>
+<tr><td><strong>Swap</strong> two rows (or columns)</td><td>$\det$ changes sign: $\det B=-\det A$</td></tr>
+<tr><td><strong>Scale</strong> one row (or column) by $\alpha$</td><td>$\det$ multiplies by $\alpha$: $\det B=\alpha\det A$</td></tr>
+<tr><td><strong>Add</strong> a multiple of one row to another (Type III)</td><td>$\det$ <em>unchanged</em>: $\det B=\det A$</td></tr>
+</tbody></table></div>
+
+<div class="box tip"><p class="lab">Tip · the Type III move is free — use it to make zeros</p>
+<p>The great news: "add a multiple of one row to another" <strong>doesn't change the determinant at all</strong>. So you can freely use Type III operations to zero-out a column and march toward triangular form <em>for free</em>. Only <em>swaps</em> (flip the sign) and <em>scaling</em> (multiply by $\alpha$) leave a bookkeeping factor you must carry. Reduce to triangular, multiply the diagonal, then undo the recorded sign/scale factors.</p></div>
+
+<div class="box ex"><p class="lab">Example 8 · a $4\times4$ determinant via row operations</p>
+<p>$A=\begin{bmatrix}2&0&2&3\\1&3&-1&1\\-1&1&-1&2\\3&5&4&0\end{bmatrix}$. Swap $R_1\leftrightarrow R_2$ to get a leading $1$ (this flips the sign, so a factor $-1$ appears out front). Then clear column 1 with Type III moves (free). Continue reducing to <strong>triangular</strong> form, recording a $\tfrac15$ scaling and one more swap along the way. The bookkeeping factors combine with the diagonal product to give</p>
+$$|A| = -110.$$
+<p>The point isn't the arithmetic marathon, it's the strategy: <em>Type III to make zeros (free), track swaps (sign) and scalings (factor), reduce to triangular, multiply the diagonal.</em> For a dense $4\times4$ this is usually faster and less error-prone than four-term cofactor expansion.</p></div>
+
+<h3 class="sub">8 · Singular vs nonsingular, and the inverse</h3>
+
+<p>Now the payoff: for a <em>square</em> matrix, "has an inverse" (you can undo multiplication by it) is the same as "its columns are independent", "it row-reduces to $I$", and "its determinant is nonzero". These equivalences tie the whole chapter together.</p>
+
+<div class="box def"><p class="lab">Definition · nonsingular / singular; inverse / invertible</p>
+<ul>
+<li>A square matrix $A$ is <strong>nonsingular</strong> if the homogeneous system $A\vec x=\mathbf0$ has <em>only</em> the trivial solution; otherwise $A$ is <strong>singular</strong>.</li>
+<li>$A$ is <strong>invertible</strong> if there is a matrix $B$ with $AB=BA=I_n$; then $B$ is <em>the</em> inverse, written $A^{-1}$.</li>
+</ul></div>
+
+<div class="box idea"><p class="lab">Intuition · the inverse is matrix "division"</p>
+<p>$A^{-1}$ undoes $A$: multiply by $A$, then by $A^{-1}$, and you're back where you started. It's the matrix analogue of the reciprocal $\tfrac1a$ (which undoes multiplication by $a$). Just as $0$ has no reciprocal, singular matrices have no inverse. And just as $\tfrac1a$ instantly solves $ax=b$ via $x=\tfrac ba$, the inverse instantly solves $A\vec x=\vec b$ via $\vec x=A^{-1}\vec b$.</p></div>
+
+<div class="box def"><p class="lab">A bundle of equivalent facts (the heart of §3.3)</p>
+<p>For a square matrix $A$ of size $n$, the following say <em>the same thing</em> — any one forces all the others:</p>
+<ol>
+<li>$A$ is nonsingular;</li>
+<li>$A$ row-reduces to the identity matrix $I_n$;</li>
+<li>the columns of $A$ are linearly independent;</li>
+<li>$A$ is invertible;</li>
+<li>$\det(A)\ne0$.</li>
+</ol>
+<p>And then: if $A$ is nonsingular, $A\vec x=\vec b$ has the <strong>unique</strong> solution $\vec x=A^{-1}\vec b$ for every $\vec b$. (Useful shortcuts: a <em>one-sided</em> inverse suffices, if $AB=I_n$ then automatically $BA=I_n$; and $A$ is <strong>singular $\iff\det A=0$</strong>.)</p></div>
+
+<h3 class="sub">9 · Computing $A^{-1}$ by Gauss–Jordan: $[\,A\mid I\,]\to[\,I\mid A^{-1}\,]$</h3>
+
+<p>Here's the practical recipe. Glue the identity onto $A$, row-reduce the left block to $I$, and the identity block is dragged along into $A^{-1}$. If the left block <em>can't</em> reach $I$ (a zero row appears), $A$ is singular, no inverse.</p>
+
+<div class="box def"><p class="lab">Algorithm · invert by augmenting with $I$</p>
+<ol class="steps">
+<li>Form the augmented matrix $[\,A\mid I\,]$.</li>
+<li>Row-reduce until the <em>left</em> block is $I$ (full Gauss–Jordan).</li>
+<li>Whatever the <em>right</em> block became is $A^{-1}$.</li>
+<li><strong>If a zero row appears on the left</strong> (so it can never become $I$), stop: $A$ is <strong>not invertible</strong>.</li>
+</ol></div>
+
+<div class="box ex"><p class="lab">Worked inverse · a $3\times3$</p>
+<p>Invert $A=\begin{bmatrix}1&2&0\\1&3&1\\0&1&2\end{bmatrix}$. Reduce $[\,A\mid I_3\,]$:</p>
+$$\left[\begin{array}{ccc|ccc}1&2&0&1&0&0\\1&3&1&0&1&0\\0&1&2&0&0&1\end{array}\right]\longrightarrow\cdots\longrightarrow\left[\begin{array}{ccc|ccc}1&0&0&5&-4&2\\0&1&0&-2&2&-1\\0&0&1&1&-1&1\end{array}\right].$$
+<p>The left block reached $I$, so $\;A^{-1}=\begin{bmatrix}5&-4&2\\-2&2&-1\\1&-1&1\end{bmatrix}$. (Verify a column if unsure: $A$ times column 1 of $A^{-1}$ should give $(1,0,0)^{\mathsf T}$.)</p></div>
+
+<div class="box ex"><p class="lab">Example 9 · three cases, including a non-invertible one</p>
+<p><strong>(a)</strong> $A=\begin{bmatrix}0&5\\6&3\end{bmatrix}$. Swap to get a pivot, scale, clear; $[\,A\mid I\,]$ reduces to give $\;A^{-1}=\begin{bmatrix}-1/10&1/6\\1/5&0\end{bmatrix}$.</p>
+<p><strong>(b)</strong> $A=\begin{bmatrix}1&1&1\\2&1&1\\2&2&3\end{bmatrix}$ reduces cleanly to $I$, yielding $\;A^{-1}=\begin{bmatrix}-1&1&0\\4&-1&-1\\-2&0&1\end{bmatrix}$.</p>
+<p><strong>(c)</strong> $A=\begin{bmatrix}5&-1&5\\5&0&4\\10&-1&9\end{bmatrix}$. During reduction the third row of the left block becomes <strong>all zeros</strong>. It can never turn into $I$, so <strong>$A$ has no inverse</strong> (it's singular; indeed row 3 = row 1 + row 2, a dependence). <em>This is how a non-invertible matrix announces itself: a zero row on the left.</em></p></div>
+
+<div class="box warn"><p class="lab">Trap · you must reduce the <em>left</em> block all the way to $I$</p>
+<p>Don't stop at echelon form. The right block only equals $A^{-1}$ once the left block is <em>exactly</em> the identity (leading 1's, zeros above and below). Stopping early gives a right block that is <em>not</em> the inverse. And the instant a zero row appears on the left, quit, inverting further is impossible.</p></div>
+
+<h3 class="sub">10 · Cramer's Rule: determinants solve small systems directly</h3>
+
+<p>For a <em>square</em> system with nonzero determinant, Cramer's Rule writes each unknown as a <strong>ratio of two determinants</strong>, no row reduction needed. It's elegant for 2×2 and 3×3 (and for systems with symbolic entries); for big systems it's slow, use elimination there.</p>
+
+<div class="box def"><p class="lab">Cramer's Rule</p>
+<p>To solve $A\vec x=\vec d$ with $\det A\ne0$: the denominator is always $\det A$; for the numerator of $x_k$, replace <strong>column $k$ of $A$ by the constants $\vec d$</strong> and take that determinant. For two equations $a_1x+b_1y=d_1,\ a_2x+b_2y=d_2$:</p>
+$$x=\frac{\begin{vmatrix}d_1&b_1\\d_2&b_2\end{vmatrix}}{\begin{vmatrix}a_1&b_1\\a_2&b_2\end{vmatrix}},\qquad y=\frac{\begin{vmatrix}a_1&d_1\\a_2&d_2\end{vmatrix}}{\begin{vmatrix}a_1&b_1\\a_2&b_2\end{vmatrix}}.$$
+<p>For three unknowns it's the same pattern: a common denominator $\det A$, and each numerator swaps in the constant column for the variable's column.</p></div>
+
+<div class="box ex"><p class="lab">Example 10 · Cramer on a 2×2 system</p>
+<p>Solve $3x+4y=-14,\ -2x-3y=11$. Denominator $\det A=\begin{vmatrix}3&4\\-2&-3\end{vmatrix}=3(-3)-4(-2)=-1$. Then</p>
+$$x=\frac{\begin{vmatrix}-14&4\\11&-3\end{vmatrix}}{-1}=\frac{(-14)(-3)-4(11)}{-1}=\frac{-2}{-1}=2,\qquad y=\frac{\begin{vmatrix}3&-14\\-2&11\end{vmatrix}}{-1}=\frac{33-28}{-1}=\frac{5}{-1}=-5.$$
+<p>So $(x,y)=(2,-5)$.</p></div>
+
+<div class="box ex"><p class="lab">Example 11 · Cramer on a 3×3 system</p>
+<p>Solve $x+2y+3z=17,\ 3x+2y+z=11,\ x-5y+z=-5$. The common denominator is $\det A=\begin{vmatrix}1&2&3\\3&2&1\\1&-5&1\end{vmatrix}=-48$. Replacing each column in turn by $(17,11,-5)^{\mathsf T}$ gives numerators $-48,\,-96,\,-192$, so</p>
+$$x=\frac{-48}{-48}=1,\qquad y=\frac{-96}{-48}=2,\qquad z=\frac{-192}{-48}=4.$$
+<p>So $(x,y,z)=(1,2,4)$. (Check in equation 1: $1+4+12=17$ ✓.)</p></div>
+
+<div class="box tip"><p class="lab">When to reach for Cramer vs elimination</p>
+<p>Cramer shines when: the system is small (2×2, 3×3), you only need <em>one</em> variable, or the entries are symbolic and you want a formula. Avoid it for $4\times4$ and larger, computing that many determinants is far slower than one Gauss–Jordan sweep. And remember it <em>requires</em> $\det A\ne0$ (a unique solution); if $\det A=0$, Cramer doesn't apply and you fall back on row reduction to see whether the system is inconsistent or has infinitely many solutions.</p></div>
+
+<h3 class="sub">11 · Section recap</h3>
+
+<div class="box tip"><p class="lab">The §3.3 cheat-sheet</p>
+<ul>
+<li><strong>Add/scale</strong>: entrywise, same size required.</li>
+<li><strong>Multiply</strong>: row-dot-column; inner dims match, outer dims give size; <em>order matters</em> ($AB\ne BA$), no cancellation, $AB=0\not\Rightarrow A$ or $B=0$.</li>
+<li><strong>Transpose</strong>: flip across the diagonal; $(AB)^{\mathsf T}=B^{\mathsf T}A^{\mathsf T}$ (order reverses).</li>
+<li><strong>Determinant</strong>: cofactor-expand along the line with most zeros; $2\times2$ is $ad-bc$; triangular = product of diagonal; Type III ops are free, swaps negate, scaling multiplies.</li>
+<li><strong>Invertible $\iff$ nonsingular $\iff$ reduces to $I$ $\iff$ independent columns $\iff\det\ne0$.</strong> Compute $A^{-1}$ via $[\,A\mid I\,]\to[\,I\mid A^{-1}\,]$; a zero row on the left means no inverse.</li>
+<li><strong>Cramer's Rule</strong>: $x_k=\dfrac{\det(A\text{ with column }k\to\vec d)}{\det A}$, for small systems with $\det A\ne0$.</li>
+</ul></div>
+</section>
+
+<nav class="pn" aria-label="Section navigation"><a class="prev" href="3-2.html"><div class="d">← Previous</div><div class="t">3.2 Vectors</div></a><a class="next" href="3-4.html"><div class="d">Next →</div><div class="t">3.4 Dot &amp; Cross Product</div></a></nav>
+</main>
+</div>
+</div>
+<script>
+var root=document.documentElement,tg=document.getElementById('tg');
+function setT(t){root.setAttribute('data-theme',t);tg.textContent=t==='dark'?'Light':'Dark';try{localStorage.setItem('m2014t',t)}catch(e){}}
+try{var s=localStorage.getItem('m2014t');if(s)setT(s);else if(matchMedia('(prefers-color-scheme:dark)').matches)setT('dark')}catch(e){}
+tg.onclick=function(){setT(root.getAttribute('data-theme')==='dark'?'light':'dark')};
+var prog=document.getElementById('prog');
+if(prog)addEventListener('scroll',function(){var h=document.documentElement;var p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);prog.style.setProperty('--p',Math.max(0,Math.min(1,p)))},{passive:true});
+function render(){renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false,macros:{"\\R":"\\mathbb{R}","\\C":"\\mathbb{C}","\\vec":"\\mathbf{#1}"}})}
+if(window.renderMathInElement)render();else addEventListener('load',render);
+</script>
+</body></html>
