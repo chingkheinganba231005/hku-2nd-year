@@ -1,0 +1,1329 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow">
+<title>Linear Algebra, Intuitively</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b2a4a'/%3E%3Cg stroke='%23ffb703' stroke-width='2.2' fill='none' stroke-linecap='round'%3E%3Cpath d='M9 8v16M23 8v16'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Ccircle cx='14' cy='11' r='1.5'/%3E%3Ccircle cx='18' cy='11' r='1.5'/%3E%3Ccircle cx='14' cy='16' r='1.5'/%3E%3Ccircle cx='18' cy='16' r='1.5'/%3E%3Ccircle cx='14' cy='21' r='1.5'/%3E%3Ccircle cx='18' cy='21' r='1.5'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --bg:#f3f5f8; --grid:rgba(27,42,74,.055); --surface:#ffffff; --surface-2:#e9eef6;
+  --ink:#17202e; --muted:#53617a; --line:#ccd5e4;
+  --accent:#1b3a7a; --hot:#d97706; --ok:#1f7a4d; --bad:#b42334; --info:#1b62b0;
+  --hot-soft:color-mix(in srgb,var(--hot) 11%,var(--surface));
+  --f-display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;
+  --f-body:'Atkinson Hyperlegible','Segoe UI',system-ui,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --grid:rgba(220,232,250,.05); --surface:#161d27; --surface-2:#1f2835;
+  --ink:#e7eef6; --muted:#9dabbe; --line:#2d3848;
+  --accent:#7ba2e8; --hot:#ffb04d; --ok:#5fcf93; --bad:#ff8a8a; --info:#74b4f5;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px;-webkit-text-size-adjust:100%}
+body{margin:0;background-color:var(--bg);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;color:var(--ink);font:400 18px/1.62 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 72px}
+.wrap{max-width:1180px;margin:0 auto}
+p{margin:0 0 1em}
+a{color:var(--info);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.14;margin:0;text-wrap:balance}
+h2{font-size:clamp(1.7rem,3.6vw,2.3rem);font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.32rem;font-weight:700;margin:2em 0 .5em}
+h4{font:700 1.04rem var(--f-body);margin:1.4em 0 .35em}
+strong{font-weight:700}
+.mu{color:var(--muted)}
+ul,ol{padding-left:1.3em;margin:0 0 1em}li{margin:.3em 0}
+code,.mono{font-family:var(--f-mono);font-size:.86em;background:var(--surface-2);padding:.08em .36em;border-radius:3px;border:1px solid var(--line)}
+/* top bar */
+.bar{position:sticky;top:0;z-index:40;background:var(--surface);border-bottom:1.5px solid var(--line);margin:0 -16px;padding:9px 16px;display:flex;align-items:center;gap:10px}
+.bar .brand{display:flex;align-items:center;gap:9px;font:800 1.02rem var(--f-display);text-decoration:none;color:var(--ink)}
+.bar .brand svg{width:28px;height:28px}
+.bar .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.bar a.home,.bar button.tg{font:700 .76rem var(--f-mono);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);padding:5px 10px;border-radius:5px;cursor:pointer;text-decoration:none}
+.bar .prog{position:absolute;left:0;bottom:-1.5px;height:3px;width:calc(var(--p,0)*100%);background:var(--hot);transition:width .1s}
+/* hero */
+.hero{padding:52px 0 26px;max-width:880px}
+.eyebrow{font:700 .74rem var(--f-mono);letter-spacing:.11em;text-transform:uppercase;color:var(--hot);margin:0 0 .8em}
+.hero h1{font-size:clamp(2.4rem,6.6vw,4.2rem);font-weight:800;letter-spacing:-.02em;margin-bottom:.3em;line-height:1.04}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{font-size:1.24rem;max-width:36em;margin-bottom:1em;color:var(--ink)}
+.hero .lede2{font-size:1.02rem;color:var(--muted);max-width:40em}
+/* layout */
+main{min-width:0;max-width:820px}
+.toc{background:var(--surface);border:1.5px solid var(--line);border-radius:7px;padding:15px 15px 9px;margin:0 0 36px}
+.toc h2{font-size:.82rem;font-family:var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.7em}
+.toc ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px 14px}
+.toc a{display:grid;grid-template-columns:2.3em 1fr;gap:3px;text-decoration:none;color:var(--ink);padding:6px 6px;border-radius:5px;font-size:.93rem;line-height:1.3}
+.toc a:hover{background:var(--surface-2)}
+.toc .n{font:700 .78rem var(--f-mono);color:var(--hot);padding-top:1px}
+.toc small{display:block;color:var(--muted);font:400 .74rem var(--f-mono);margin-top:1px}
+@media(min-width:1080px){
+  .layout{display:grid;grid-template-columns:252px minmax(0,1fr);gap:52px;align-items:start}
+  .toc{position:sticky;top:66px;margin:0;max-height:calc(100vh - 86px);overflow:auto}
+  .toc ol{display:block}
+}
+/* sections */
+.sec{margin:0 0 76px;scroll-margin-top:70px}
+.sec-h{margin:0 0 1em;padding-top:26px;border-top:3px solid var(--accent)}
+.sec-h .tag{display:inline-block;font:700 .72rem var(--f-mono);letter-spacing:.06em;color:var(--hot);margin-bottom:.4em}
+.sub{font-family:var(--f-display);font-weight:700;font-size:1.28rem;margin:2.1em 0 .5em;color:var(--accent);padding-bottom:.2em;border-bottom:2px solid var(--surface-2)}
+/* callouts */
+.box{position:relative;margin:1.9em 0 1.5em;padding:1.3em 1.2em .85em;border:1.5px solid var(--line);background:var(--surface);border-radius:7px}
+.box>.lab{position:absolute;top:-.78em;left:14px;padding:2px 11px;font:700 .68rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;border-radius:4px;background:var(--ink);color:var(--bg)}
+.box>:last-child{margin-bottom:.15em}
+.box.def{border-color:var(--info);background:color-mix(in srgb,var(--info) 6%,var(--surface))}
+.box.def>.lab{background:var(--info);color:#fff}
+.box.idea{border-color:var(--hot);background:var(--hot-soft)}
+.box.idea>.lab{background:var(--hot);color:#fff}
+.box.tip{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 8%,var(--surface))}
+.box.tip>.lab{background:var(--ok);color:#fff}
+.box.warn{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 7%,var(--surface))}
+.box.warn>.lab{background:var(--bad);color:#fff}
+.box.ex{border-color:var(--accent);border-width:1.5px;background:var(--surface);box-shadow:var(--shadow,0 1px 3px rgba(0,0,0,.05))}
+.box.ex>.lab{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .box>.lab{color:#0f141b}
+.steps{counter-reset:st;list-style:none;padding:0;margin:1em 0}
+.steps>li{counter-increment:st;position:relative;padding:.1em 0 .9em 2.4em;margin:0}
+.steps>li::before{content:counter(st);position:absolute;left:0;top:.05em;width:1.7em;height:1.7em;display:grid;place-items:center;background:var(--accent);color:#fff;border-radius:50%;font:700 .82rem var(--f-mono)}
+:root[data-theme="dark"] .steps>li::before{color:#0f141b}
+.steps>li:last-child{padding-bottom:0}
+.katex{font-size:1.02em}
+.katex-display{margin:.8em 0;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.scroll{overflow-x:auto;overflow-y:hidden}
+.q{font-style:italic;color:var(--muted)}
+.tl{font:700 .7rem var(--f-mono);text-transform:uppercase;letter-spacing:.07em;color:var(--hot);margin:.2em 0 .3em}
+table.gt{border-collapse:collapse;font-size:.92rem;margin:1em 0;width:100%}
+table.gt th,table.gt td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+table.gt th{background:var(--surface-2);font-weight:700}
+.pill{display:inline-block;font:700 .72rem var(--f-mono);padding:1px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+hr.soft{border:none;border-top:1.5px dashed var(--line);margin:2.2em 0}
+.endnote{margin-top:60px;padding:22px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);font-size:.95rem;color:var(--muted)}
+</style></head><body><div class="wrap">
+<div class="bar"><a class="brand" href="#top"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="var(--accent)"/><g stroke="var(--hot)" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M9 8v16M23 8v16"/></g><g fill="#fff"><circle cx="14" cy="11" r="1.5"/><circle cx="18" cy="11" r="1.5"/><circle cx="14" cy="16" r="1.5"/><circle cx="18" cy="16" r="1.5"/><circle cx="14" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/></g></svg>MATH2014 · Linear Algebra</a><div class="right"><a class="home" href="../">All courses</a><button class="tg" id="tg" aria-label="Toggle dark mode">Dark</button></div><div class="prog" id="prog"></div></div>
+<a id="top"></a>
+<header class="hero">
+<p class="eyebrow">HKU · MATH2014 · Chapter 3</p>
+<h1>Linear Algebra, <em>made intuitive</em></h1>
+<p class="lede">Every concept, every definition and every worked example from the Chapter 3 slides, re-explained from scratch in plain language, with no steps skipped.</p>
+<p class="lede2">This is not a summary. It is a slow, friendly walk-through: what each idea <em>really</em> means, why it works, how to do the computations by hand without making mistakes, and the tips and traps that separate a pass from a top mark. If you have never seen a matrix before, start at the top; it is all built up piece by piece.</p>
+</header>
+<div class="layout">
+<nav class="toc" aria-label="Contents"><h2>Contents</h2><ol id="toc"></ol></nav>
+<main>
+<section class="sec" id="s31" data-n="3.1" data-t="Systems &amp; matrices" data-s="the whole engine">
+<div class="sec-h"><span class="tag">SECTION 3.1</span><h2>Systems of Linear Equations &amp; Matrices</h2></div>
+
+<p>Almost everything in this chapter is really about one deceptively simple question: <strong>given a bunch of equations, what values of the unknowns make them all true at once?</strong> That is called <em>solving a system of linear equations</em>, and linear algebra is, at heart, a super-organised, mistake-proof machine for doing exactly that. Once you can do it by hand without panicking, the rest of the course (span, independence, rank, later on) is just interpreting the answer in different ways.</p>
+
+<p>We will build the machine slowly. First: what the words mean. Then: a clumsy-but-honest way to solve (juggling whole equations). Then: the slick professional way (matrices). They are the <em>same</em> method, just written more compactly, so understanding the clumsy way first makes the slick way feel obvious.</p>
+
+<h3 class="sub">1 · What is a linear equation, and a system?</h3>
+
+<p>A <strong>linear equation</strong> in the unknowns $x_1, x_2, \dots, x_n$ is one where every unknown appears only by itself, multiplied by a number, and then added up. No powers ($x^2$), no products of unknowns ($x_1 x_2$), no $\sin$, no $\sqrt{\,}$. Just "number times unknown, plus number times unknown, … equals a number". For example $3x_1 - 2x_2 + x_3 = 7$ is linear; $x_1^2 + x_2 = 1$ is not.</p>
+
+<div class="box def"><p class="lab">Definition · System of linear equations</p>
+<p>A <strong>system of linear equations</strong> is a collection of $m$ equations in the same unknowns $x_1,\dots,x_n$, which we can always write in the pattern</p>
+$$\begin{aligned}
+a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n &= b_1\\
+a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n &= b_2\\
+&\;\;\vdots\\
+a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n &= b_m
+\end{aligned}$$
+<p>The numbers $a_{ij}$ are the <strong>coefficients</strong> (the number multiplying an unknown), and the $b_i$ on the right are the <strong>constants</strong>. In this course the numbers can be complex, from $\mathbb{C}$, but you can picture them as ordinary real numbers for now.</p></div>
+
+<div class="box idea"><p class="lab">Intuition · read the subscripts like a grid reference</p>
+<p>The double subscript $a_{ij}$ looks scary but it is just a map reference: <strong>$i$ is the row (which equation), $j$ is the column (which unknown)</strong>. So $a_{23}$ is "the coefficient in equation&nbsp;2 sitting on $x_3$." Whenever you see $a_{ij}$, silently say "row $i$, column $j$." Keeping row-first, column-second straight is the single most useful habit in this entire chapter.</p></div>
+
+<p>What does a solution look like, and what does it <em>mean</em>? Geometrically, each linear equation in two unknowns is a <strong>straight line</strong>; in three unknowns it is a flat <strong>plane</strong>. "Solving the system" means finding the point(s) that lie on <em>all</em> of them at once, the place where the lines (or planes) cross.</p>
+
+<div class="box def"><p class="lab">Definition · Solution &amp; solution set</p>
+<p>A <strong>solution</strong> of a system in $n$ unknowns is an ordered list of $n$ numbers $(s_1, s_2, \dots, s_n)$ such that substituting $s_1$ for $x_1$, $s_2$ for $x_2$, and so on, makes <em>every</em> equation true <em>simultaneously</em>. The <strong>solution set</strong> is the set of <em>all</em> solutions, and nothing else.</p>
+<p>The solution set can contain exactly one solution, infinitely many, or none at all. If there are none, the solution set is the <strong>empty set</strong>, written $\varnothing$ or $\{\,\}$.</p></div>
+
+<div class="box tip"><p class="lab">Tip · three outcomes, and you can picture all three</p>
+<p>Think of two lines in a plane. There are only three things two lines can do, and these are <em>exactly</em> the three possibilities for any linear system:</p>
+<ul>
+<li><strong>Cross at one point</strong> → exactly one solution (the "nice" case).</li>
+<li><strong>Be parallel and never meet</strong> → no solution (the system is <em>inconsistent</em>).</li>
+<li><strong>Be the same line</strong> → infinitely many solutions (they overlap everywhere).</li>
+</ul>
+<p>A system can <em>never</em> have, say, exactly two or exactly five solutions. It is always one, none, or infinitely many. If you ever "find two solutions", you have actually found infinitely many, go hunting for the free variable (explained below).</p></div>
+
+<h3 class="sub">2 · The honest way first: juggling whole equations</h3>
+
+<p>How do we actually find the solution? The core idea is beautifully simple: <strong>we are allowed to change the equations, as long as we never change the solution set.</strong> There are exactly three moves that are guaranteed safe.</p>
+
+<div class="box def"><p class="lab">Definition · The three equation operations</p>
+<ol>
+<li><strong>Swap</strong> two equations (change their order in the list).</li>
+<li><strong>Scale</strong>: multiply every term of one equation by a <em>nonzero</em> number.</li>
+<li><strong>Replace</strong>: take one equation, multiply it by some number, and add it (both sides) onto another equation. Keep the first equation as it was; only the second one changes.</li>
+</ol></div>
+
+<div class="box idea"><p class="lab">Intuition · why these three moves don't lose or gain solutions</p>
+<p>A <strong>Theorem</strong> in the notes promises that these operations <em>preserve the solution set</em>, the new system is <em>equivalent</em> to the old one. Here is why, in plain words:</p>
+<ul>
+<li><strong>Swapping</strong> obviously changes nothing, writing the equations in a different order can't change which $x$-values satisfy them.</li>
+<li><strong>Scaling by a nonzero number:</strong> if $2x+y=3$ is true for some numbers, then $6x+3y=9$ (times 3) is true for the <em>same</em> numbers, and vice versa. The reason we forbid multiplying by $0$ is that $0=0$ is true for <em>everything</em>, so you would throw the equation's information away and gain fake solutions.</li>
+<li><strong>Replacement:</strong> if two equations are both true, then any combination of them is also true, so adding a multiple of one onto another cannot break a genuine solution. And because the move is reversible (add it, then subtract it back), it cannot invent new solutions either.</li>
+</ul>
+<p>That reversibility is the key. Every operation can be undone by another operation of the same type, so the before-system and after-system have <em>exactly</em> the same solution set. We just keep applying safe moves until the answer is staring at us.</p></div>
+
+<div class="box warn"><p class="lab">Trap · the "nonzero" in scaling is not optional</p>
+<p>Multiplying an equation by $0$ turns it into $0=0$, which is uselessly true and quietly destroys a constraint. On an exam this can turn a no-solution system into a fake "infinitely many" answer. <strong>Never scale by zero.</strong> (You <em>can</em> add a multiple of a row that includes a zero factor, that's fine; the rule only bans scaling an equation itself to death.)</p></div>
+
+<h3 class="sub">3 · The slick way: stop writing the $x$'s</h3>
+
+<p>Here is the realisation that makes everything faster. When we juggle equations, the letters $x_1, x_2, x_3$ never actually do anything, they just sit there holding places. All the <em>action</em> is in the coefficients and the constants. So why keep copying the letters? Strip them away and keep only the numbers in a tidy grid. That grid is a <strong>matrix</strong>.</p>
+
+<div class="box def"><p class="lab">Definition · Matrix</p>
+<p>An <strong>$m \times n$ matrix</strong> ("$m$ by $n$") is a rectangular grid of numbers with $m$ rows and $n$ columns. For a matrix $A$, the symbol $[A]_{ij}$ means "the number sitting in row $i$, column $j$ of $A$." (Rows go across; columns go down. Say it out loud until it's automatic.)</p>
+<p>Example: $\displaystyle B=\begin{bmatrix}-1&2&5&3\\1&0&-6&1\\-4&2&2&-2\end{bmatrix}$ has $m=3$ rows and $n=4$ columns, so it is a $3\times4$ matrix. Here $[B]_{23}=-6$ (row 2, column 3) and $[B]_{34}=-2$ (row 3, column 4).</p></div>
+
+<div class="box tip"><p class="lab">Tip · rows then columns, always</p>
+<p>"$m \times n$" is <strong>rows × columns</strong>, in that order, like reading a book (across a line first, then down the page). A $3\times 4$ matrix is short and wide (3 tall, 4 across), not tall and thin. Mixing up the order is the #1 beginner slip and it wrecks every later definition (matrix multiplication, etc.), so nail it now.</p></div>
+
+<p>A single column of numbers is special enough to get its own name.</p>
+
+<div class="box def"><p class="lab">Definition · Column vector</p>
+<p>A <strong>column vector of size $m$</strong> is just an ordered list of $m$ numbers written vertically (top to bottom). We write $[\vec v]_i$ for the entry in position $i$. The <strong>zero vector</strong> $\mathbf 0$ is the column vector whose every entry is $0$.</p></div>
+
+<p>Now we turn a whole system into matrices. Take the general system from the definition above. Its numbers split naturally into three pieces:</p>
+
+<ul>
+<li>The <strong>coefficient matrix</strong> $A$: the $m\times n$ grid of the $a_{ij}$'s (all the numbers multiplying unknowns).</li>
+<li>The <strong>vector of constants</strong> $\vec b$: the column of the $b_i$'s from the right-hand sides.</li>
+<li>The (unknown) <strong>solution vector</strong> $\vec x$: the column of unknowns $x_1,\dots,x_n$ we are solving for.</li>
+</ul>
+
+$$A=\begin{bmatrix}a_{11}&a_{12}&\cdots&a_{1n}\\a_{21}&a_{22}&\cdots&a_{2n}\\\vdots&&&\vdots\\a_{m1}&a_{m2}&\cdots&a_{mn}\end{bmatrix},\quad \vec b=\begin{bmatrix}b_1\\b_2\\\vdots\\b_m\end{bmatrix},\quad \vec x=\begin{bmatrix}x_1\\x_2\\\vdots\\x_n\end{bmatrix}.$$
+
+<p>For solving by hand, the most useful object glues the coefficients and the constants together into one grid, with a bar to remind us where the "=" was.</p>
+
+<div class="box def"><p class="lab">Definition · Augmented matrix</p>
+<p>The <strong>augmented matrix</strong> of a system is the coefficient matrix $A$ with the constant column $\vec b$ tacked on as an extra last column, written $[\,A\mid \vec b\,]$. It has $m$ rows and $n+1$ columns. The vertical bar is just a visual reminder of the equals signs; it carries no arithmetic.</p>
+<p>Example. The system
+$$\begin{aligned}x_1 - x_2 + 2x_3 &= 1\\ 2x_1 + x_2 + x_3 &= 8\\ x_1 + x_2 \phantom{{}+0x_3} &= 5\end{aligned}
+\quad\text{has augmented matrix}\quad
+\left[\begin{array}{ccc|c}1&-1&2&1\\2&1&1&8\\1&1&0&5\end{array}\right].$$
+Notice the <strong>$0$</strong> in row 3, column 3: the third equation has no $x_3$, so its coefficient is $0$. <em>Missing terms are zeros, never blanks.</em> Line the columns up by unknown.</p></div>
+
+<div class="box warn"><p class="lab">Trap · put in the invisible zeros and ones</p>
+<p>When a term is "missing" ($x_1 + x_2 = 5$ has no $x_3$), its coefficient is $0$. When a term has no visible number ($x_1$ means $1x_1$, and $-x_2$ means $-1x_2$), the coefficient is $1$ or $-1$. Forgetting these, or writing coefficients in the wrong column because the equation listed the unknowns out of order, is the most common way to get a perfectly good method to give a wrong answer. <strong>Rewrite each equation in the standard order $x_1, x_2, \dots$ with every coefficient shown, before you build the matrix.</strong></p></div>
+
+<h3 class="sub">4 · Row operations: the three moves, now on rows</h3>
+
+<p>Each equation became a <em>row</em> of the augmented matrix. So the three equation operations become three <strong>elementary row operations (EROs)</strong>, the exact same moves, now spoken in matrix language. There is a compact shorthand for each that you should use in your working so the grader can follow you.</p>
+
+<div class="box def"><p class="lab">Definition · The three elementary row operations</p>
+<table class="gt"><thead><tr><th>#</th><th>Operation</th><th>Shorthand</th><th>In words</th></tr></thead><tbody>
+<tr><td>Type I</td><td>Swap</td><td>$R_i \leftrightarrow R_j$</td><td>Swap the positions of rows $i$ and $j$.</td></tr>
+<tr><td>Type II</td><td>Scale</td><td>$\alpha R_i$</td><td>Multiply every entry of row $i$ by the nonzero number $\alpha$.</td></tr>
+<tr><td>Type III</td><td>Replace</td><td>$\alpha R_i + R_j$</td><td>Add $\alpha$ times row $i$ onto row $j$; row $i$ is unchanged, row $j$ becomes the new combination.</td></tr>
+</tbody></table></div>
+
+<div class="box tip"><p class="lab">Tip · which row actually changes</p>
+<p>In $\alpha R_i + R_j$, only <strong>$R_j$</strong> (the last one named) changes; $R_i$ stays exactly as it was. The notation some books use, $R_j \leftarrow R_j + \alpha R_i$ ("the new $R_j$ is the old $R_j$ plus $\alpha$ times $R_i$"), makes the arrow point at the row being overwritten. Write your step label next to the arrow between matrices so you (and the marker) can retrace it. Being able to re-check your own arithmetic later is worth more than speed.</p></div>
+
+<p>Two matrices that you can get from one another by a sequence of EROs are called <strong>row equivalent</strong>. The whole point: <strong>row-equivalent augmented matrices represent systems with the same solution set.</strong> So we are free to row-reduce to our heart's content, hunting for a form so simple the answer just falls out.</p>
+
+<h3 class="sub">5 · Worked Example 1 — the full method, twice</h3>
+
+<p>Let's see the machine run on two real systems. Follow every arrow; I'll say in words what each one does and why.</p>
+
+<div class="box ex"><p class="lab">Example 1 (part 1) · a system with one unique solution</p>
+<p>Solve
+$$\begin{aligned}x_1 + 2x_2 + 2x_3 &= 4\\ x_1 + 3x_2 + 3x_3 &= 5\\ 2x_1 + 6x_2 + 5x_3 &= 6\end{aligned}$$
+<p><strong>Step 0.</strong> Write the augmented matrix (line columns up, show every number):</p>
+$$\left[\begin{array}{ccc|c}1&2&2&4\\1&3&3&5\\2&6&5&6\end{array}\right]$$
+<p><strong>Forward phase: clear out column 1 below the top-left.</strong> The top-left entry is a tidy $1$ (great, it's our first pivot). We want $0$'s underneath it. Row 2 starts with a $1$, so subtract row 1 from it; row 3 starts with a $2$, so subtract twice row 1.</p>
+$$\xrightarrow[\;R_3 - 2R_1\;]{\;R_2 - R_1\;}
+\left[\begin{array}{ccc|c}1&2&2&4\\0&1&1&1\\0&2&1&-2\end{array}\right]$$
+<p>(Check row 3: $2-2\cdot1=0$, $6-2\cdot2=2$, $5-2\cdot2=1$, $6-2\cdot4=-2$. ✓) <strong>Now clear column 2 below its pivot.</strong> The new pivot is the $1$ in row 2, column 2. Row 3 has a $2$ there, so subtract twice row 2:</p>
+$$\xrightarrow{\;R_3 - 2R_2\;}
+\left[\begin{array}{ccc|c}1&2&2&4\\0&1&1&1\\0&0&-1&-4\end{array}\right]$$
+<p>The left block is now a clean "staircase" (<em>echelon form</em>, defined next). <strong>Backward phase: make pivots into 1's and clear <em>above</em> them.</strong> Scale row 3 by $-1$ to turn its $-1$ into $+1$:</p>
+$$\xrightarrow{\;-1\cdot R_3\;}
+\left[\begin{array}{ccc|c}1&2&2&4\\0&1&1&1\\0&0&1&4\end{array}\right]$$
+<p>Use that bottom pivot to wipe out the entries above it in column 3 (row 1 has a $2$, row 2 has a $1$):</p>
+$$\xrightarrow[\;R_2 - R_3\;]{\;R_1 - 2R_3\;}
+\left[\begin{array}{ccc|c}1&2&0&-4\\0&1&0&-3\\0&0&1&4\end{array}\right]$$
+<p>Finally clear column 2 above its pivot (row 1 has a $2$):</p>
+$$\xrightarrow{\;R_1 - 2R_2\;}
+\left[\begin{array}{ccc|c}1&0&0&2\\0&1&0&-3\\0&0&1&4\end{array}\right]$$
+<p>Translate back to equations: the rows now literally say $x_1 = 2$, $x_2=-3$, $x_3=4$. <strong>So $(x_1,x_2,x_3) = (2,-3,4)$.</strong> One unique solution.</p>
+<p><strong>Always check.</strong> Put it into the <em>messiest original</em> equation, $2x_1+6x_2+5x_3 = 2(2)+6(-3)+5(4) = 4-18+20 = 6$. ✓ Done.</p></div>
+
+<div class="box ex"><p class="lab">Example 1 (part 2) · a system with infinitely many solutions</p>
+<p>Solve
+$$\begin{aligned}x_1 + 2x_2 + 0x_3 + x_4 &= 7\\ x_1 + x_2 + x_3 - x_4 &= 3\\ 3x_1 + x_2 + 5x_3 - 7x_4 &= 1\end{aligned}$$
+<p>Augmented matrix, then clear column 1 below the top $1$:</p>
+$$\left[\begin{array}{cccc|c}1&2&0&1&7\\1&1&1&-1&3\\3&1&5&-7&1\end{array}\right]
+\xrightarrow[\;R_3-3R_1\;]{\;R_2-R_1\;}
+\left[\begin{array}{cccc|c}1&2&0&1&7\\0&-1&1&-2&-4\\0&-5&5&-10&-20\end{array}\right]$$
+<p>The pivot in column 2 is the $-1$ in row 2. Clear below it (row 3 has $-5$, so add $-5$ times row 2, i.e. $R_3-5R_2$). Also, to make column 2 clean <em>above</em>, add $2$ times row 2 onto row 1 ($R_1+2R_2$). Doing both:</p>
+$$\xrightarrow[\;R_3-5R_2\;]{\;R_1+2R_2\;}
+\left[\begin{array}{cccc|c}1&0&2&-3&-1\\0&-1&1&-2&-4\\0&0&0&0&0\end{array}\right]$$
+<p>Row 3 collapsed to all zeros, that's the "$0=0$" harmless truth, and it is our signal that solutions will be infinite. Scale row 2 by $-1$ to make its pivot $+1$:</p>
+$$\xrightarrow{\;-1\cdot R_2\;}
+\left[\begin{array}{cccc|c}1&0&2&-3&-1\\0&1&-1&2&4\\0&0&0&0&0\end{array}\right]$$
+<p>This is reduced echelon form. The pivots sit in columns 1 and 2, so $x_1,x_2$ are <strong>basic</strong>; columns 3 and 4 have no pivot, so $x_3,x_4$ are <strong>free</strong>. Read the nonzero rows as equations and solve for the basic variables:</p>
+$$x_1 + 2x_3 - 3x_4 = -1 \;\Rightarrow\; x_1 = -1 - 2x_3 + 3x_4,\qquad x_2 - x_3 + 2x_4 = 4 \;\Rightarrow\; x_2 = 4 + x_3 - 2x_4.$$
+<p>Let $x_3 = s$ and $x_4 = t$ be any real numbers. Then the whole solution set is</p>
+$$\vec x = \begin{bmatrix}x_1\\x_2\\x_3\\x_4\end{bmatrix} = \begin{bmatrix}-1-2s+3t\\4+s-2t\\s\\t\end{bmatrix}\quad\text{for } s,t\in\R.$$
+<p>Every choice of $s$ and $t$ gives a different solution, and <em>every</em> solution comes from some choice, so there are infinitely many. (This is a <em>parametric description</em>, explained in part 8.)</p></div>
+
+<h3 class="sub">6 · Echelon form &amp; reduced echelon form (the goal shapes)</h3>
+
+<p>We kept saying "reduce until it's simple." Simple means one of two standard shapes. The looser one is <strong>echelon form</strong> (a clean staircase); the strictest one is <strong>reduced echelon form</strong> (the staircase, scrubbed spotless). Here are the precise rules, with the intuition.</p>
+
+<div class="box def"><p class="lab">Definition · Echelon form (row echelon form)</p>
+<p>A matrix is in <strong>echelon form</strong> if:</p>
+<ol>
+<li>Any rows that are <em>all zeros</em> sit at the very <strong>bottom</strong>.</li>
+<li>The first nonzero entry of a row (its <strong>leading entry</strong>) is strictly to the <em>right</em> of the leading entry of the row above it.</li>
+<li>Everything <em>below</em> a leading entry (in its column) is $0$.</li>
+</ol></div>
+
+<div class="box idea"><p class="lab">Intuition · it's a descending staircase</p>
+<p>Picture the leading entries as the steps of a staircase going down to the right. Each step is lower <em>and</em> further right than the one before, and the space under the staircase is all zeros. Rule 1 just sweeps empty (all-zero) rows to the basement where they belong. If you squint at a matrix and the nonzero stuff forms a neat downward-right staircase with zeros beneath it, it's in echelon form.</p></div>
+
+<div class="box def"><p class="lab">Definition · Reduced echelon form (RREF)</p>
+<p>A matrix in echelon form is in <strong>reduced echelon form</strong> if additionally:</p>
+<ol start="4">
+<li>Every leading entry is a <strong>$1$</strong> (a "leading 1").</li>
+<li>Each leading $1$ is the <em>only</em> nonzero entry in its whole column (zeros above it as well as below).</li>
+</ol>
+<p>Example, in reduced echelon form:
+$$C=\begin{bmatrix}1&-3&0&6&0&0&-5&9\\0&0&0&0&1&0&3&-7\\0&0&0&0&0&1&7&3\\0&0&0&0&0&0&0&0\\0&0&0&0&0&0&0&0\end{bmatrix}.$$
+Each leading $1$ (columns 1, 5, 6) stands alone in its column, and the all-zero rows are at the bottom.</p></div>
+
+<div class="box tip"><p class="lab">Tip · echelon is a <em>family</em>, reduced echelon is <em>unique</em></p>
+<p>A key, exam-favourite fact (<strong>Theorem 1: Uniqueness of the Reduced Echelon Form</strong>): a matrix can be row-reduced to <em>many different</em> echelon forms depending on which operations you pick, but it has <strong>one and only one</strong> reduced echelon form. So if two students reduce the same matrix correctly to RREF, they <em>must</em> get identical matrices, a great way to check your answer against a friend. If you're told to "find the RREF" and you and the solution differ, one of you has an arithmetic slip; there's no "alternative correct RREF."</p></div>
+
+<p>Vocabulary note: if a matrix $A$ row-reduces to an echelon matrix $U$, we call $U$ <em>an echelon form of $A$</em>; its unique reduced echelon matrix is <em>the reduced echelon form of $A$</em>.</p>
+
+<h3 class="sub">7 · Pivots: the load-bearing positions</h3>
+
+<p>The staircase steps have a name, and they run the whole show.</p>
+
+<div class="box def"><p class="lab">Definition · Pivot position &amp; pivot column</p>
+<p>A <strong>pivot position</strong> of a matrix $A$ is a spot that ends up holding a leading $1$ in the reduced echelon form of $A$. A <strong>pivot column</strong> is a column that contains a pivot position. A <strong>pivot</strong> is the nonzero number you use in that position while reducing (it becomes the leading $1$ after scaling).</p></div>
+
+<div class="box idea"><p class="lab">Intuition · pivots are the columns that "do something"</p>
+<p>Pivot columns are the columns that carry genuine, independent information; the non-pivot columns are, in a precise sense, leftovers that depend on the pivot ones. When we solve a system, pivot columns ↔ <strong>basic variables</strong> (pinned down), and non-pivot columns ↔ <strong>free variables</strong> (you choose them). Spotting the pivots at a glance is a skill the whole chapter leans on, so the next worked example is all about finding them.</p></div>
+
+<div class="box ex"><p class="lab">Example · locate the pivot columns while reducing</p>
+<p>Row-reduce to echelon form and find the pivot columns of
+$$A=\begin{bmatrix}0&-3&-6&4&9\\-1&-2&-1&3&1\\-2&-3&0&3&-1\\1&4&5&-9&-7\end{bmatrix}.$$
+<p><strong>Column 1</strong> is the leftmost nonzero column → it's a pivot column, and the pivot position is at the top. But the top entry is $0$. No problem: a Type I swap fixes it. Swap rows 1 and 4 to bring a nonzero (here a tidy $1$) to the top:</p>
+$$\xrightarrow{\;R_1\leftrightarrow R_4\;}
+\begin{bmatrix}\boxed{1}&4&5&-9&-7\\-1&-2&-1&3&1\\-2&-3&0&3&-1\\0&-3&-6&4&9\end{bmatrix}$$
+<p>Clear below the pivot $1$ with Type III ops ($R_2+R_1$ and $R_3+2R_1$; row 4 already has a $0$):</p>
+$$\xrightarrow[\;R_3+2R_1\;]{\;R_2+R_1\;}
+\begin{bmatrix}1&4&5&-9&-7\\0&2&4&-6&-6\\0&5&10&-15&-15\\0&-3&-6&4&9\end{bmatrix}$$
+<p><strong>Column 2</strong>: cover row 1 and look at the sub-matrix; the top of column 2 is now $2$, a pivot. Clear below it ($R_3 - \tfrac52 R_2$ and $R_4 + \tfrac32 R_2$):</p>
+$$\longrightarrow
+\begin{bmatrix}1&4&5&-9&-7\\0&2&4&-6&-6\\0&0&0&0&0\\0&0&0&-5&0\end{bmatrix}$$
+<p><strong>Column 3</strong>: in the remaining sub-matrix (rows 3–4) column 3 is all zeros, so <em>no pivot can be made there</em>, column 3 is <strong>not</strong> a pivot column. Move right. <strong>Column 4</strong> has a $-5$ we can use; swap the zero row down so a nonzero sits in the pivot spot:</p>
+$$\xrightarrow{\;R_3\leftrightarrow R_4\;}
+\begin{bmatrix}1&4&5&-9&-7\\0&2&4&-6&-6\\0&0&0&-5&0\\0&0&0&0&0\end{bmatrix}$$
+<p>This is echelon form. The pivots are $1, 2, -5$, sitting in <strong>columns 1, 2 and 4</strong>. So columns 1, 2, 4 are the pivot columns; columns 3 and 5 are not. (That tells us instantly that in a system with this coefficient pattern, $x_3$ and $x_5$ would be free.)</p></div>
+
+<div class="box warn"><p class="lab">Trap · a column of zeros can never become a pivot column</p>
+<p>In the example, column 3 got stuck: once the entries you could use were all $0$, there was no legal move to create a leading entry there (swapping and scaling can't make something out of nothing, and replacement with zeros does nothing). When that happens, <strong>skip the column and move right</strong>, don't waste time trying to force a pivot. A skipped column is exactly a free variable later.</p></div>
+
+<h3 class="sub">8 · Gaussian elimination: the step-by-step recipe</h3>
+
+<p>Everything above comes together into one dependable algorithm, <strong>Gaussian elimination</strong> (also called the row-reduction algorithm). It has a <strong>forward phase</strong> (make the staircase, working top-left to bottom-right) and a <strong>backward phase</strong> (scrub it to reduced form, working bottom-right back up).</p>
+
+<ol class="steps">
+<li><strong>Find the leftmost nonzero column.</strong> It is a pivot column; the pivot position is its top entry.</li>
+<li><strong>Get a nonzero into the pivot position.</strong> If the top is $0$, swap in a row below that has a nonzero there (Type I).</li>
+<li><strong>Make zeros below the pivot</strong> using Type III operations (add suitable multiples of the pivot row to the rows beneath).</li>
+<li><strong>Cover</strong> the pivot row and everything above it, and look only at the sub-matrix that remains.</li>
+<li><strong>Repeat steps 1–4</strong> on that sub-matrix until no nonzero rows remain. <em>(Forward phase done, you now have an echelon form.)</em></li>
+<li><strong>Backward phase:</strong> starting from the <em>rightmost</em> pivot and moving up-left, scale each pivot to $1$ (Type II) and use it to make zeros <em>above</em> it (Type III). <em>(Now you have the unique reduced echelon form.)</em></li>
+</ol>
+
+<div class="box ex"><p class="lab">Example · one matrix, all the way from scratch to RREF</p>
+<p>Reduce to echelon form, then to reduced echelon form:
+$$\begin{bmatrix}0&3&-6&6&4&-5\\3&-7&8&-5&8&9\\3&-9&12&-9&6&15\end{bmatrix}.$$
+<p><strong>Forward.</strong> Column 1 is the pivot column; its top entry is $0$, so swap a nonzero up. (The notes swap rows 1 and 3.)</p>
+$$\xrightarrow{\;R_1\leftrightarrow R_3\;}
+\begin{bmatrix}3&-9&12&-9&6&15\\3&-7&8&-5&8&9\\0&3&-6&6&4&-5\end{bmatrix}$$
+<p>Make zeros below the pivot $3$. Row 2 also starts with $3$, so $R_2 - R_1$ (row 3 already has $0$):</p>
+$$\xrightarrow{\;R_2 - R_1\;}
+\begin{bmatrix}3&-9&12&-9&6&15\\0&2&-4&4&2&-6\\0&3&-6&6&4&-5\end{bmatrix}$$
+<p>Cover row 1. In column 2 the pivot is $2$. Clear below with $R_3 - \tfrac32 R_2$:</p>
+$$\xrightarrow{\;R_3 - \frac32 R_2\;}
+\begin{bmatrix}3&-9&12&-9&6&15\\0&2&-4&4&2&-6\\0&0&0&0&1&4\end{bmatrix}$$
+<p>Cover rows 1–2. Column 3 and column 4 of the last row are $0$; the next pivot is the $1$ in column 5. This is already echelon form. <strong>Pivot columns: 1, 2, 5.</strong></p>
+<p><strong>Backward.</strong> Rightmost pivot is the $1$ in row 3, column 5 (already a $1$, lucky). Clear above it, $R_1 - 6R_3$ and $R_2 - 2R_3$:</p>
+$$\xrightarrow[\;R_2 - 2R_3\;]{\;R_1 - 6R_3\;}
+\begin{bmatrix}3&-9&12&-9&0&-9\\0&2&-4&4&0&-14\\0&0&0&0&1&4\end{bmatrix}$$
+<p>Next pivot up is the $2$ in row 2. Scale to $1$ ($\tfrac12 R_2$), then clear above it ($R_1 + 9R_2$):</p>
+$$\xrightarrow{\;\frac12 R_2\;}
+\begin{bmatrix}3&-9&12&-9&0&-9\\0&1&-2&2&0&-7\\0&0&0&0&1&4\end{bmatrix}
+\xrightarrow{\;R_1 + 9R_2\;}
+\begin{bmatrix}3&0&-6&9&0&-72\\0&1&-2&2&0&-7\\0&0&0&0&1&4\end{bmatrix}$$
+<p>Last, scale the top pivot to $1$ ($\tfrac13 R_1$):</p>
+$$\xrightarrow{\;\frac13 R_1\;}
+\begin{bmatrix}1&0&-2&3&0&-24\\0&1&-2&2&0&-7\\0&0&0&0&1&4\end{bmatrix}.$$
+<p>That is the reduced echelon form. The forward phase (steps 1–5) built the staircase; the backward phase (step 6) scrubbed it. <em>Golden rule to save effort: do the whole forward phase first, then the whole backward phase.</em> Jumping back and forth creates fractions early and multiplies your chances of a slip.</p></div>
+
+<h3 class="sub">9 · Reading the answer: basic, free, and parametric descriptions</h3>
+
+<p>Once the augmented matrix is in reduced echelon form, the solution is <em>right there</em>; you just translate rows back into equations and tidy up. The vocabulary:</p>
+
+<div class="box def"><p class="lab">Definition · basic vs free variables; consistent vs inconsistent</p>
+<ul>
+<li>A variable whose column is a <strong>pivot column</strong> is a <strong>basic variable</strong> (it gets pinned to a specific value or formula).</li>
+<li>A variable whose column has <strong>no pivot</strong> is a <strong>free variable</strong> (you may assign it any value you like; call it a parameter $s,t,\dots$).</li>
+<li>A system is <strong>consistent</strong> if it has at least one solution, and <strong>inconsistent</strong> if it has none.</li>
+</ul></div>
+
+<p>Suppose reduction gives the augmented matrix
+$$\left[\begin{array}{ccc|c}1&0&-5&1\\0&1&1&4\\0&0&0&0\end{array}\right].$$
+There are 3 unknowns (4 columns, minus the constant column). Turning rows into equations:
+$$x_1 - 5x_3 = 1,\qquad x_2 + x_3 = 4,\qquad 0=0.$$
+The last row says nothing (ignore it). Columns 1,2 have pivots → $x_1,x_2$ are basic; column 3 has no pivot → $x_3$ is free. Solve each basic variable in terms of the free one:</p>
+$$x_1 = 1 + 5x_3,\qquad x_2 = 4 - x_3,\qquad x_3\ \text{free}.$$
+
+<div class="box idea"><p class="lab">Intuition · "free" literally means you choose</p>
+<p>"$x_3$ is free" means: pick any value for $x_3$, and the formulas hand you $x_1$ and $x_2$ to match. Choose $x_3=0$ → solution $(1,4,0)$. Choose $x_3=1$ → $(6,3,1)$. Each choice of the free variable gives a different solution, and <em>every</em> solution of the system is produced by some choice. That family of formulas is called a <strong>parametric description</strong> of the solution set (the free variables are the parameters). <strong>Solving a system</strong> means either producing such a parametric description, or showing the solution set is empty.</p></div>
+
+<div class="box tip"><p class="lab">Tip · count free variables to know the outcome instantly</p>
+<ul>
+<li><strong>A pivot in the last (constant) column</strong> → a row reading $0=$ (nonzero), e.g. $0\,0\,0\mid 3$, which is a contradiction. The system is <strong>inconsistent</strong>: no solutions. (Watch for this first!)</li>
+<li>Otherwise it's consistent. Then: <strong>no free variables</strong> → exactly one solution; <strong>at least one free variable</strong> → infinitely many solutions.</li>
+</ul>
+<p>So the lightning check is: (1) any contradiction row? If yes, no solutions. (2) If no, count the non-pivot variable columns, that's the number of free variables, which tells you unique vs infinite.</p></div>
+
+<div class="box warn"><p class="lab">Trap · a zero row is fine; a "$0 = \text{nonzero}$" row is fatal</p>
+<p>Do not confuse the harmless all-zero row $[\,0\ 0\ 0\mid 0\,]$ (meaning "$0=0$", true, just ignore it) with the deadly $[\,0\ 0\ 0\mid 5\,]$ (meaning "$0=5$", impossible). The first signals free variables / infinite solutions; the second signals <em>no</em> solutions at all. The only difference is whether the number after the bar is zero. Check that last column every single time.</p></div>
+
+<h3 class="sub">10 · Two theorems that tell you the answer before you finish</h3>
+
+<p>Once you trust row reduction, two short theorems let you <em>predict</em> how many solutions a system has, often without fully solving it. Both are just the "lightning check" from the last section, promoted to official status.</p>
+
+<div class="box def"><p class="lab">Theorem · Free variables for a consistent system</p>
+<p>Suppose a consistent system has $n$ variables, and its augmented matrix reduces to a form with $r$ nonzero rows (equivalently, $r$ pivots). Then the solution set is described using exactly</p>
+$$\boxed{\,n - r\ \text{free variables}.}$$
+<p>In words: start with $n$ unknowns, subtract one for every pivot (every genuinely independent equation that survived), and whatever is left over is free to roam.</p></div>
+
+<div class="box idea"><p class="lab">Intuition · pivots "use up" variables</p>
+<p>Think of each pivot as an equation that <em>pins down</em> one variable in terms of the others. If you have $n$ knobs and $r$ of them get pinned, then $n-r$ knobs are still yours to twist. $n-r=0$ means every knob is pinned → a unique solution. $n-r\ge 1$ means at least one knob spins freely → infinitely many solutions. That single subtraction is the fastest way to answer "unique or infinite?" on an exam.</p></div>
+
+<div class="box def"><p class="lab">Theorem 2 · Existence and Uniqueness</p>
+<p><strong>Existence.</strong> A linear system is consistent (has at least one solution) <em>if and only if</em> the rightmost column of the augmented matrix is <strong>not</strong> a pivot column, i.e. an echelon form has <em>no</em> row of the shape $[\,0\ \cdots\ 0 \mid b\,]$ with $b\ne 0$.</p>
+<p><strong>Uniqueness.</strong> If a system <em>is</em> consistent, then it has <em>either</em> (i) a <strong>unique</strong> solution, when there are no free variables, <em>or</em> (ii) <strong>infinitely many</strong> solutions, when there is at least one free variable.</p></div>
+
+<div class="box tip"><p class="lab">Tip · the two-question decision tree</p>
+<p>After reducing (echelon form is enough), ask in order:</p>
+<ol>
+<li><strong>Is there a pivot in the constant column</strong> (a $0=\text{nonzero}$ row)? If <em>yes</em> → <strong>no solution</strong>, stop. If <em>no</em> → consistent, go on.</li>
+<li><strong>Are there any free variables</strong> ($n-r\ge 1$)? If <em>no</em> → <strong>exactly one</strong> solution. If <em>yes</em> → <strong>infinitely many</strong>.</li>
+</ol>
+<p>That's the entire theory of "how many solutions", in two questions.</p></div>
+
+<h3 class="sub">11 · The Gauss–Jordan method, named and boxed</h3>
+
+<p>When we push row reduction all the way to <em>reduced</em> echelon form and then read off each basic variable, the whole procedure has a name: the <strong>Gauss–Jordan method</strong>. It is exactly what you have already been doing; here is the official five-step checklist so you can follow it like a recipe.</p>
+
+<ol class="steps">
+<li><strong>Write the augmented matrix</strong> of the system (every coefficient in its column, zeros and ones included).</li>
+<li><strong>Forward phase to echelon form.</strong> Then <em>decide consistency</em>: if a $0=\text{nonzero}$ row appears, stop and declare "no solution".</li>
+<li><strong>Backward phase to reduced echelon form</strong> (leading 1's, zeros above and below each).</li>
+<li><strong>Write the equations</strong> that the reduced matrix represents.</li>
+<li><strong>Solve each nonzero equation for its basic variable</strong>, expressed in terms of the free variables.</li>
+</ol>
+
+<h3 class="sub">12 · Worked Example 2 — four systems, four outcomes</h3>
+
+<p>This is the single most important practice set in §3.1: four systems that between them show every behaviour you'll meet. Do each one yourself first, then compare. I'll narrate the key moves.</p>
+
+<div class="box ex"><p class="lab">Example 2(a) · unique solution</p>
+<p>Solve $\;x_1+2x_2+2x_3=4,\quad x_1+3x_2+3x_3=5,\quad 2x_1+6x_2+5x_3=6.$</p>
+<p>Augment, then clear column 1 ($R_2-R_1$, $R_3-2R_1$):</p>
+$$\left[\begin{array}{ccc|c}1&2&2&4\\1&3&3&5\\2&6&5&6\end{array}\right]
+\xrightarrow[\;R_3-2R_1\;]{\;R_2-R_1\;}
+\left[\begin{array}{ccc|c}1&2&2&4\\0&1&1&1\\0&2&1&-2\end{array}\right]$$
+<p>Clear column 2 and finish the backward phase ($R_1-2R_2$, $R_3-2R_2$; then $R_2+R_3$; then $-1\cdot R_3$):</p>
+$$\longrightarrow
+\left[\begin{array}{ccc|c}1&0&0&2\\0&1&0&-3\\0&0&1&4\end{array}\right]
+\quad\Rightarrow\quad \vec x=\begin{bmatrix}2\\-3\\4\end{bmatrix}.$$
+<p>Three pivots, three variables, so $n-r=0$: a <strong>unique</strong> solution, no surprises. (Same system as Example 1 part 1, now in Gauss–Jordan bookkeeping.)</p></div>
+
+<div class="box ex"><p class="lab">Example 2(b) · unique solution, but you must swap first</p>
+<p>Solve $\;-7x_1-6x_2-12x_3=-33,\quad 5x_1+5x_2+7x_3=24,\quad x_1+4x_3=5.$</p>
+<p>The top-left is a messy $-7$, but row 3 starts with a clean $1$, so <strong>swap rows 1 and 3</strong> to get an easy pivot (this avoids fractions for as long as possible):</p>
+$$\left[\begin{array}{ccc|c}-7&-6&-12&-33\\5&5&7&24\\1&0&4&5\end{array}\right]
+\xrightarrow{\;R_1\leftrightarrow R_3\;}
+\left[\begin{array}{ccc|c}1&0&4&5\\5&5&7&24\\-7&-6&-12&-33\end{array}\right]$$
+<p>Clear column 1 ($R_2-5R_1$, $R_3+7R_1$), scale and clear column 2, then column 3. Pushing it through gives</p>
+$$\longrightarrow
+\left[\begin{array}{ccc|c}1&0&0&-3\\0&1&0&5\\0&0&1&2\end{array}\right]
+\quad\Rightarrow\quad \vec x=\begin{bmatrix}-3\\5\\2\end{bmatrix}.$$
+<p>Lesson: when the natural pivot is ugly, <strong>hunt the column for a $1$ and swap it up</strong>. The answer is the same; the arithmetic is kinder.</p></div>
+
+<div class="box ex"><p class="lab">Example 2(c) · infinitely many solutions</p>
+<p>Solve $\;x_1-x_2+2x_3=1,\quad 2x_1+x_2+x_3=8,\quad x_1+x_2=5.$</p>
+<p>Clear column 1 ($R_2-2R_1$, $R_3-R_1$), scale row 2 by $\tfrac13$, then clear with $R_3-2R_2$:</p>
+$$\left[\begin{array}{ccc|c}1&-1&2&1\\2&1&1&8\\1&1&0&5\end{array}\right]
+\longrightarrow
+\left[\begin{array}{ccc|c}1&-1&2&1\\0&1&-1&2\\0&0&0&0\end{array}\right]$$
+<p>The last row is all zeros ($0=0$) → consistent with a free variable. Columns 1,2 are pivots ($x_1,x_2$ basic), column 3 is free. Reading the rows: $x_2-x_3=2$ and $x_1-x_2+2x_3=1$. Set $x_3=t$. Then $x_2=2+t$ and $x_1=1+x_2-2x_3=1+(2+t)-2t=3-t$. So</p>
+$$\vec x=\begin{bmatrix}3-t\\2+t\\t\end{bmatrix}\quad\text{for }t\in\R.$$
+<p>$n-r=3-2=1$ free variable → the <strong>infinitely many</strong> outcome, exactly as predicted.</p></div>
+
+<div class="box ex"><p class="lab">Example 2(d) · no solution (watch the last row)</p>
+<p>Solve $\;2x_1+x_2+7x_3-7x_4=2,\ -3x_1+4x_2-5x_3-6x_4=3,\ x_1+x_2+4x_3-5x_4=2.$</p>
+<p>Swap the clean row to the top ($R_1\leftrightarrow R_3$), clear column 1, and keep reducing. After the forward phase the bottom row becomes</p>
+$$\left[\begin{array}{cccc|c}1&0&3&-2&0\\0&1&1&-3&0\\0&0&0&0&1\end{array}\right].$$
+<p>The last row reads $0x_1+0x_2+0x_3+0x_4 = 1$, i.e. $\mathbf{0=1}$. That is impossible, so the system is <strong>inconsistent: no solution.</strong> Note there <em>are</em> columns without pivots here (looks like free variables), but existence fails first, an inconsistent system has an <em>empty</em> solution set regardless of free variables. <strong>Always check the constant column before you celebrate free variables.</strong></p></div>
+
+<h3 class="sub">13 · Worked Example 3 — consistency with unknown parameters</h3>
+
+<div class="box ex"><p class="lab">Example 3(a) · is this system consistent?</p>
+<p>Decide whether $\;x_2-4x_3=8,\quad 2x_1-3x_2+2x_3=1,\quad 5x_1-8x_2+7x_3=1\;$ is consistent.</p>
+<p>Row 1 has no $x_1$, so swap a row with an $x_1$ to the top ($R_1\leftrightarrow R_2$), scale to make the pivot $1$, and clear down. Carrying out the forward phase lands on the echelon form</p>
+$$\left[\begin{array}{ccc|c}1&-3/2&1&1/2\\0&1&-4&8\\0&0&0&5/2\end{array}\right].$$
+<p>The last row says $0=\tfrac52$, a contradiction. <strong>The system is inconsistent (not consistent).</strong> You didn't need the full solution, reaching echelon form and spotting the bad row is enough to answer "is it consistent?".</p></div>
+
+<div class="box ex"><p class="lab">Example 3(b) · consistency that depends on constants $\alpha,\beta$</p>
+<p>For which $\alpha,\beta$ is $\;x_1+2x_2+3x_3-x_4=\alpha,\ 8x_1+10x_2+12x_3+x_4=\beta,\ 7x_1+8x_2+9x_3+2x_4=0\;$ consistent?</p>
+<p>Carry the symbols $\alpha,\beta$ along as ordinary numbers while you reduce. The Gauss–Jordan method brings the augmented matrix to</p>
+$$\left[\begin{array}{cccc|c}1&2&3&-1&2\\0&1&2&-3/2&\dfrac{8\alpha-\beta}{6}\\0&0&0&0&\alpha-\beta\end{array}\right].$$
+<p>The last row reads $0=\alpha-\beta$. That equation is satisfiable <em>only if</em> its right side is zero. Therefore:</p>
+<ul>
+<li>if $\alpha=\beta$, the bad row becomes $0=0$ (harmless) → the system is <strong>consistent</strong> (in fact with a free variable, so infinitely many solutions);</li>
+<li>if $\alpha\ne\beta$, the row is $0=(\text{nonzero})$ → <strong>inconsistent</strong>, no solution.</li>
+</ul></div>
+
+<div class="box tip"><p class="lab">Tip · parameters are just numbers that haven't decided yet</p>
+<p>When a problem puts letters like $\alpha,\beta,k$ in the constants, <strong>row-reduce normally, treating them as numbers</strong>, and watch what condition the <em>last</em> row demands. The whole question usually boils down to "what makes the bottom row $0=0$ instead of $0=\text{nonzero}$?" Don't try to split into cases early; reduce first, impose the condition last.</p></div>
+
+<h3 class="sub">14 · Worked Example 4 — describing big infinite solution sets</h3>
+
+<p>With many variables the parametric answer looks intimidating, but the recipe never changes: reduce to RREF, mark pivot columns as basic, mark the rest as free parameters, and solve each basic variable for the free ones. Here is a 7-variable monster so you see it scales.</p>
+
+<div class="box ex"><p class="lab">Example 4(a) · seven unknowns, four free</p>
+<p>A system in $x_1,\dots,x_7$ reduces to the reduced echelon augmented matrix</p>
+$$\left[\begin{array}{ccccccc|c}1&4&0&0&2&1&-3&4\\0&0&1&0&1&-3&5&2\\0&0&0&1&2&-6&6&1\\0&0&0&0&0&0&0&0\end{array}\right].$$
+<p>Pivots sit in columns 1, 3, 4, so $x_1,x_3,x_4$ are <strong>basic</strong>; columns 2, 5, 6, 7 have no pivot, so $x_2,x_5,x_6,x_7$ are <strong>free</strong> ($n-r=7-3=4$ free variables, matching the theorem). Read each nonzero row and solve its basic variable:</p>
+$$x_1=4-4x_2-2x_5-x_6+3x_7,\qquad x_3=2-x_5+3x_6-5x_7,\qquad x_4=1-2x_5+6x_6-6x_7.$$
+<p>Writing the free variables as themselves, the full solution vector is</p>
+$$\vec x=\begin{bmatrix}4-4x_2-2x_5-x_6+3x_7\\ x_2\\ 2-x_5+3x_6-5x_7\\ 1-2x_5+6x_6-6x_7\\ x_5\\ x_6\\ x_7\end{bmatrix}\quad\text{for }x_2,x_5,x_6,x_7\in\R.$$</p></div>
+
+<div class="box ex"><p class="lab">Example 4(b) · five equations that collapse to three</p>
+<p>A five-equation system in $x_1,\dots,x_5$ reduces to</p>
+$$\left[\begin{array}{ccccc|c}1&-1&0&0&3&6\\0&0&1&0&-2&1\\0&0&0&1&4&9\\0&0&0&0&0&0\\0&0&0&0&0&0\end{array}\right].$$
+<p>Two whole rows vanished (the five equations carried only three independent pieces of information). Pivots in columns 1, 3, 4 → $x_1,x_3,x_4$ basic; columns 2, 5 free. Solving:</p>
+$$x_1=6+x_2-3x_5,\qquad x_3=1+2x_5,\qquad x_4=9-4x_5,$$
+$$\vec x=\begin{bmatrix}6+x_2-3x_5\\ x_2\\ 1+2x_5\\ 9-4x_5\\ x_5\end{bmatrix}\quad\text{for }x_2,x_5\in\R.$$</p></div>
+
+<div class="box idea"><p class="lab">Intuition · why rows vanish, and why that's good news</p>
+<p>A row of zeros appears when one equation was secretly a combination of the others, it added no new restriction, so reduction erases it. Each vanished row is <em>one fewer pivot</em>, hence <em>one more free variable</em>. Don't be alarmed by disappearing rows; count the survivors ($r$), subtract from $n$, and you know the size of the solution family immediately.</p></div>
+
+<h3 class="sub">15 · Homogeneous systems — the special case where $\vec b=\mathbf 0$</h3>
+
+<p>One family of systems is so important it gets its own name: the ones whose right-hand sides are <em>all zero</em>. They look almost too easy, but they are the engine behind span, independence and nullspace later, so meet them properly now.</p>
+
+<div class="box def"><p class="lab">Definition · Homogeneous system &amp; trivial solution</p>
+<p>A system is <strong>homogeneous</strong> if its vector of constants is the zero vector, i.e. $\vec b=\mathbf 0$: every equation ends in "$=0$". For such a system, setting <em>every</em> variable to $0$, that is $x_1=x_2=\cdots=x_n=0$, always works. This all-zeros solution $\vec x=\mathbf 0$ is called the <strong>trivial solution</strong>.</p>
+<p>Example: $\;2x_1-3x_2+x_3-6x_4=0,\quad 4x_1+x_2+2x_3+9x_4=0,\quad 3x_1+x_2+x_3+8x_4=0.$</p></div>
+
+<div class="box idea"><p class="lab">Theorem · a homogeneous system is <em>always</em> consistent</p>
+<p>Because the trivial solution $\vec x=\mathbf 0$ is always available, a homogeneous system can <strong>never</strong> be inconsistent, there's no such thing as "no solution" here. So for a homogeneous system the only real question is: <em>is the trivial solution the only one, or are there others?</em> By the uniqueness theorem that's decided entirely by free variables:</p>
+<ul>
+<li><strong>No free variables</strong> → the trivial solution is the <em>only</em> solution.</li>
+<li><strong>At least one free variable</strong> → there are infinitely many <strong>nontrivial</strong> solutions as well.</li>
+</ul></div>
+
+<div class="box tip"><p class="lab">Tip · why we'll care so much later</p>
+<p>"Does $A\vec x=\mathbf 0$ have a nontrivial solution?" turns out to be <em>exactly</em> the question "are the columns of $A$ linearly dependent?" (§3.2). So this innocent-looking special case is the gateway to half the chapter. When you reduce a homogeneous system you can drop the constant column entirely, it's all zeros and stays all zeros, so just reduce the coefficient matrix and count free variables.</p></div>
+
+<h3 class="sub">16 · Putting it together — a practice walkthrough &amp; survival tips</h3>
+
+<div class="box ex"><p class="lab">In-class exercise · echelon, then reduced echelon</p>
+<p>Reduce $\begin{bmatrix}0&3&-6&6&4&-5\\3&-7&8&-5&8&9\\3&-9&12&-9&6&15\end{bmatrix}$ to echelon form, then reduced echelon form.</p>
+<p>This is the very matrix we fully reduced in part 8, work it again now without looking, then check against that example. The forward phase gives the echelon form $\begin{bmatrix}3&-9&12&-9&6&15\\0&2&-4&4&2&-6\\0&0&0&0&1&4\end{bmatrix}$ (pivots in columns 1, 2, 5), and the backward phase gives the reduced echelon form $\begin{bmatrix}1&0&-2&3&0&-24\\0&1&-2&2&0&-7\\0&0&0&0&1&4\end{bmatrix}$. If you landed there, you've mastered the core skill of the whole chapter.</p></div>
+
+<div class="box tip"><p class="lab">Exam survival kit for §3.1</p>
+<ul>
+<li><strong>Label every arrow</strong> with the operation ($R_2-3R_1$, etc.). Unlabelled jumps lose method marks and make slips impossible to find.</li>
+<li><strong>Forward fully, then backward fully.</strong> Don't create leading 1's early, fractions breed errors. Keep whole numbers as long as you can.</li>
+<li><strong>Pivots left-to-right, zeros below; then right-to-left, zeros above.</strong> That rhythm never changes.</li>
+<li><strong>Check the constant column last</strong> for a $0=\text{nonzero}$ contradiction before declaring "infinitely many".</li>
+<li><strong>Write the final answer as a vector</strong> with the free variables as parameters, e.g. $\vec x=\begin{bmatrix}1+5s\\4-s\\s\end{bmatrix}$, $s\in\R$. Don't stop at the matrix; translate it back.</li>
+<li><strong>Verify</strong> by plugging the solution into the ugliest original equation. Thirty seconds now saves a whole question.</li>
+<li>Remember the three outcomes: one / none / infinitely many, never anything else.</li>
+</ul></div>
+</section>
+<section class="sec" id="s32" data-n="3.2" data-t="Vectors" data-s="combinations, span, independence">
+<div class="sec-h"><span class="tag">SECTION 3.2</span><h2>Vectors, Linear Combinations, Span &amp; Independence</h2></div>
+
+<p>In §3.1 a column of numbers was just "the answer, stacked up." In §3.2 those columns become the <strong>main characters</strong>. We stop asking "what solves this system?" and start asking richer questions: <em>can I build this vector out of those vectors? which directions can I reach? is one of my vectors secretly redundant?</em> Remarkably, every one of these questions turns back into "solve a linear system", so you already own the tool. This section is where linear algebra stops being bookkeeping and starts being geometry.</p>
+
+<h3 class="sub">1 · Vectors in $\R^2$: lists you can add and stretch</h3>
+
+<p>A <strong>column vector</strong> (or just <strong>vector</strong>) is a matrix with a single column, an ordered list of numbers written vertically. The simplest live in $\R^2$ ("r-two"), with two entries each.</p>
+
+<div class="box def"><p class="lab">Definition · $\R^2$ and the two operations</p>
+<p>A vector in $\R^2$ is $\displaystyle \vec w=\begin{bmatrix}w_1\\w_2\end{bmatrix}$ with $w_1,w_2$ real numbers. The symbol $\R^2$ means the set of <em>all</em> such two-entry vectors. Two vectors are <strong>equal</strong> exactly when their entries match position by position. There are two operations:</p>
+<ul>
+<li><strong>Addition:</strong> add entrywise. $\begin{bmatrix}u_1\\u_2\end{bmatrix}+\begin{bmatrix}v_1\\v_2\end{bmatrix}=\begin{bmatrix}u_1+v_1\\u_2+v_2\end{bmatrix}$.</li>
+<li><strong>Scalar multiple:</strong> multiply every entry by a number $c$ (a <em>scalar</em>). $c\begin{bmatrix}u_1\\u_2\end{bmatrix}=\begin{bmatrix}cu_1\\cu_2\end{bmatrix}$.</li>
+</ul></div>
+
+<div class="box idea"><p class="lab">Intuition · a vector is an arrow; the two operations are "slide" and "stretch"</p>
+<p>Picture $\vec w$ as an arrow from the origin to the point $(w_1,w_2)$. Then <strong>scalar multiplication stretches or flips</strong> the arrow: $2\vec w$ is twice as long, same direction; $-\vec w$ is the same length pointing backwards; $0\vec w$ collapses to the origin. <strong>Addition slides</strong> one arrow onto the tip of the other. These two moves, stretch and slide, are the <em>only</em> things we ever do to vectors, and the whole section is about what you can build with them.</p></div>
+
+<div class="box ex"><p class="lab">Example 1 · scaling and combining two vectors</p>
+<p>Given $\vec u=\begin{bmatrix}1\\-2\end{bmatrix}$ and $\vec v=\begin{bmatrix}2\\-5\end{bmatrix}$, find $4\vec u$, $(-3)\vec v$, and $4\vec u+(-3)\vec v$.</p>
+<p>Scale each entry, then add entrywise:</p>
+$$4\vec u=\begin{bmatrix}4\\-8\end{bmatrix},\qquad -3\vec v=\begin{bmatrix}-6\\15\end{bmatrix},\qquad 4\vec u-3\vec v=\begin{bmatrix}4+(-6)\\-8+15\end{bmatrix}=\begin{bmatrix}-2\\7\end{bmatrix}.$$
+<p>That's it, scale first, then add position by position. No new rules, just the two operations applied carefully.</p></div>
+
+<h3 class="sub">2 · Vectors <em>are</em> points: the geometric picture</h3>
+
+<p>Set up ordinary $xy$-axes. Every point $(a,b)$ in the plane corresponds to exactly one vector $\begin{bmatrix}a\\b\end{bmatrix}$, and vice versa. So we are free to think of $\R^2$ either as "all two-entry columns" <em>or</em> as "all points in the plane", whichever is more helpful. This dictionary between <strong>algebra (columns of numbers)</strong> and <strong>geometry (points and arrows)</strong> is the heart of the subject.</p>
+
+<div class="box idea"><p class="lab">Intuition · the parallelogram rule for addition</p>
+<p>Draw $\vec u$ and $\vec v$ as arrows from the origin $\mathbf 0$. Then $\vec u+\vec v$ is the arrow to the <strong>fourth corner of the parallelogram</strong> whose other three corners are $\vec u$, $\mathbf 0$, and $\vec v$. In words: addition "completes the parallelogram". This picture is why vector addition feels like combining two movements, go along $\vec u$, then along $\vec v$, and you land at $\vec u+\vec v$, no matter which you do first (that's why $\vec u+\vec v=\vec v+\vec u$).</p></div>
+
+<h3 class="sub">3 · Up to $\R^3$ and $\R^n$: more entries, same rules</h3>
+
+<p>Nothing special happened because we had two entries. Everything generalises directly.</p>
+
+<div class="box def"><p class="lab">Definition · $\R^n$</p>
+<p>Vectors in $\R^3$ are $3\times1$ columns (three entries), pictured as arrows from the origin in 3-D space. For any positive integer $n$, $\R^n$ ("r-n") is the set of all <strong>ordered $n$-tuples</strong> of real numbers, written as $n\times1$ columns $\vec u=\begin{bmatrix}u_1\\u_2\\\vdots\\u_n\end{bmatrix}$. Addition is still entrywise, scalar multiplication still scales every entry. The <strong>zero vector</strong> $\mathbf 0$ has every entry $0$.</p></div>
+
+<div class="box tip"><p class="lab">Tip · you can't picture $\R^5$, and you don't need to</p>
+<p>Beyond $\R^3$ there's no literal picture, but <em>all the algebra is identical</em> and the 2-D/3-D intuition keeps working as a metaphor. When a problem lives in $\R^6$, reason as if the arrows were in the plane, "stretch", "slide", "same direction", the conclusions carry over because they only ever used the two operations, never the drawing.</p></div>
+
+<div class="box def"><p class="lab">Algebraic properties of $\R^n$ (the vector-space laws)</p>
+<p>For all $\vec u,\vec v,\vec w$ in $\R^n$ and all scalars $c,d$:</p>
+<table class="gt"><tbody>
+<tr><td>(i)</td><td>$\vec u+\vec v=\vec v+\vec u$</td><td>(addition order doesn't matter)</td></tr>
+<tr><td>(ii)</td><td>$(\vec u+\vec v)+\vec w=\vec u+(\vec v+\vec w)$</td><td>(grouping doesn't matter)</td></tr>
+<tr><td>(iii)</td><td>$\vec u+\mathbf 0=\mathbf 0+\vec u=\vec u$</td><td>($\mathbf 0$ changes nothing)</td></tr>
+<tr><td>(iv)</td><td>$\vec u+(-\vec u)=\mathbf 0$, where $-\vec u=(-1)\vec u$</td><td>(every vector has an opposite)</td></tr>
+<tr><td>(v)</td><td>$c(\vec u+\vec v)=c\vec u+c\vec v$</td><td>(scaling distributes over vectors)</td></tr>
+<tr><td>(vi)</td><td>$(c+d)\vec u=c\vec u+d\vec u$</td><td>(scaling distributes over scalars)</td></tr>
+</tbody></table></div>
+
+<div class="box idea"><p class="lab">Intuition · these six laws are just "common sense, made official"</p>
+<p>You already expect all six, that's the point. They say vectors behave like ordinary numbers for the purposes of adding and scaling. They matter because <em>every</em> later theorem is built only from these laws, so anything that obeys them (not just columns, functions and polynomials too) is a "vector space" and inherits the whole theory for free. For this course, just use them without fuss when rearranging vector equations.</p></div>
+
+<h3 class="sub">4 · Linear combinations: the one idea everything rests on</h3>
+
+<p>Here is the central construction of the whole chapter. Take some vectors, scale each by a number, add the results. That's a linear combination, the <em>only</em> way we're allowed to build new vectors from old ones.</p>
+
+<div class="box def"><p class="lab">Definition · Linear combination</p>
+<p>Given vectors $\vec u_1,\vec u_2,\dots,\vec u_n$ (all the same size) and scalars $\alpha_1,\alpha_2,\dots,\alpha_n$ (the <strong>weights</strong>), the vector</p>
+$$\alpha_1\vec u_1+\alpha_2\vec u_2+\cdots+\alpha_n\vec u_n$$
+<p>is called a <strong>linear combination</strong> of $\vec u_1,\dots,\vec u_n$ with those weights. The weights can be <em>any</em> numbers, positive, negative, zero, fractions.</p></div>
+
+<div class="box ex"><p class="lab">Example 2 · same vectors, different weights, different results</p>
+<p>Let $\vec u_1=\begin{bmatrix}2\\4\\-3\\1\\2\\9\end{bmatrix},\ \vec u_2=\begin{bmatrix}6\\3\\0\\-2\\1\\4\end{bmatrix},\ \vec u_3=\begin{bmatrix}-5\\2\\1\\1\\-3\\0\end{bmatrix},\ \vec u_4=\begin{bmatrix}3\\2\\-5\\7\\1\\3\end{bmatrix}$ (vectors in $\R^6$).</p>
+<p><strong>(1)</strong> With weights $\alpha_1=1,\ \alpha_2=-4,\ \alpha_3=2,\ \alpha_4=-1$, compute $\alpha_1\vec u_1+\alpha_2\vec u_2+\alpha_3\vec u_3+\alpha_4\vec u_4$. Work one entry at a time, e.g. the first entry is $1(2)+(-4)(6)+2(-5)+(-1)(3)=2-24-10-3=-35$. Doing all six entries:</p>
+$$1\vec u_1-4\vec u_2+2\vec u_3-\vec u_4=\begin{bmatrix}-35\\-6\\4\\4\\-9\\-10\end{bmatrix}.$$
+<p><strong>(2)</strong> Keep the <em>same four vectors</em> but take new weights $\beta_1=3,\ \beta_2=0,\ \beta_3=5,\ \beta_4=-1$. (Weight $0$ means $\vec u_2$ simply doesn't contribute.) Then</p>
+$$3\vec u_1+0\vec u_2+5\vec u_3-\vec u_4=\begin{bmatrix}-22\\20\\1\\1\\-10\\24\end{bmatrix}.$$
+<p><strong>The lesson:</strong> fix a set of vectors, and by turning the weight-knobs you manufacture a whole universe of new vectors. Which vectors you can reach this way is precisely the idea of <em>span</em> (part 6).</p></div>
+
+<div class="box tip"><p class="lab">Tip · compute linear combinations entry-by-entry, with a column of scratch</p>
+<p>For a 6-entry combination, don't try to do it in your head. Write the weight times each vector's first entry in a row and sum; then the second entries; and so on. It's slow but bullet-proof. A single sign slip ruins the whole vector, and these appear constantly, so trade a little speed for accuracy.</p></div>
+
+<h3 class="sub">5 · The key question: is $\vec b$ a linear combination of given vectors?</h3>
+
+<p>Example 2 built vectors by choosing weights. Now reverse it: you're <em>handed</em> a target vector $\vec b$ and asked whether <em>some</em> choice of weights produces it. This "can I build $\vec b$?" question is the bridge back to §3.1.</p>
+
+<div class="box ex"><p class="lab">Example 3 · can $\vec b$ be written as a combination of $\vec a_1,\vec a_2$?</p>
+<p>Let $\vec a_1=\begin{bmatrix}1\\-2\\-5\end{bmatrix},\ \vec a_2=\begin{bmatrix}2\\5\\6\end{bmatrix},\ \vec b=\begin{bmatrix}7\\4\\-3\end{bmatrix}$. Do weights $x_1,x_2$ exist with $x_1\vec a_1+x_2\vec a_2=\vec b$? If so, find them.</p>
+<p><strong>Turn the vector equation into a system.</strong> The left side is</p>
+$$x_1\begin{bmatrix}1\\-2\\-5\end{bmatrix}+x_2\begin{bmatrix}2\\5\\6\end{bmatrix}=\begin{bmatrix}x_1+2x_2\\-2x_1+5x_2\\-5x_1+6x_2\end{bmatrix}.$$
+<p>Setting this equal to $\vec b$ entry-by-entry gives three ordinary equations:</p>
+$$x_1+2x_2=7,\qquad -2x_1+5x_2=4,\qquad -5x_1+6x_2=-3.$$
+<p>Solve by row reduction (exactly §3.1). The system is consistent with the unique solution $x_1=3,\ x_2=2$. <strong>So yes:</strong> $\vec b=3\vec a_1+2\vec a_2$. (Quick check: $3\begin{bmatrix}1\\-2\\-5\end{bmatrix}+2\begin{bmatrix}2\\5\\6\end{bmatrix}=\begin{bmatrix}3+4\\-6+10\\-15+12\end{bmatrix}=\begin{bmatrix}7\\4\\-3\end{bmatrix}=\vec b$. ✓)</p></div>
+
+<div class="box idea"><p class="lab">Intuition · the vectors you combine are literally the columns of the matrix</p>
+<p>Look where the numbers landed: $\vec a_1$, $\vec a_2$, and $\vec b$ became the <em>columns</em> of the augmented matrix $\left[\begin{array}{cc|c}1&2&7\\-2&5&4\\-5&6&-3\end{array}\right]=[\,\vec a_1\ \vec a_2\mid\vec b\,]$. That's not a coincidence, it's the whole trick.</p></div>
+
+<div class="box def"><p class="lab">The fundamental correspondence</p>
+<p>The vector equation $\;x_1\vec a_1+x_2\vec a_2+\cdots+x_n\vec a_n=\vec b\;$ has <strong>exactly the same solution set</strong> as the linear system whose augmented matrix is</p>
+$$[\,\vec a_1\ \ \vec a_2\ \cdots\ \vec a_n\mid\vec b\,].$$
+<p>In particular: <strong>$\vec b$ is a linear combination of $\vec a_1,\dots,\vec a_n$ if and only if that system is consistent</strong> (has at least one solution).</p></div>
+
+<div class="box tip"><p class="lab">Tip · "linear combination?" is a consistency question in disguise</p>
+<p>Whenever a problem asks "is $\vec b$ a combination of these vectors?", your move is automatic: <strong>stack the vectors as columns, tack $\vec b$ on as the last column, row-reduce, check consistency.</strong> Consistent → yes (and the solution gives the weights); a $0=\text{nonzero}$ row → no. You never need a new technique; §3.1 already answers every such question.</p></div>
+
+<h3 class="sub">6 · Span: the set of <em>everything</em> you can reach</h3>
+
+<p>Fix some vectors. As you let the weights range over all numbers, the linear combinations sweep out a set of reachable vectors. That set has a name.</p>
+
+<div class="box def"><p class="lab">Definition · Span</p>
+<p>If $\vec v_1,\dots,\vec v_p$ are in $\R^n$, then <strong>$\operatorname{Span}\{\vec v_1,\dots,\vec v_p\}$</strong> is the set of <em>all</em> linear combinations $c_1\vec v_1+c_2\vec v_2+\cdots+c_p\vec v_p$ as the scalars $c_1,\dots,c_p$ range over all real numbers. We say this set is <strong>spanned (or generated) by</strong> $\vec v_1,\dots,\vec v_p$.</p></div>
+
+<div class="box idea"><p class="lab">Intuition · span = "all the places these arrows can take you"</p>
+<p>Think of the $\vec v_i$ as the only moves you're allowed (in any amount, forward or backward). The span is every destination reachable by combining those moves. Asking "<strong>is $\vec b$ in $\operatorname{Span}\{\vec v_1,\dots,\vec v_p\}$?</strong>" is <em>the same</em> question as "is $\vec b$ a linear combination of the $\vec v_i$?", which (part 5) is just "is $[\,\vec v_1\ \cdots\ \vec v_p\mid\vec b\,]$ consistent?". Three phrasings, one computation.</p></div>
+
+<div class="box tip"><p class="lab">Tip · the geometry of small spans (memorise these pictures)</p>
+<ul>
+<li><strong>$\operatorname{Span}\{\vec v\}$ for one nonzero $\vec v$</strong>: all scalar multiples of $\vec v$, a <strong>line</strong> through the origin in the direction of $\vec v$.</li>
+<li><strong>$\operatorname{Span}\{\vec u,\vec v\}$ for two nonzero vectors, neither a multiple of the other</strong>: the whole <strong>plane</strong> through the origin containing both arrows.</li>
+<li><strong>If $\vec v$ <em>is</em> a multiple of $\vec u$</strong>: they point along the same line, so $\operatorname{Span}\{\vec u,\vec v\}$ collapses back to just that <strong>line</strong>, the second vector added nothing.</li>
+</ul>
+<p>Every span contains $\mathbf 0$ (take all weights $0$) and is "flat" through the origin, a point, line, plane, or higher-dimensional flat. That last bullet is your first hint that some vectors can be <em>redundant</em>, which is exactly linear dependence.</p></div>
+
+<h3 class="sub">7 · Linear independence: are any of my vectors redundant?</h3>
+
+<p>If one vector in a set is already reachable from the others, it adds no new directions, it's dead weight. "Linear independence" is the precise way to say "no dead weight." The cleanest test uses the zero vector.</p>
+
+<div class="box def"><p class="lab">Definition · Linearly independent / dependent</p>
+<p>A set $\{\vec v_1,\dots,\vec v_p\}$ in $\R^n$ is <strong>linearly independent</strong> if the vector equation</p>
+$$x_1\vec v_1+x_2\vec v_2+\cdots+x_p\vec v_p=\mathbf 0$$
+<p>has <strong>only the trivial solution</strong> $x_1=\cdots=x_p=0$. The set is <strong>linearly dependent</strong> if there exist weights $c_1,\dots,c_p$, <em>not all zero</em>, with $c_1\vec v_1+\cdots+c_p\vec v_p=\mathbf 0$. Such an equation (with not-all-zero weights) is a <strong>linear dependence relation</strong>. A set is dependent exactly when it is not independent.</p></div>
+
+<div class="box idea"><p class="lab">Intuition · "the only way to get zero is to use nothing"</p>
+<p>There's always one boring way to combine vectors into $\mathbf 0$: multiply them all by $0$. The question is whether that's the <em>only</em> way. If some <em>nonzero</em> mix also cancels to $\mathbf 0$, then you can solve that relation for one of the vectors, showing it's a combination of the others, <strong>redundant</strong>. So:</p>
+<ul>
+<li><strong>Independent</strong> = the only way to reach $\mathbf 0$ is the trivial way = <em>no</em> vector is redundant.</li>
+<li><strong>Dependent</strong> = there's a sneaky nonzero cancellation = <em>at least one</em> vector is a combination of the rest.</li>
+</ul></div>
+
+<div class="box def"><p class="lab">Matrix form · independence $\Leftrightarrow$ only the trivial solution of $A\vec x=\mathbf 0$</p>
+<p>Put the vectors as columns: $A=[\,\vec a_1\ \cdots\ \vec a_n\,]$. Then $x_1\vec a_1+\cdots+x_n\vec a_n=\mathbf 0$ is exactly the homogeneous system $A\vec x=\mathbf 0$. Therefore:</p>
+<p style="text-align:center"><strong>The columns of $A$ are linearly independent $\iff$ $A\vec x=\mathbf 0$ has only the trivial solution $\iff$ there are no free variables.</strong></p>
+<p>So testing independence is just reducing the coefficient matrix and counting free variables, zero free variables means independent; any free variable means dependent.</p></div>
+
+<div class="box ex"><p class="lab">Example 4 · test three vectors, and exhibit a dependence relation</p>
+<p>Let $\vec v_1=\begin{bmatrix}1\\2\\3\end{bmatrix},\ \vec v_2=\begin{bmatrix}4\\5\\6\end{bmatrix},\ \vec v_3=\begin{bmatrix}2\\1\\0\end{bmatrix}$.</p>
+<p><strong>(a) Independent?</strong> Set $\alpha_1\vec v_1+\alpha_2\vec v_2+\alpha_3\vec v_3=\mathbf 0$, which is the homogeneous system</p>
+$$\alpha_1+4\alpha_2+2\alpha_3=0,\qquad 2\alpha_1+5\alpha_2+\alpha_3=0,\qquad 3\alpha_1+6\alpha_2=0.$$
+<p>Row-reduce the coefficient matrix. It reduces to the two relations $\alpha_1+2\alpha_3=0$ and $\alpha_2+\alpha_3=0$, with $\alpha_3$ <strong>free</strong>, so there are <em>nontrivial</em> solutions. For instance $\alpha_3=-1$ gives $\alpha_1=2,\ \alpha_2=1$, i.e. $(\alpha_1,\alpha_2,\alpha_3)=(-2,1,-1)$ also works (scaling the free choice). Because a nonzero solution exists, <strong>the set is linearly dependent</strong> (not independent).</p>
+<p><strong>(b) A dependence relation.</strong> Using $(\alpha_1,\alpha_2,\alpha_3)=(-2,1,-1)$: $\;-2\vec v_1+\vec v_2-\vec v_3=\mathbf 0$, which rearranges to the tidy fact</p>
+$$2\vec v_1=\vec v_2-\vec v_3.$$
+<p>Check: $\vec v_2-\vec v_3=\begin{bmatrix}4-2\\5-1\\6-0\end{bmatrix}=\begin{bmatrix}2\\4\\6\end{bmatrix}=2\vec v_1$. ✓ So $\vec v_1$ really is built from the other two, that's the redundancy made explicit.</p></div>
+
+<h3 class="sub">8 · Fast rules for small or special sets</h3>
+
+<p>Some cases you should recognise instantly without any row reduction.</p>
+
+<div class="box def"><p class="lab">One or two vectors</p>
+<ul>
+<li><strong>One vector $\{\vec v\}$:</strong> independent $\iff$ $\vec v\ne\mathbf 0$. (If $\vec v\ne\mathbf 0$ then $x_1\vec v=\mathbf 0$ forces $x_1=0$.)</li>
+<li><strong>The zero vector alone $\{\mathbf 0\}$:</strong> dependent, since $x_1\mathbf 0=\mathbf 0$ holds for <em>every</em> $x_1$, including nonzero ones.</li>
+<li><strong>Two vectors $\{\vec v_1,\vec v_2\}$:</strong> dependent $\iff$ one is a scalar multiple of the other. Independent $\iff$ neither is a multiple of the other. (For two vectors you can often just eyeball this.)</li>
+</ul></div>
+
+<div class="box def"><p class="lab">Theorem* · characterization of dependent sets</p>
+<p>A set $S=\{\vec v_1,\dots,\vec v_p\}$ of two or more vectors is linearly dependent <strong>if and only if</strong> at least one vector in $S$ is a linear combination of the others. Moreover, if $S$ is dependent and $\vec v_1\ne\mathbf 0$, then some $\vec v_j$ (with $j>1$) is a combination of the <em>preceding</em> vectors $\vec v_1,\dots,\vec v_{j-1}$.</p></div>
+
+<div class="box idea"><p class="lab">Why Theorem* is true (both directions, in plain words)</p>
+<p><strong>If one vector is a combination of the others</strong>, say $\vec v_1=c_2\vec v_2+c_3\vec v_3$, move everything to one side: $\;(-1)\vec v_1+c_2\vec v_2+c_3\vec v_3+0\vec v_4+\cdots=\mathbf 0$. The weight $-1$ on $\vec v_1$ is nonzero, so that's a genuine dependence relation, $S$ is dependent.</p>
+<p><strong>Conversely, if $S$ is dependent</strong>, there's a relation $c_1\vec v_1+\cdots+c_p\vec v_p=\mathbf 0$ with not all $c_i$ zero. Let $j$ be the <em>largest</em> index with $c_j\ne 0$. If $j=1$ the relation says $c_1\vec v_1=\mathbf 0$ with $c_1\ne0$, forcing $\vec v_1=\mathbf 0$ (handled as the trivial case). Otherwise $j>1$, and we can divide by $c_j$ and solve:</p>
+$$\vec v_j=\left(-\frac{c_1}{c_j}\right)\vec v_1+\cdots+\left(-\frac{c_{j-1}}{c_j}\right)\vec v_{j-1},$$
+<p>so $\vec v_j$ is a combination of the vectors before it. $\blacksquare$</p></div>
+
+<div class="box warn"><p class="lab">Trap · "dependent" does <em>not</em> mean "every vector is redundant"</p>
+<p>Theorem* promises <em>at least one</em> vector is a combination of the others, not <em>all</em> of them. A particular vector in a dependent set may still fail to be a combination of the rest (e.g. if it points in a brand-new direction while two <em>other</em> vectors duplicate each other). Don't over-claim: dependence is a statement about the set, not a licence to delete any vector you like.</p></div>
+
+<div class="box ex"><p class="lab">Example 5 · when is $\vec w$ in $\operatorname{Span}\{\vec u,\vec v\}$?</p>
+<p>Let $\vec u=\begin{bmatrix}3\\1\\0\end{bmatrix},\ \vec v=\begin{bmatrix}1\\6\\0\end{bmatrix}$. Describe $\operatorname{Span}\{\vec u,\vec v\}$, and explain why a vector $\vec w$ lies in it exactly when $\{\vec u,\vec v,\vec w\}$ is linearly dependent.</p>
+<p>Neither $\vec u$ nor $\vec v$ is a multiple of the other, so they're independent and span a <strong>plane</strong> through the origin, here the $x_1x_2$-plane (both have third entry $0$, so every combination does too). Now:</p>
+<ul>
+<li><strong>If $\vec w$ is in the plane</strong> ($\vec w=c_1\vec u+c_2\vec v$ for some weights), then $\vec w$ is a combination of $\vec u,\vec v$, so by Theorem* the set $\{\vec u,\vec v,\vec w\}$ is <strong>dependent</strong>.</li>
+<li><strong>Conversely, if $\{\vec u,\vec v,\vec w\}$ is dependent</strong>, Theorem* (with $\vec u\ne\mathbf 0$) says some vector is a combination of the preceding ones. It can't be $\vec v$ (not a multiple of $\vec u$), so it must be $\vec w$, i.e. $\vec w$ is a combination of $\vec u,\vec v$, so $\vec w$ <strong>is in the plane</strong>.</li>
+</ul>
+<p>So "$\vec w\in\operatorname{Span}\{\vec u,\vec v\}$" and "$\{\vec u,\vec v,\vec w\}$ dependent" are the same condition: geometrically, $\vec w$ lies <em>in the plane</em> spanned by $\vec u$ and $\vec v$. If $\vec w$ pokes out of the plane, the three are independent.</p></div>
+
+<h3 class="sub">9 · Two theorems that let you conclude dependence instantly</h3>
+
+<p>Sometimes you can declare a set dependent <em>without any computation at all</em>, just by counting or spotting a zero. Keep these two in your back pocket for exams.</p>
+
+<div class="box def"><p class="lab">Theorem** · too many vectors must be dependent</p>
+<p>If a set contains <strong>more vectors than there are entries in each vector</strong>, the set is automatically linearly dependent. That is, any set $\{\vec v_1,\dots,\vec v_p\}$ in $\R^n$ with $p>n$ is linearly dependent.</p></div>
+
+<div class="box idea"><p class="lab">Why Theorem** holds · more unknowns than equations</p>
+<p>Form $A=[\,\vec v_1\ \cdots\ \vec v_p\,]$, which is $n\times p$. The equation $A\vec x=\mathbf 0$ is a homogeneous system of $n$ equations in $p$ unknowns. If $p>n$ there are more variables than equations, so there <em>must</em> be a free variable, hence a nontrivial solution, hence dependence. <strong>Example:</strong> any 3 vectors in $\R^2$, or any 5 vectors in $\R^4$, are dependent before you even look at the numbers. (Careful: the theorem says nothing when $p\le n$, then you must actually test.)</p></div>
+
+<div class="box def"><p class="lab">Theorem*** · a set containing $\mathbf 0$ is dependent</p>
+<p>If a set $S=\{\vec v_1,\dots,\vec v_p\}$ in $\R^n$ contains the zero vector, it is linearly dependent.</p></div>
+
+<div class="box idea"><p class="lab">Why Theorem*** holds · put all the weight on the zero vector</p>
+<p>Say $\vec v_1=\mathbf 0$. Then $1\vec v_1+0\vec v_2+\cdots+0\vec v_p=\mathbf 0$ is a dependence relation with a nonzero weight (the $1$ on $\vec v_1$) that costs nothing, because $1\cdot\mathbf 0=\mathbf 0$. A nonzero weight exists, so the set is dependent. <strong>Spot a zero vector → declare dependent immediately.</strong></p></div>
+
+<h3 class="sub">10 · Section recap &amp; exam tactics</h3>
+
+<div class="box tip"><p class="lab">The §3.2 playbook</p>
+<ul>
+<li><strong>Everything is one system.</strong> "Is $\vec b$ a combination / in the span?" → reduce $[\,\vec v_1\cdots\vec v_p\mid\vec b\,]$ and check <em>consistency</em>. "Are they independent?" → reduce the coefficient matrix $[\,\vec v_1\cdots\vec v_p\,]$ and count <em>free variables</em> (the constant column is all zeros, so you can omit it).</li>
+<li><strong>Consistency vs free variables are different questions.</strong> Combination/span cares whether a solution <em>exists</em>; independence cares whether the solution is <em>unique</em>. Don't mix them up.</li>
+<li><strong>Use the free shortcuts first:</strong> more vectors than entries → dependent (Theorem**); a zero vector present → dependent (Theorem***); two vectors with one a multiple of the other → dependent.</li>
+<li><strong>To exhibit a dependence relation</strong>, solve the homogeneous system, pick a convenient nonzero value for a free variable, and write out $c_1\vec v_1+\cdots=\mathbf 0$. Then rearrange to show one vector built from the others, and <em>verify</em> by direct computation.</li>
+<li><strong>Geometry anchors the algebra:</strong> one vector spans a line, two independent vectors span a plane, a vector is in a span exactly when it lies in that line/plane. Picture it to sanity-check your arithmetic.</li>
+</ul></div>
+</section>
+<section class="sec" id="s33" data-n="3.3" data-t="Matrices" data-s="algebra, determinants, inverses">
+<div class="sec-h"><span class="tag">SECTION 3.3</span><h2>Matrix Algebra, Determinants &amp; Inverses</h2></div>
+
+<p>So far matrices were just <em>storage</em>, a tidy way to hold a system's numbers. In §3.3 they become <strong>objects you can do arithmetic with</strong>: add them, scale them, multiply them, flip them, measure them (determinant), and even "divide" by them (inverse). Most rules feel like ordinary number algebra, but three or four are gloriously different, and those differences are exactly what exams probe. We'll flag every trap.</p>
+
+<h3 class="sub">1 · Notation: naming every part of a matrix</h3>
+
+<div class="box def"><p class="lab">Definition · entries, columns, diagonal</p>
+<p>For an $m\times n$ matrix $A$, the <strong>$(i,j)$-entry</strong> $a_{ij}$ sits in row $i$, column $j$. The columns are vectors $\vec a_1,\dots,\vec a_n$, and we write $A=[\,\vec a_1\ \vec a_2\ \cdots\ \vec a_n\,]$. The <strong>diagonal entries</strong> are $a_{11},a_{22},a_{33},\dots$ (row index = column index); together they form the <strong>main diagonal</strong>.</p>
+<ul>
+<li>A <strong>diagonal matrix</strong> is a square matrix whose off-diagonal entries are all $0$.</li>
+<li>The <strong>$n\times n$ identity matrix</strong> $I_n$ is the diagonal matrix with $1$'s on the main diagonal, $\;I_3=\begin{bmatrix}1&0&0\\0&1&0\\0&0&1\end{bmatrix}$. It's the matrix version of the number $1$.</li>
+<li>A <strong>zero matrix</strong> $0$ has every entry $0$ (the matrix version of the number $0$).</li>
+</ul></div>
+
+<div class="box tip"><p class="lab">Tip · "row $i$, column $j$" — the habit that prevents a hundred errors</p>
+<p>Every subscript, every size "$m\times n$", every entry $a_{ij}$ is <strong>rows first, columns second</strong>. Matrix multiplication (below) will punish any slip here instantly. Say it out loud until it's muscle memory.</p></div>
+
+<h3 class="sub">2 · Addition and scalar multiplication: the easy, entrywise operations</h3>
+
+<div class="box def"><p class="lab">Definition · equality, sum, scalar multiple</p>
+<ul>
+<li>Two matrices are <strong>equal</strong> if they have the <em>same size</em> and all corresponding entries match.</li>
+<li>If $A,B$ are the <strong>same size</strong>, their <strong>sum</strong> $A+B$ adds corresponding entries. If the sizes differ, $A+B$ is <strong>undefined</strong>.</li>
+<li>For a scalar $r$, the <strong>scalar multiple</strong> $rA$ multiplies <em>every</em> entry of $A$ by $r$.</li>
+</ul></div>
+
+<div class="box ex"><p class="lab">Example 1 · when addition works, and when it doesn't</p>
+<p>Let $A=\begin{bmatrix}4&0&5\\-1&3&2\end{bmatrix},\ B=\begin{bmatrix}1&1&1\\3&5&7\end{bmatrix},\ C=\begin{bmatrix}2&-3\\0&1\end{bmatrix}$.</p>
+<p>$A$ and $B$ are both $2\times3$, so add entrywise: $\;A+B=\begin{bmatrix}4+1&0+1&5+1\\-1+3&3+5&2+7\end{bmatrix}=\begin{bmatrix}5&1&6\\2&8&9\end{bmatrix}$.</p>
+<p>But $A$ is $2\times3$ while $C$ is $2\times2$ — different sizes — so <strong>$A+C$ is not defined</strong>. You can't add shapes that don't match.</p></div>
+
+<div class="box def"><p class="lab">Theorem · laws of addition &amp; scalar multiplication</p>
+<p>For same-size matrices $A,B,C$ and scalars $r,s$: (a) $A+B=B+A$; (b) $(A+B)+C=A+(B+C)$; (c) $A+0=A$; (d) $r(A+B)=rA+rB$; (e) $(r+s)A=rA+sA$; (f) $r(sA)=(rs)A$. These are identical to the vector laws of §3.2, and for the same reason: everything happens entrywise.</p></div>
+
+<h3 class="sub">3 · Matrix multiplication: the one rule that isn't entrywise</h3>
+
+<p>You might expect $AB$ to multiply entries position-by-position. It does <em>not</em>. Matrix multiplication is built so that it matches <strong>composing the systems/transformations</strong> the matrices represent, and that forces the "row-dot-column" rule.</p>
+
+<div class="box def"><p class="lab">Definition · the row–column rule for $AB$</p>
+<p>If $A$ is $m\times n$ and $B$ is $n\times p$ (so $A$'s column-count matches $B$'s row-count), the product $AB$ is the $m\times p$ matrix whose $(i,j)$-entry is the <strong>row $i$ of $A$ dotted with column $j$ of $B$</strong>:</p>
+$$(AB)_{ij}=a_{i1}b_{1j}+a_{i2}b_{2j}+\cdots+a_{in}b_{nj}.$$
+<p>If $A$'s columns don't match $B$'s rows in number, $AB$ is undefined.</p></div>
+
+<div class="box idea"><p class="lab">Intuition · "inner dimensions must match; outer dimensions give the size"</p>
+<p>Write the sizes next to each other: $(m\times \underline{n})(\underline{n}\times p)$. The two inner numbers must be <strong>equal</strong> (that's what lets a row of $A$ pair up with a column of $B$), and the two outer numbers give the <strong>result's size</strong> $m\times p$. To fill entry $(i,j)$, slide row $i$ of $A$ across column $j$ of $B$, multiply the overlapping pairs, and add. Every entry of the answer is one little dot product.</p></div>
+
+<div class="box ex"><p class="lab">Example 2 · a full $2\times2$ times $2\times3$ product</p>
+<p>Compute $AB$ for $A=\begin{bmatrix}2&3\\1&-5\end{bmatrix}$ (2×2) and $B=\begin{bmatrix}4&3&9\\1&-2&3\end{bmatrix}$ (2×3). Inner dims $2=2$ ✓; result is $2\times3$.</p>
+<p>Each entry is (a row of $A$) · (a column of $B$). For instance the $(1,1)$-entry is row 1 of $A$ = $(2,3)$ dotted with column 1 of $B$ = $(4,1)$: $\;2\cdot4+3\cdot1=11$. Doing all six:</p>
+$$AB=\begin{bmatrix}2\cdot4+3\cdot1 & 2\cdot3+3\cdot(-2) & 2\cdot9+3\cdot3\\[2pt]1\cdot4+(-5)\cdot1 & 1\cdot3+(-5)(-2) & 1\cdot9+(-5)\cdot3\end{bmatrix}=\begin{bmatrix}11&0&27\\9&-7&24\end{bmatrix}.$$</p></div>
+
+<div class="box def"><p class="lab">Theorem 2 · laws that <em>do</em> hold for multiplication</p>
+<p>Whenever the sizes make the products defined: (a) $A(BC)=(AB)C$ (associative); (b) $A(B+C)=AB+AC$ (left distributive); (c) $(B+C)A=BA+CA$ (right distributive); (d) $r(AB)=(rA)B=A(rB)$; (e) $I_mA=A=AI_n$ (identity does nothing).</p></div>
+
+<div class="box warn"><p class="lab">Trap · three ways matrix multiplication breaks your number-instincts</p>
+<ol>
+<li><strong>It is NOT commutative: $AB\ne BA$ in general.</strong> Even when both are defined they usually differ, and often one is defined while the other isn't. Example: $A=\begin{bmatrix}1&3\\-1&2\end{bmatrix},B=\begin{bmatrix}4&0\\5&1\end{bmatrix}$ give $AB=\begin{bmatrix}19&3\\6&2\end{bmatrix}$ but $BA=\begin{bmatrix}4&12\\4&17\end{bmatrix}$. When $AB=BA$ we say $A,B$ <strong>commute</strong> (special, not the norm).</li>
+<li><strong>No cancellation:</strong> $AB=AC$ does <em>not</em> let you conclude $B=C$.</li>
+<li><strong>Zero divisors:</strong> $AB=0$ does <em>not</em> force $A=0$ or $B=0$; two nonzero matrices can multiply to the zero matrix.</li>
+</ol>
+<p>Keep the order of factors sacred and never "cancel" a matrix. These three are exam favourites precisely because they violate habits from ordinary algebra.</p></div>
+
+<div class="box def"><p class="lab">Powers of a square matrix</p>
+<p>For square $A$ and a positive integer $k$, $A^k=\underbrace{A\,A\cdots A}_{k\text{ copies}}$. By convention $A^0=I$ (the identity), so that $A^0\vec x=\vec x$. Only square matrices have powers (you need $A$ times $A$ to be defined).</p></div>
+
+<h3 class="sub">4 · Transpose: flipping rows and columns</h3>
+
+<div class="box def"><p class="lab">Definition · transpose &amp; symmetric matrix</p>
+<p>The <strong>transpose</strong> $A^{\mathsf T}$ of an $m\times n$ matrix $A$ is the $n\times m$ matrix whose $(i,j)$-entry is $[A]_{ji}$: row $i$ of $A^{\mathsf T}$ is column $i$ of $A$. In words, <strong>flip $A$ across its main diagonal</strong> (rows become columns). A square matrix is <strong>symmetric</strong> if $A=A^{\mathsf T}$ (it's its own mirror image across the diagonal).</p></div>
+
+<div class="box ex"><p class="lab">Example 3 · transpose turns a $3\times4$ into a $4\times3$</p>
+<p>For $D=\begin{bmatrix}3&7&2&-3\\-1&4&2&8\\0&3&-2&5\end{bmatrix}$, read each <em>row</em> of $D$ and write it as a <em>column</em> of $D^{\mathsf T}$:</p>
+$$D^{\mathsf T}=\begin{bmatrix}3&-1&0\\7&4&3\\2&2&-2\\-3&8&5\end{bmatrix}.$$
+<p>(Row 1 of $D$ was $3,7,2,-3$; it became column 1 of $D^{\mathsf T}$. Size went $3\times4\to4\times3$.)</p></div>
+
+<div class="box def"><p class="lab">Theorem 3 · transpose rules (watch the reversal in (d))</p>
+<p>(a) $(A^{\mathsf T})^{\mathsf T}=A$; (b) $(A+B)^{\mathsf T}=A^{\mathsf T}+B^{\mathsf T}$; (c) $(rA)^{\mathsf T}=rA^{\mathsf T}$; (d) $\;(AB)^{\mathsf T}=B^{\mathsf T}A^{\mathsf T}$.</p></div>
+
+<div class="box warn"><p class="lab">Trap · transpose of a product <em>reverses the order</em></p>
+<p>Rule (d) is $(AB)^{\mathsf T}=B^{\mathsf T}A^{\mathsf T}$, not $A^{\mathsf T}B^{\mathsf T}$. The factors swap places. (You can see why from sizes: $AB$ is $m\times p$, so $(AB)^{\mathsf T}$ is $p\times m$, which only matches $B^{\mathsf T}$ (p×n) times $A^{\mathsf T}$ (n×m).) The same order-reversal will reappear for inverses: $(AB)^{-1}=B^{-1}A^{-1}$.</p></div>
+
+<h3 class="sub">5 · Submatrices and the determinant</h3>
+
+<p>The <strong>determinant</strong> is a single number squeezed out of a <em>square</em> matrix that answers one huge question: <em>is this matrix invertible?</em> (Determinant $\ne 0$ ⟺ invertible.) It's defined recursively, each $n\times n$ determinant is built from smaller ones.</p>
+
+<div class="box def"><p class="lab">Definition · submatrix $A(i\,|\,j)$</p>
+<p>For an $m\times n$ matrix $A$, the submatrix $A(i\,|\,j)$ is the $(m-1)\times(n-1)$ matrix left after <strong>deleting row $i$ and column $j$</strong>.</p></div>
+
+<div class="box ex"><p class="lab">Example 4 · deleting a row and a column</p>
+<p>For $A=\begin{bmatrix}1&-2&3&9\\4&-2&0&1\\3&5&2&1\end{bmatrix}$: $A(2\,|\,3)$ deletes row 2 and column 3, leaving $\begin{bmatrix}1&-2&9\\3&5&1\end{bmatrix}$; and $A(3\,|\,1)$ deletes row 3 and column 1, leaving $\begin{bmatrix}-2&3&9\\-2&0&1\end{bmatrix}$.</p></div>
+
+<div class="box def"><p class="lab">Definition · determinant (recursive, "cofactor" expansion along row 1)</p>
+<p>For a square matrix $A$ of size $n$, $\det(A)=|A|$ is:</p>
+<ul>
+<li>if $n=1$: $\det(A)=[A]_{11}$ (the single entry);</li>
+<li>if $n\ge2$: expand along the top row with <strong>alternating signs</strong>,
+$$\det(A)=[A]_{11}\det A(1|1)-[A]_{12}\det A(1|2)+[A]_{13}\det A(1|3)-\cdots+(-1)^{1+n}[A]_{1n}\det A(1|n).$$</li>
+</ul></div>
+
+<div class="box def"><p class="lab">The $2\times2$ shortcut (memorise this)</p>
+<p>$\displaystyle\det\begin{bmatrix}a&b\\c&d\end{bmatrix}=ad-bc$ (main-diagonal product minus anti-diagonal product). This drops out of the definition and is the base case you'll use constantly inside bigger determinants.</p></div>
+
+<div class="box ex"><p class="lab">Example 5 · a $3\times3$ determinant by expansion</p>
+<p>$A=\begin{bmatrix}3&2&-1\\4&1&6\\-3&-1&2\end{bmatrix}$. Expand along row 1, each $2\times2$ minor via $ad-bc$:</p>
+$$|A|=3\underbrace{\det\begin{bmatrix}1&6\\-1&2\end{bmatrix}}_{1\cdot2-6(-1)=8}-2\underbrace{\det\begin{bmatrix}4&6\\-3&2\end{bmatrix}}_{4\cdot2-6(-3)=26}+(-1)\underbrace{\det\begin{bmatrix}4&1\\-3&-1\end{bmatrix}}_{4(-1)-1(-3)=-1}.$$
+$$=3(8)-2(26)+(-1)(-1)=24-52+1=-27.$$</p></div>
+
+<h3 class="sub">6 · Expanding along <em>any</em> row or column — pick the lazy one</h3>
+
+<div class="box def"><p class="lab">Theorem · expansion about row $i$ or column $j$</p>
+<p>You may expand a determinant along <em>any</em> row or column, using the <strong>checkerboard sign</strong> $(-1)^{i+j}$ at position $(i,j)$:</p>
+$$\det(A)=\sum_{j}(-1)^{i+j}[A]_{ij}\det A(i|j)\quad(\text{row }i),\qquad \det(A)=\sum_{i}(-1)^{i+j}[A]_{ij}\det A(i|j)\quad(\text{col }j).$$
+<p>The sign pattern is $\begin{smallmatrix}+&-&+&-\\-&+&-&+\\+&-&+&-\end{smallmatrix}\cdots$</p></div>
+
+<div class="box tip"><p class="lab">Tip · expand along the row/column with the most zeros</p>
+<p>Every zero entry kills an entire minor computation (zero times anything is zero). So <strong>choose the row or column containing the most zeros</strong>, it can turn a four-term expansion into a one- or two-term one. This single habit saves enormous time on $4\times4$ determinants.</p></div>
+
+<div class="box ex"><p class="lab">Example 6 · a $4\times4$, expanded two ways (same answer: 92)</p>
+<p>$A=\begin{bmatrix}-2&3&0&1\\9&-2&0&1\\1&3&-2&-1\\4&1&2&6\end{bmatrix}$. <strong>Column 3</strong> is the smart choice, it has two zeros, so only two terms survive:</p>
+$$|A|=(-1)^{3+3}(-2)\det\begin{bmatrix}-2&3&1\\9&-2&1\\4&1&6\end{bmatrix}+(-1)^{4+3}(2)\det\begin{bmatrix}-2&3&1\\9&-2&1\\1&3&-1\end{bmatrix}.$$
+<p>The two $3\times3$ determinants work out to $-107$ and $61$, giving $|A|=(-2)(-107)-2(61)=214-122=92$. Expanding instead along <strong>row 4</strong> (four terms) gives the identical $-4\cdot10+(-22)-2\cdot61+6\cdot46=92$. Reassuring: the answer never depends on which line you expand along, only your effort does.</p></div>
+
+<div class="box ex"><p class="lab">Example 7 · triangular matrices — just multiply the diagonal</p>
+<p>$T=\begin{bmatrix}2&3&-1&3&3\\0&-1&5&2&-1\\0&0&3&9&2\\0&0&0&-1&3\\0&0&0&0&5\end{bmatrix}$ is <strong>upper triangular</strong> (zeros below the diagonal). Repeatedly expanding along the first column (always just one nonzero entry) collapses everything to the product of the diagonal:</p>
+$$|T|=2\times(-1)\times3\times(-1)\times5=30.$$</p></div>
+
+<div class="box idea"><p class="lab">Why triangular is a product of the diagonal</p>
+<p>Expand along column 1: the only nonzero entry is the top-left $a_{11}$, leaving $a_{11}$ times a smaller triangular determinant. Repeat. Each step peels off one diagonal entry, so $\det=a_{11}a_{22}\cdots a_{nn}$. This is the single most useful computational fact about determinants, and it's exactly <em>why</em> row-reducing to triangular form (next) lets you compute any determinant cheaply.</p></div>
+
+<h3 class="sub">7 · How row/column operations change a determinant</h3>
+
+<p>Instead of expanding a big messy determinant, you can row-reduce to triangular form, <em>if</em> you track how each operation scales the answer. Here are the rules.</p>
+
+<div class="box def"><p class="lab">Determinant behaviour under operations</p>
+<table class="gt"><thead><tr><th>Situation / operation</th><th>Effect on $\det$</th></tr></thead><tbody>
+<tr><td>A whole row (or column) is all zeros</td><td>$\det=0$</td></tr>
+<tr><td>Two rows (or columns) are equal</td><td>$\det=0$</td></tr>
+<tr><td><strong>Swap</strong> two rows (or columns)</td><td>$\det$ changes sign: $\det B=-\det A$</td></tr>
+<tr><td><strong>Scale</strong> one row (or column) by $\alpha$</td><td>$\det$ multiplies by $\alpha$: $\det B=\alpha\det A$</td></tr>
+<tr><td><strong>Add</strong> a multiple of one row to another (Type III)</td><td>$\det$ <em>unchanged</em>: $\det B=\det A$</td></tr>
+</tbody></table></div>
+
+<div class="box tip"><p class="lab">Tip · the Type III move is free — use it to make zeros</p>
+<p>The great news: "add a multiple of one row to another" <strong>doesn't change the determinant at all</strong>. So you can freely use Type III operations to zero-out a column and march toward triangular form <em>for free</em>. Only <em>swaps</em> (flip the sign) and <em>scaling</em> (multiply by $\alpha$) leave a bookkeeping factor you must carry. Reduce to triangular, multiply the diagonal, then undo the recorded sign/scale factors.</p></div>
+
+<div class="box ex"><p class="lab">Example 8 · a $4\times4$ determinant via row operations</p>
+<p>$A=\begin{bmatrix}2&0&2&3\\1&3&-1&1\\-1&1&-1&2\\3&5&4&0\end{bmatrix}$. Swap $R_1\leftrightarrow R_2$ to get a leading $1$ (this flips the sign, so a factor $-1$ appears out front). Then clear column 1 with Type III moves (free). Continue reducing to <strong>triangular</strong> form, recording a $\tfrac15$ scaling and one more swap along the way. The bookkeeping factors combine with the diagonal product to give</p>
+$$|A| = -110.$$
+<p>The point isn't the arithmetic marathon, it's the strategy: <em>Type III to make zeros (free), track swaps (sign) and scalings (factor), reduce to triangular, multiply the diagonal.</em> For a dense $4\times4$ this is usually faster and less error-prone than four-term cofactor expansion.</p></div>
+
+<h3 class="sub">8 · Singular vs nonsingular, and the inverse</h3>
+
+<p>Now the payoff: for a <em>square</em> matrix, "has an inverse" (you can undo multiplication by it) is the same as "its columns are independent", "it row-reduces to $I$", and "its determinant is nonzero". These equivalences tie the whole chapter together.</p>
+
+<div class="box def"><p class="lab">Definition · nonsingular / singular; inverse / invertible</p>
+<ul>
+<li>A square matrix $A$ is <strong>nonsingular</strong> if the homogeneous system $A\vec x=\mathbf0$ has <em>only</em> the trivial solution; otherwise $A$ is <strong>singular</strong>.</li>
+<li>$A$ is <strong>invertible</strong> if there is a matrix $B$ with $AB=BA=I_n$; then $B$ is <em>the</em> inverse, written $A^{-1}$.</li>
+</ul></div>
+
+<div class="box idea"><p class="lab">Intuition · the inverse is matrix "division"</p>
+<p>$A^{-1}$ undoes $A$: multiply by $A$, then by $A^{-1}$, and you're back where you started. It's the matrix analogue of the reciprocal $\tfrac1a$ (which undoes multiplication by $a$). Just as $0$ has no reciprocal, singular matrices have no inverse. And just as $\tfrac1a$ instantly solves $ax=b$ via $x=\tfrac ba$, the inverse instantly solves $A\vec x=\vec b$ via $\vec x=A^{-1}\vec b$.</p></div>
+
+<div class="box def"><p class="lab">A bundle of equivalent facts (the heart of §3.3)</p>
+<p>For a square matrix $A$ of size $n$, the following say <em>the same thing</em> — any one forces all the others:</p>
+<ol>
+<li>$A$ is nonsingular;</li>
+<li>$A$ row-reduces to the identity matrix $I_n$;</li>
+<li>the columns of $A$ are linearly independent;</li>
+<li>$A$ is invertible;</li>
+<li>$\det(A)\ne0$.</li>
+</ol>
+<p>And then: if $A$ is nonsingular, $A\vec x=\vec b$ has the <strong>unique</strong> solution $\vec x=A^{-1}\vec b$ for every $\vec b$. (Useful shortcuts: a <em>one-sided</em> inverse suffices, if $AB=I_n$ then automatically $BA=I_n$; and $A$ is <strong>singular $\iff\det A=0$</strong>.)</p></div>
+
+<h3 class="sub">9 · Computing $A^{-1}$ by Gauss–Jordan: $[\,A\mid I\,]\to[\,I\mid A^{-1}\,]$</h3>
+
+<p>Here's the practical recipe. Glue the identity onto $A$, row-reduce the left block to $I$, and the identity block is dragged along into $A^{-1}$. If the left block <em>can't</em> reach $I$ (a zero row appears), $A$ is singular, no inverse.</p>
+
+<div class="box def"><p class="lab">Algorithm · invert by augmenting with $I$</p>
+<ol class="steps">
+<li>Form the augmented matrix $[\,A\mid I\,]$.</li>
+<li>Row-reduce until the <em>left</em> block is $I$ (full Gauss–Jordan).</li>
+<li>Whatever the <em>right</em> block became is $A^{-1}$.</li>
+<li><strong>If a zero row appears on the left</strong> (so it can never become $I$), stop: $A$ is <strong>not invertible</strong>.</li>
+</ol></div>
+
+<div class="box ex"><p class="lab">Worked inverse · a $3\times3$</p>
+<p>Invert $A=\begin{bmatrix}1&2&0\\1&3&1\\0&1&2\end{bmatrix}$. Reduce $[\,A\mid I_3\,]$:</p>
+$$\left[\begin{array}{ccc|ccc}1&2&0&1&0&0\\1&3&1&0&1&0\\0&1&2&0&0&1\end{array}\right]\longrightarrow\cdots\longrightarrow\left[\begin{array}{ccc|ccc}1&0&0&5&-4&2\\0&1&0&-2&2&-1\\0&0&1&1&-1&1\end{array}\right].$$
+<p>The left block reached $I$, so $\;A^{-1}=\begin{bmatrix}5&-4&2\\-2&2&-1\\1&-1&1\end{bmatrix}$. (Verify a column if unsure: $A$ times column 1 of $A^{-1}$ should give $(1,0,0)^{\mathsf T}$.)</p></div>
+
+<div class="box ex"><p class="lab">Example 9 · three cases, including a non-invertible one</p>
+<p><strong>(a)</strong> $A=\begin{bmatrix}0&5\\6&3\end{bmatrix}$. Swap to get a pivot, scale, clear; $[\,A\mid I\,]$ reduces to give $\;A^{-1}=\begin{bmatrix}-1/10&1/6\\1/5&0\end{bmatrix}$.</p>
+<p><strong>(b)</strong> $A=\begin{bmatrix}1&1&1\\2&1&1\\2&2&3\end{bmatrix}$ reduces cleanly to $I$, yielding $\;A^{-1}=\begin{bmatrix}-1&1&0\\4&-1&-1\\-2&0&1\end{bmatrix}$.</p>
+<p><strong>(c)</strong> $A=\begin{bmatrix}5&-1&5\\5&0&4\\10&-1&9\end{bmatrix}$. During reduction the third row of the left block becomes <strong>all zeros</strong>. It can never turn into $I$, so <strong>$A$ has no inverse</strong> (it's singular; indeed row 3 = row 1 + row 2, a dependence). <em>This is how a non-invertible matrix announces itself: a zero row on the left.</em></p></div>
+
+<div class="box warn"><p class="lab">Trap · you must reduce the <em>left</em> block all the way to $I$</p>
+<p>Don't stop at echelon form. The right block only equals $A^{-1}$ once the left block is <em>exactly</em> the identity (leading 1's, zeros above and below). Stopping early gives a right block that is <em>not</em> the inverse. And the instant a zero row appears on the left, quit, inverting further is impossible.</p></div>
+
+<h3 class="sub">10 · Cramer's Rule: determinants solve small systems directly</h3>
+
+<p>For a <em>square</em> system with nonzero determinant, Cramer's Rule writes each unknown as a <strong>ratio of two determinants</strong>, no row reduction needed. It's elegant for 2×2 and 3×3 (and for systems with symbolic entries); for big systems it's slow, use elimination there.</p>
+
+<div class="box def"><p class="lab">Cramer's Rule</p>
+<p>To solve $A\vec x=\vec d$ with $\det A\ne0$: the denominator is always $\det A$; for the numerator of $x_k$, replace <strong>column $k$ of $A$ by the constants $\vec d$</strong> and take that determinant. For two equations $a_1x+b_1y=d_1,\ a_2x+b_2y=d_2$:</p>
+$$x=\frac{\begin{vmatrix}d_1&b_1\\d_2&b_2\end{vmatrix}}{\begin{vmatrix}a_1&b_1\\a_2&b_2\end{vmatrix}},\qquad y=\frac{\begin{vmatrix}a_1&d_1\\a_2&d_2\end{vmatrix}}{\begin{vmatrix}a_1&b_1\\a_2&b_2\end{vmatrix}}.$$
+<p>For three unknowns it's the same pattern: a common denominator $\det A$, and each numerator swaps in the constant column for the variable's column.</p></div>
+
+<div class="box ex"><p class="lab">Example 10 · Cramer on a 2×2 system</p>
+<p>Solve $3x+4y=-14,\ -2x-3y=11$. Denominator $\det A=\begin{vmatrix}3&4\\-2&-3\end{vmatrix}=3(-3)-4(-2)=-1$. Then</p>
+$$x=\frac{\begin{vmatrix}-14&4\\11&-3\end{vmatrix}}{-1}=\frac{(-14)(-3)-4(11)}{-1}=\frac{-2}{-1}=2,\qquad y=\frac{\begin{vmatrix}3&-14\\-2&11\end{vmatrix}}{-1}=\frac{33-28}{-1}=\frac{5}{-1}=-5.$$
+<p>So $(x,y)=(2,-5)$.</p></div>
+
+<div class="box ex"><p class="lab">Example 11 · Cramer on a 3×3 system</p>
+<p>Solve $x+2y+3z=17,\ 3x+2y+z=11,\ x-5y+z=-5$. The common denominator is $\det A=\begin{vmatrix}1&2&3\\3&2&1\\1&-5&1\end{vmatrix}=-48$. Replacing each column in turn by $(17,11,-5)^{\mathsf T}$ gives numerators $-48,\,-96,\,-192$, so</p>
+$$x=\frac{-48}{-48}=1,\qquad y=\frac{-96}{-48}=2,\qquad z=\frac{-192}{-48}=4.$$
+<p>So $(x,y,z)=(1,2,4)$. (Check in equation 1: $1+4+12=17$ ✓.)</p></div>
+
+<div class="box tip"><p class="lab">When to reach for Cramer vs elimination</p>
+<p>Cramer shines when: the system is small (2×2, 3×3), you only need <em>one</em> variable, or the entries are symbolic and you want a formula. Avoid it for $4\times4$ and larger, computing that many determinants is far slower than one Gauss–Jordan sweep. And remember it <em>requires</em> $\det A\ne0$ (a unique solution); if $\det A=0$, Cramer doesn't apply and you fall back on row reduction to see whether the system is inconsistent or has infinitely many solutions.</p></div>
+
+<h3 class="sub">11 · Section recap</h3>
+
+<div class="box tip"><p class="lab">The §3.3 cheat-sheet</p>
+<ul>
+<li><strong>Add/scale</strong>: entrywise, same size required.</li>
+<li><strong>Multiply</strong>: row-dot-column; inner dims match, outer dims give size; <em>order matters</em> ($AB\ne BA$), no cancellation, $AB=0\not\Rightarrow A$ or $B=0$.</li>
+<li><strong>Transpose</strong>: flip across the diagonal; $(AB)^{\mathsf T}=B^{\mathsf T}A^{\mathsf T}$ (order reverses).</li>
+<li><strong>Determinant</strong>: cofactor-expand along the line with most zeros; $2\times2$ is $ad-bc$; triangular = product of diagonal; Type III ops are free, swaps negate, scaling multiplies.</li>
+<li><strong>Invertible $\iff$ nonsingular $\iff$ reduces to $I$ $\iff$ independent columns $\iff\det\ne0$.</strong> Compute $A^{-1}$ via $[\,A\mid I\,]\to[\,I\mid A^{-1}\,]$; a zero row on the left means no inverse.</li>
+<li><strong>Cramer's Rule</strong>: $x_k=\dfrac{\det(A\text{ with column }k\to\vec d)}{\det A}$, for small systems with $\det A\ne0$.</li>
+</ul></div>
+</section>
+<section class="sec" id="s34" data-n="3.4" data-t="Dot &amp; cross product" data-s="angles, length, area">
+<div class="sec-h"><span class="tag">SECTION 3.4</span><h2>Inner Product &amp; Cross Product</h2></div>
+
+<p>We can already add vectors and scale them. Now we ask: <em>can we multiply two vectors, and get something useful?</em> There are two famous answers, and they're wonderfully different in flavour. The <strong>dot product</strong> eats two vectors and spits out a single <em>number</em> — it measures length and angle. The <strong>cross product</strong> (only in 3-D) eats two vectors and returns a <em>new vector</em> perpendicular to both — it measures area and gives directions. Between them they power nearly all of the geometry in this course.</p>
+
+<h3 class="sub">1 · The dot product: multiply, then add</h3>
+
+<div class="box def"><p class="lab">Definition · dot (inner, scalar) product</p>
+<p>For $\vec a=[a_1,a_2,\dots,a_n]$ and $\vec b=[b_1,b_2,\dots,b_n]$ (same size), the <strong>dot product</strong> is the <em>number</em></p>
+$$\vec a\cdot\vec b=a_1b_1+a_2b_2+\cdots+a_nb_n.$$
+<p>The result is a <strong>scalar</strong> (a single real number), not a vector — which is why it's also called the <strong>scalar product</strong> or <strong>inner product</strong>, written $\langle\vec a,\vec b\rangle$.</p></div>
+
+<div class="box idea"><p class="lab">Intuition · "line them up, multiply matching entries, total it"</p>
+<p>It's the same "multiply corresponding things and add" move you used inside matrix multiplication (every entry of $AB$ was a dot product of a row with a column). Here it stands alone. The payoff, coming in part 4, is that this plain arithmetic secretly encodes the <em>angle</em> between the two vectors.</p></div>
+
+<div class="box ex"><p class="lab">Example 1 · a dot product in $\R^5$</p>
+<p>$\vec w=[2,4,-3,2,8]$, $\vec x=[3,1,0,-1,-2]$. Multiply matching entries and sum:</p>
+$$\vec w\cdot\vec x=2(3)+4(1)+(-3)(0)+2(-1)+8(-2)=6+4+0-2-16=-8.$$
+<p>One number out. (The negative sign will mean something in part 5: these two vectors point in <em>generally opposite</em> directions.)</p></div>
+
+<h3 class="sub">2 · The norm: a vector's length</h3>
+
+<div class="box def"><p class="lab">Definition · norm (length/magnitude)</p>
+<p>The <strong>norm</strong> $\lVert\vec u\rVert$ of a vector is the square root of the dot product of the vector with itself:</p>
+$$\lVert\vec u\rVert=\sqrt{u_1^2+u_2^2+\cdots+u_n^2}=\sqrt{\vec u\cdot\vec u}.$$</p></div>
+
+<div class="box idea"><p class="lab">Intuition · it's just Pythagoras, in any dimension</p>
+<p>In the plane, the length of the arrow to $(u_1,u_2)$ is $\sqrt{u_1^2+u_2^2}$ by the Pythagorean theorem. The norm simply extends that to $n$ entries: square every component, add, square-root. The key identity $\lVert\vec u\rVert^2=\vec u\cdot\vec u$ links length and dot product — it's the bridge we'll cross constantly.</p></div>
+
+<div class="box ex"><p class="lab">Example 2 · norms of two vectors</p>
+<p>For $\vec w=[2,4,-3,2,8]$ and $\vec x=[3,1,0,-1,-2]$:</p>
+$$\lVert\vec w\rVert=\sqrt{2^2+4^2+(-3)^2+2^2+8^2}=\sqrt{4+16+9+4+64}=\sqrt{97},$$
+$$\lVert\vec x\rVert=\sqrt{3^2+1^2+0^2+(-1)^2+(-2)^2}=\sqrt{9+1+0+1+4}=\sqrt{15}.$$</p></div>
+
+<div class="box def"><p class="lab">Properties of the dot product</p>
+<p>For vectors $\vec a,\vec b,\vec c$ and scalar $c$: (1) $\vec a\cdot\vec a=\lVert\vec a\rVert^2$; (2) $\vec a\cdot\vec b=\vec b\cdot\vec a$ (symmetric); (3) $\vec a\cdot(\vec b+\vec c)=\vec a\cdot\vec b+\vec a\cdot\vec c$ (distributes); (4) $(c\vec a)\cdot\vec b=c(\vec a\cdot\vec b)=\vec a\cdot(c\vec b)$; (5) $\mathbf 0\cdot\vec a=0$.</p></div>
+
+<h3 class="sub">3 · The dot product knows the angle</h3>
+
+<p>Here's the beautiful fact that makes the dot product so useful: it equals the product of the two lengths times the cosine of the angle between the vectors.</p>
+
+<div class="box def"><p class="lab">Geometric formula</p>
+<p>If $\theta$ is the angle between nonzero vectors $\vec a$ and $\vec b$ (with $0\le\theta\le\pi$), then</p>
+$$\boxed{\;\vec a\cdot\vec b=\lVert\vec a\rVert\,\lVert\vec b\rVert\cos\theta.\;}$$
+<p>Rearranged, this <em>finds</em> the angle: $\displaystyle\cos\theta=\frac{\vec a\cdot\vec b}{\lVert\vec a\rVert\,\lVert\vec b\rVert}$.</p></div>
+
+<div class="box idea"><p class="lab">Why it's true · the Law of Cosines in disguise</p>
+<p>Place $\vec a$ and $\vec b$ as arrows from the origin, reaching points $A$ and $B$; the third side of the triangle is $\vec a-\vec b$. The Law of Cosines on triangle $OAB$ says $\lVert\vec a-\vec b\rVert^2=\lVert\vec a\rVert^2+\lVert\vec b\rVert^2-2\lVert\vec a\rVert\lVert\vec b\rVert\cos\theta$. But expand the left side with dot-product algebra: $\lVert\vec a-\vec b\rVert^2=(\vec a-\vec b)\cdot(\vec a-\vec b)=\lVert\vec a\rVert^2-2\,\vec a\cdot\vec b+\lVert\vec b\rVert^2$. Compare the two: the $\lVert\vec a\rVert^2$ and $\lVert\vec b\rVert^2$ cancel, leaving $-2\,\vec a\cdot\vec b=-2\lVert\vec a\rVert\lVert\vec b\rVert\cos\theta$, i.e. $\vec a\cdot\vec b=\lVert\vec a\rVert\lVert\vec b\rVert\cos\theta$. $\blacksquare$</p></div>
+
+<div class="box ex"><p class="lab">Example 3 · dot product from lengths and angle</p>
+<p>If $\lVert\vec a\rVert=4$, $\lVert\vec b\rVert=6$, and the angle between them is $\theta=\pi/3$ (so $\cos\theta=\tfrac12$), then</p>
+$$\vec a\cdot\vec b=\lVert\vec a\rVert\,\lVert\vec b\rVert\cos\theta=4\cdot6\cdot\tfrac12=12.$$</p></div>
+
+<div class="box ex"><p class="lab">Example 4 · the angle between two vectors</p>
+<p>Find the angle between $\vec a=[2,2,-1]$ and $\vec b=[5,-3,2]$. Compute the three ingredients:</p>
+$$\vec a\cdot\vec b=2(5)+2(-3)+(-1)(2)=10-6-2=2,\quad \lVert\vec a\rVert=\sqrt{4+4+1}=3,\quad \lVert\vec b\rVert=\sqrt{25+9+4}=\sqrt{38}.$$
+$$\cos\theta=\frac{\vec a\cdot\vec b}{\lVert\vec a\rVert\lVert\vec b\rVert}=\frac{2}{3\sqrt{38}}\quad\Rightarrow\quad \theta=\arccos\frac{2}{3\sqrt{38}}\approx84.8^\circ.$$</p></div>
+
+<h3 class="sub">4 · Orthogonality: the dot product's party trick</h3>
+
+<div class="box def"><p class="lab">Definition · orthogonal (perpendicular) vectors</p>
+<p>Two nonzero vectors are <strong>orthogonal</strong> (perpendicular) if the angle between them is $\theta=\pi/2$. Since $\cos(\pi/2)=0$, the formula collapses to the cleanest test in the whole chapter:</p>
+$$\vec a\perp\vec b\iff \vec a\cdot\vec b=0.$$</p></div>
+
+<div class="box idea"><p class="lab">Intuition · the <em>sign</em> of the dot product tells you the general direction</p>
+<p>Because $\vec a\cdot\vec b=\lVert\vec a\rVert\lVert\vec b\rVert\cos\theta$ and the lengths are positive, the sign of $\vec a\cdot\vec b$ is the sign of $\cos\theta$:</p>
+<ul>
+<li><strong>$\vec a\cdot\vec b>0$</strong>: angle is acute, the vectors point in <em>roughly the same</em> direction.</li>
+<li><strong>$\vec a\cdot\vec b=0$</strong>: angle is exactly $90^\circ$, <em>perpendicular</em>.</li>
+<li><strong>$\vec a\cdot\vec b<0$</strong>: angle is obtuse, they point in <em>roughly opposite</em> directions.</li>
+</ul>
+<p>(That's why Example 1's $-8$ meant "generally opposing.") No need to compute the actual angle to read off this qualitative relationship.</p></div>
+
+<div class="box ex"><p class="lab">Example 5 · a perpendicularity check</p>
+<p>Show $[2,2,-1]\perp[5,-4,2]$. Just dot them: $\;[2,2,-1]\cdot[5,-4,2]=2(5)+2(-4)+(-1)(2)=10-8-2=0$. The dot product is $0$, so the vectors are perpendicular. (No angle computation needed — zero <em>is</em> the certificate.)</p></div>
+
+<h3 class="sub">5 · The cross product: a vector perpendicular to two others</h3>
+
+<p>The cross product is special to <strong>three dimensions</strong>. Given two vectors in $\R^3$, it produces a third vector that is perpendicular to both — exactly what you need to find a normal direction to a plane, or the area of a parallelogram.</p>
+
+<div class="box def"><p class="lab">Definition · cross (vector) product</p>
+<p>For $\vec x=(x_1,x_2,x_3)$ and $\vec y=(y_1,y_2,y_3)$ in $\R^3$,</p>
+$$\vec x\times\vec y=(x_2y_3-x_3y_2,\;\; x_3y_1-x_1y_3,\;\; x_1y_2-x_2y_1).$$
+<p>The result is a <strong>vector</strong> (hence "vector product"), and it's defined <em>only</em> for 3-D vectors.</p></div>
+
+<div class="box tip"><p class="lab">Tip · the determinant mnemonic (how everyone actually computes it)</p>
+<p>Nobody memorises those three formulas. Instead, write a "formal determinant" with the unit vectors $\hat i,\hat j,\hat k$ on top and expand along row 1:</p>
+$$\vec x\times\vec y=\det\begin{bmatrix}\hat i&\hat j&\hat k\\ x_1&x_2&x_3\\ y_1&y_2&y_3\end{bmatrix}=\begin{vmatrix}x_2&x_3\\y_2&y_3\end{vmatrix}\hat i-\begin{vmatrix}x_1&x_3\\y_1&y_3\end{vmatrix}\hat j+\begin{vmatrix}x_1&x_2\\y_1&y_2\end{vmatrix}\hat k.$$
+<p><strong>Watch the minus sign on the middle ($\hat j$) term</strong> — it's the single most common cross-product mistake.</p></div>
+
+<div class="box ex"><p class="lab">Example 6 · a cross product by the determinant trick</p>
+<p>For $\vec a=(1,3,4)$ and $\vec b=(2,7,-5)$:</p>
+$$\vec a\times\vec b=\begin{vmatrix}\hat i&\hat j&\hat k\\1&3&4\\2&7&-5\end{vmatrix}=\begin{vmatrix}3&4\\7&-5\end{vmatrix}\hat i-\begin{vmatrix}1&4\\2&-5\end{vmatrix}\hat j+\begin{vmatrix}1&3\\2&7\end{vmatrix}\hat k.$$
+<p>Each $2\times2$ via $ad-bc$: $\;(3\cdot-5-4\cdot7)=-43$; $\;(1\cdot-5-4\cdot2)=-13$; $\;(1\cdot7-3\cdot2)=1$. With the middle sign flip:</p>
+$$\vec a\times\vec b=-43\hat i-(-13)\hat j+1\hat k=-43\hat i+13\hat j+\hat k=(-43,13,1).$$</p></div>
+
+<div class="box ex"><p class="lab">Example 7 · a vector crossed with itself is zero</p>
+<p>For any $\vec a=(a_1,a_2,a_3)$, the determinant for $\vec a\times\vec a$ has two <em>identical</em> rows, so it's $\mathbf 0$. Directly: each component like $a_2a_3-a_3a_2=0$. Hence $\vec a\times\vec a=\mathbf 0$. (Makes sense: a vector can't be perpendicular to itself, and the "parallelogram" it spans with itself is flat.)</p></div>
+
+<h3 class="sub">6 · What the cross product means geometrically</h3>
+
+<div class="box def"><p class="lab">Theorem · $\vec a\times\vec b$ is perpendicular to both $\vec a$ and $\vec b$</p>
+<p>The vector $\vec a\times\vec b$ is orthogonal to $\vec a$ and to $\vec b$ (so it's perpendicular to the whole plane they span).</p></div>
+
+<div class="box ex"><p class="lab">Example 8 · proof that $(\vec a\times\vec b)\cdot\vec a=0$</p>
+<p>Dot $\vec a\times\vec b$ with $\vec a=(a_1,a_2,a_3)$:</p>
+$$(\vec a\times\vec b)\cdot\vec a=a_1(a_2b_3-a_3b_2)-a_2(a_1b_3-a_3b_1)+a_3(a_1b_2-a_2b_1).$$
+<p>Multiply out: $\;a_1a_2b_3-a_1a_3b_2-a_2a_1b_3+a_2a_3b_1+a_3a_1b_2-a_3a_2b_1$. Every term cancels with another ($a_1a_2b_3$ with $-a_2a_1b_3$, etc.), giving $0$. The same computation shows $(\vec a\times\vec b)\cdot\vec b=0$. So $\vec a\times\vec b\perp\vec a$ and $\perp\vec b$. $\blacksquare$</p></div>
+
+<div class="box idea"><p class="lab">Intuition · direction by the right-hand rule, length by $\sin\theta$</p>
+<p>Perpendicularity leaves two choices of direction (up or down); the <strong>right-hand rule</strong> picks one: point your right hand's fingers along $\vec a$, curl them toward $\vec b$, and your thumb points along $\vec a\times\vec b$. For the <em>length</em>:</p>
+$$\lVert\vec a\times\vec b\rVert=\lVert\vec a\rVert\,\lVert\vec b\rVert\sin\theta,$$
+<p>which is exactly the <strong>area of the parallelogram</strong> spanned by $\vec a$ and $\vec b$ (base times height, height $=\lVert\vec b\rVert\sin\theta$). Compare the dot product's $\cos\theta$: dot uses the <em>aligned</em> part, cross uses the <em>perpendicular</em> part.</p></div>
+
+<div class="box idea"><p class="lab">Why $\lVert\vec a\times\vec b\rVert=\lVert\vec a\rVert\lVert\vec b\rVert\sin\theta$ (sketch)</p>
+<p>Expanding $\lVert\vec a\times\vec b\rVert^2$ and regrouping gives the identity $\lVert\vec a\times\vec b\rVert^2=\lVert\vec a\rVert^2\lVert\vec b\rVert^2-(\vec a\cdot\vec b)^2$. Substitute $\vec a\cdot\vec b=\lVert\vec a\rVert\lVert\vec b\rVert\cos\theta$: the right side becomes $\lVert\vec a\rVert^2\lVert\vec b\rVert^2(1-\cos^2\theta)=\lVert\vec a\rVert^2\lVert\vec b\rVert^2\sin^2\theta$. Take square roots (and $\sin\theta\ge0$ on $[0,\pi]$). $\blacksquare$</p></div>
+
+<div class="box def"><p class="lab">Parallel test</p>
+<p>Two nonzero vectors are <strong>parallel</strong> $\iff\vec a\times\vec b=\mathbf 0$. (Parallel means $\theta=0$ or $\pi$, so $\sin\theta=0$, so the cross product has zero length.) Neat contrast: dot product $=0$ detects <em>perpendicular</em>; cross product $=\mathbf 0$ detects <em>parallel</em>.</p></div>
+
+<h3 class="sub">7 · Two signature applications: normals and areas</h3>
+
+<div class="box ex"><p class="lab">Example 9 · a vector perpendicular to a plane through three points</p>
+<p>Find a vector perpendicular to the plane through $P(1,4,6)$, $Q(-2,5,-1)$, $R(1,-1,1)$.</p>
+<p><strong>Idea:</strong> build two vectors lying <em>in</em> the plane, then cross them — the result is perpendicular to both, hence to the plane. Use edges from $P$:</p>
+$$\overrightarrow{PQ}=Q-P=(-3,1,-7),\qquad \overrightarrow{PR}=R-P=(0,-5,-5).$$
+$$\overrightarrow{PQ}\times\overrightarrow{PR}=\begin{vmatrix}\hat i&\hat j&\hat k\\-3&1&-7\\0&-5&-5\end{vmatrix}=(-5-35)\hat i-(15-0)\hat j+(15-0)\hat k=(-40,-15,15).$$
+<p>So $(-40,-15,15)$ is perpendicular to the plane — and so is any scalar multiple, e.g. the tidier $(8,3,-3)$ (divide by $-5$).</p></div>
+
+<div class="box ex"><p class="lab">Example 10 · area of a triangle in 3-D</p>
+<p>Find the area of triangle $PQR$ with the same $P,Q,R$. The parallelogram on $\overrightarrow{PQ},\overrightarrow{PR}$ has area $\lVert\overrightarrow{PQ}\times\overrightarrow{PR}\rVert$; a triangle is <em>half</em> of it. From Example 9, $\overrightarrow{PQ}\times\overrightarrow{PR}=(-40,-15,15)$, so</p>
+$$\lVert\overrightarrow{PQ}\times\overrightarrow{PR}\rVert=\sqrt{(-40)^2+(-15)^2+15^2}=\sqrt{1600+225+225}=\sqrt{2050}=5\sqrt{82}.$$
+$$\text{Area of }\triangle PQR=\tfrac12\cdot5\sqrt{82}=\frac{5}{2}\sqrt{82}.$$</p></div>
+
+<h3 class="sub">8 · Algebra of the cross product (and the scalar triple product)</h3>
+
+<div class="box def"><p class="lab">Properties of the cross product</p>
+<p>For vectors $\vec a,\vec b,\vec c$ and scalar $c$:</p>
+<ol>
+<li>$\vec a\times\vec b=-(\vec b\times\vec a)$ &nbsp;(<strong>anti</strong>-commutative — order flips the sign!)</li>
+<li>$(c\vec a)\times\vec b=c(\vec a\times\vec b)=\vec a\times(c\vec b)$</li>
+<li>$\vec a\times(\vec b+\vec c)=\vec a\times\vec b+\vec a\times\vec c$</li>
+<li>$(\vec a+\vec b)\times\vec c=\vec a\times\vec c+\vec b\times\vec c$</li>
+<li>$\vec a\cdot(\vec b\times\vec c)=(\vec a\times\vec b)\cdot\vec c$ &nbsp;(the <strong>scalar triple product</strong>)</li>
+<li>$\vec a\times(\vec b\times\vec c)=(\vec a\cdot\vec c)\vec b-(\vec a\cdot\vec b)\vec c$ &nbsp;("BAC−CAB")</li>
+</ol></div>
+
+<div class="box warn"><p class="lab">Trap · the cross product is anti-commutative, not commutative</p>
+<p>Property 1 says swapping the order <em>negates</em> the result: $\vec b\times\vec a=-(\vec a\times\vec b)$. This fits the right-hand rule (flip the order, your thumb points the opposite way). Don't ever assume $\vec a\times\vec b=\vec b\times\vec a$. Also note the cross product is <em>not</em> associative in general: $\vec a\times(\vec b\times\vec c)\ne(\vec a\times\vec b)\times\vec c$.</p></div>
+
+<div class="box idea"><p class="lab">The scalar triple product is a determinant (Property 5 proof)</p>
+<p>Writing $\vec a\cdot(\vec b\times\vec c)$ out and regrouping gives exactly the $3\times3$ determinant with the three vectors as rows:</p>
+$$\vec a\cdot(\vec b\times\vec c)=\det\begin{bmatrix}a_1&a_2&a_3\\b_1&b_2&b_3\\c_1&c_2&c_3\end{bmatrix}.$$
+<p>Regrouping the same expression the other way shows it also equals $(\vec a\times\vec b)\cdot\vec c$, proving Property 5. Geometrically its absolute value is the <strong>volume of the parallelepiped</strong> spanned by $\vec a,\vec b,\vec c$ — and it's $0$ exactly when the three vectors are coplanar (linearly dependent). A lovely closing link: the determinant from §3.3 measures 3-D volume.</p></div>
+
+<h3 class="sub">9 · Section recap</h3>
+
+<div class="box tip"><p class="lab">Dot vs cross, side by side</p>
+<ul>
+<li><strong>Dot product</strong> $\vec a\cdot\vec b=\sum a_ib_i$ → a <em>number</em>; equals $\lVert\vec a\rVert\lVert\vec b\rVert\cos\theta$; detects <strong>perpendicular</strong> ($=0$); sign gives same/opposite direction; gives length via $\lVert\vec u\rVert=\sqrt{\vec u\cdot\vec u}$ and angle via $\cos\theta=\dfrac{\vec a\cdot\vec b}{\lVert\vec a\rVert\lVert\vec b\rVert}$.</li>
+<li><strong>Cross product</strong> (3-D only) $\vec a\times\vec b$ → a <em>vector</em> perpendicular to both; compute by the $\hat i\hat j\hat k$ determinant (mind the middle minus); length $\lVert\vec a\rVert\lVert\vec b\rVert\sin\theta=$ parallelogram area; detects <strong>parallel</strong> ($=\mathbf 0$); anti-commutative.</li>
+<li><strong>Uses:</strong> normal to a plane = cross of two in-plane edges; triangle area = ½‖cross‖; volume / coplanarity = scalar triple product = determinant.</li>
+</ul></div>
+</section>
+<section class="sec" id="s35" data-n="3.5" data-t="Eigenvalues" data-s="special directions, diagonalization">
+<div class="sec-h"><span class="tag">SECTION 3.5</span><h2>The Eigenvalue Problem</h2></div>
+
+<p>Multiplying a vector by a matrix usually <em>rotates and stretches</em> it into a new direction. But for most matrices there are a few special directions that the matrix leaves <strong>pointing the same way</strong> — it only stretches or shrinks them. Those magic directions are <strong>eigenvectors</strong>, and the stretch factors are <strong>eigenvalues</strong>. They are the deepest idea in the chapter and the key to understanding what a matrix "really does", plus a slick way to compute huge powers $A^k$.</p>
+
+<h3 class="sub">1 · What eigenvectors and eigenvalues are</h3>
+
+<div class="box def"><p class="lab">Definition · eigenvector &amp; eigenvalue</p>
+<p>For a square $n\times n$ matrix $A$, a <strong>nonzero</strong> vector $\vec x$ is an <strong>eigenvector</strong> of $A$ if</p>
+$$A\vec x=\lambda\vec x$$
+<p>for some scalar $\lambda$. That scalar $\lambda$ is the <strong>eigenvalue</strong> attached to $\vec x$; we say $\vec x$ is an eigenvector <em>corresponding to</em> $\lambda$. (The zero vector is excluded — $A\mathbf 0=\lambda\mathbf 0$ holds for every $\lambda$ and would tell us nothing.)</p></div>
+
+<div class="box idea"><p class="lab">Intuition · "the matrix doesn't turn this vector, it just scales it"</p>
+<p>$A\vec x=\lambda\vec x$ says: feeding $\vec x$ through $A$ gives back the <em>same direction</em>, merely multiplied by $\lambda$. If $\lambda=3$, $A$ triples $\vec x$; if $\lambda=-1$, $A$ flips it; if $\lambda=0$, $A$ crushes it to $\mathbf 0$ (so $\vec x$ is a nonzero solution of $A\vec x=\mathbf 0$). These invariant directions are the "grain" of the matrix — the axes along which its action is simplest.</p></div>
+
+<div class="box ex"><p class="lab">Example 1 · verifying an eigenvector</p>
+<p>Is $\vec v=\begin{bmatrix}1\\2\end{bmatrix}$ an eigenvector of $A=\begin{bmatrix}3&0\\8&-1\end{bmatrix}$? Just multiply and see if the output is a multiple of $\vec v$:</p>
+$$A\vec v=\begin{bmatrix}3&0\\8&-1\end{bmatrix}\begin{bmatrix}1\\2\end{bmatrix}=\begin{bmatrix}3\\6\end{bmatrix}=3\begin{bmatrix}1\\2\end{bmatrix}=3\vec v.$$
+<p>Yes — the output $(3,6)$ is exactly $3$ times the input, so $\vec v$ is an eigenvector with eigenvalue $\lambda=3$.</p></div>
+
+<h3 class="sub">2 · Finding eigenvalues: the characteristic equation</h3>
+
+<p>Verifying is easy; <em>finding</em> eigenvalues from scratch needs one clever rearrangement. Move everything to one side: $A\vec x=\lambda\vec x$ becomes $A\vec x-\lambda\vec x=\mathbf 0$, i.e. $(A-\lambda I)\vec x=\mathbf 0$ (we insert $I$ so the "$\lambda$" becomes a matrix we can subtract).</p>
+
+<div class="box def"><p class="lab">Definition · characteristic equation</p>
+<p>$\lambda$ is an eigenvalue of $A$ $\iff$ the homogeneous system $(A-\lambda I)\vec x=\mathbf 0$ has a <strong>nontrivial</strong> solution $\iff$ the matrix $A-\lambda I$ is singular $\iff$</p>
+$$\boxed{\;\det(A-\lambda I)=0.\;}$$
+<p>This is the <strong>characteristic equation</strong>. Its left side is a degree-$n$ polynomial in $\lambda$ (the <em>characteristic polynomial</em>); its roots are precisely the eigenvalues.</p></div>
+
+<div class="box idea"><p class="lab">Intuition · why the determinant must vanish</p>
+<p>We need a <em>nonzero</em> $\vec x$ with $(A-\lambda I)\vec x=\mathbf 0$. A homogeneous system has nonzero solutions exactly when its matrix is singular (§3.3), and singular exactly when its determinant is $0$. So eigenvalues are the special $\lambda$'s that make $A-\lambda I$ "collapse" (lose invertibility). Find those $\lambda$'s first, then for each one solve $(A-\lambda I)\vec x=\mathbf 0$ to get its eigenvectors.</p></div>
+
+<div class="box def"><p class="lab">The recipe</p>
+<ol class="steps">
+<li>Form $A-\lambda I$ (subtract $\lambda$ from each diagonal entry).</li>
+<li>Set $\det(A-\lambda I)=0$ and solve the polynomial for $\lambda$ — these are the eigenvalues.</li>
+<li>For <em>each</em> eigenvalue $\lambda$, solve the homogeneous system $(A-\lambda I)\vec x=\mathbf 0$; its nonzero solutions are the eigenvectors (a free variable always appears, since the matrix is singular).</li>
+</ol></div>
+
+<h3 class="sub">3 · Worked examples: $2\times2$</h3>
+
+<div class="box ex"><p class="lab">Example 2 · full eigen-analysis of a $2\times2$</p>
+<p>Find eigenvalues and eigenvectors of $A=\begin{bmatrix}1&6\\5&2\end{bmatrix}$.</p>
+<p><strong>Eigenvalues.</strong> $\det(A-\lambda I)=\det\begin{bmatrix}1-\lambda&6\\5&2-\lambda\end{bmatrix}=(1-\lambda)(2-\lambda)-30=\lambda^2-3\lambda-28=0.$ Factor: $(\lambda-7)(\lambda+4)=0$, so $\lambda=7$ or $\lambda=-4$.</p>
+<p><strong>Eigenvector for $\lambda_1=7$:</strong> solve $(A-7I)\vec v=\mathbf 0$, i.e. $\begin{bmatrix}-6&6\\5&-5\end{bmatrix}\vec v=\mathbf 0$. Both rows say $v_1=v_2$, so pick $\vec v_1=\begin{bmatrix}1\\1\end{bmatrix}$.</p>
+<p><strong>Eigenvector for $\lambda_2=-4$:</strong> solve $(A+4I)\vec v=\mathbf 0$, i.e. $\begin{bmatrix}5&6\\5&6\end{bmatrix}\vec v=\mathbf 0$, giving $5v_1+6v_2=0$, so $\vec v_2=\begin{bmatrix}1\\-5/6\end{bmatrix}$ (or the cleaner $\begin{bmatrix}6\\-5\end{bmatrix}$).</p>
+<p>So $\lambda_1=7\leftrightarrow\begin{bmatrix}1\\1\end{bmatrix}$ and $\lambda_2=-4\leftrightarrow\begin{bmatrix}6\\-5\end{bmatrix}$.</p></div>
+
+<div class="box tip"><p class="lab">Tip · eigenvectors come in families — any nonzero multiple works</p>
+<p>Because $(A-\lambda I)\vec x=\mathbf 0$ is homogeneous, if $\vec v$ is an eigenvector then so is every nonzero scalar multiple of $\vec v$ (they all point along the same special direction). So $\begin{bmatrix}6\\-5\end{bmatrix}$ and $\begin{bmatrix}1\\-5/6\end{bmatrix}$ are the "same" eigenvector. Just report one convenient representative, ideally with whole-number entries.</p></div>
+
+<div class="box ex"><p class="lab">Example 3 · another $2\times2$</p>
+<p>For $A=\begin{bmatrix}5&4\\1&2\end{bmatrix}$: $\det(A-\lambda I)=(5-\lambda)(2-\lambda)-4=\lambda^2-7\lambda+6=0=(\lambda-6)(\lambda-1)$, so $\lambda=6$ or $1$. For $\lambda=6$: $(A-6I)\vec v=\mathbf 0$ gives $\vec v_1=\begin{bmatrix}1\\1/4\end{bmatrix}$ (i.e. $\begin{bmatrix}4\\1\end{bmatrix}$). For $\lambda=1$: $(A-I)\vec v=\mathbf 0$ gives $\vec v_2=\begin{bmatrix}1\\-1\end{bmatrix}$.</p></div>
+
+<h3 class="sub">4 · Worked examples: $3\times3$ (and a shortcut)</h3>
+
+<div class="box ex"><p class="lab">Example 4 · four $3\times3$ matrices</p>
+<p><strong>Matrix $A=\begin{bmatrix}0&1&0\\0&0&1\\6&-11&6\end{bmatrix}$ (a companion matrix).</strong> Expanding $\det(A-\lambda I)$ gives $-\lambda^3+6\lambda^2-11\lambda+6=-(\lambda-1)(\lambda-2)(\lambda-3)$, so $\lambda=1,2,3$. Solving each $(A-\lambda I)\vec v=\mathbf 0$:</p>
+$$\lambda=1:\begin{bmatrix}1\\1\\1\end{bmatrix},\qquad \lambda=2:\begin{bmatrix}1\\2\\4\end{bmatrix},\qquad \lambda=3:\begin{bmatrix}1\\3\\9\end{bmatrix}.$$
+<p>Three distinct eigenvalues, three independent eigenvectors — the ideal case.</p>
+<p><strong>Matrix $B=\begin{bmatrix}3&-2&0\\-2&3&0\\0&0&5\end{bmatrix}$ (symmetric).</strong> $\det(B-\lambda I)=(5-\lambda)^2(1-\lambda)$, so $\lambda_1=1$ and $\lambda_2=\lambda_3=5$ (a <strong>repeated</strong> eigenvalue). For $\lambda=1$: $\vec v_1=\begin{bmatrix}1\\1\\0\end{bmatrix}$. For $\lambda=5$ the system has <em>two</em> free variables, giving two independent eigenvectors $\begin{bmatrix}1\\-1\\0\end{bmatrix}$ and $\begin{bmatrix}0\\0\\1\end{bmatrix}$ — so even the repeated eigenvalue supplies its full quota.</p>
+<p><strong>Matrix $C=\begin{bmatrix}1&1&-1\\-1&3&-1\\-1&2&0\end{bmatrix}$.</strong> $\det(C-\lambda I)=-(1-\lambda)^2(2-\lambda)$, so $\lambda_1=2$, $\lambda_2=\lambda_3=1$. For $\lambda=2$: $\vec v_1=\begin{bmatrix}0\\1\\1\end{bmatrix}$. For the <em>repeated</em> $\lambda=1$ here, the system has only <em>one</em> free variable, yielding a single direction $\begin{bmatrix}1\\1\\1\end{bmatrix}$ — a warning sign we'll return to (this matrix is "defective").</p>
+<p><strong>Matrix $D=\begin{bmatrix}-1&2&2\\2&2&2\\-3&-6&-6\end{bmatrix}$.</strong> $\det(D-\lambda I)=-\lambda(\lambda+2)(\lambda+3)$, so $\lambda=0,-2,-3$ (note $\lambda=0$ is allowed — it signals $D$ is singular), with eigenvectors $\begin{bmatrix}0\\1\\-1\end{bmatrix},\begin{bmatrix}1\\-1/2\\0\end{bmatrix},\begin{bmatrix}1\\0\\-1\end{bmatrix}$.</p></div>
+
+<div class="box tip"><p class="lab">Tip · a triangular matrix wears its eigenvalues on its diagonal</p>
+<p><strong>Theorem:</strong> the eigenvalues of a triangular (or diagonal) matrix are exactly its main-diagonal entries. Reason: $A-\lambda I$ is still triangular, so $\det(A-\lambda I)=(a_{11}-\lambda)(a_{22}-\lambda)\cdots(a_{nn}-\lambda)$, whose roots are the $a_{ii}$. So if you spot a triangular matrix, <em>read the eigenvalues straight off the diagonal</em> — no characteristic polynomial needed.</p></div>
+
+<h3 class="sub">5 · Diagonalization: the eigen-payoff</h3>
+
+<p>If an $n\times n$ matrix has enough independent eigenvectors, we can rewrite it as $A=PDP^{-1}$ with $D$ <em>diagonal</em>. This "diagonalization" turns hard matrix questions (especially powers) into trivial ones.</p>
+
+<div class="box def"><p class="lab">Definition · diagonalizable; how to build $P$ and $D$</p>
+<p>$A$ is <strong>diagonalizable</strong> if $A=PDP^{-1}$ for some invertible $P$ and diagonal $D$. The construction: put $n$ independent eigenvectors as the <em>columns</em> of $P$, and put their eigenvalues (in the matching order) on the diagonal of $D$:</p>
+$$P=[\,\vec v_1\ \vec v_2\ \cdots\ \vec v_n\,],\qquad D=\begin{bmatrix}\lambda_1&&\\&\ddots&\\&&\lambda_n\end{bmatrix}.$$</p></div>
+
+<div class="box idea"><p class="lab">Intuition · change to the "eigen-coordinates" where $A$ is just scaling</p>
+<p>$A=PDP^{-1}$ reads right-to-left as a three-step process: $P^{-1}$ rewrites a vector in the eigenvector coordinate system, $D$ simply scales each coordinate by its eigenvalue, and $P$ translates back. In the right coordinates, the complicated matrix $A$ is <em>nothing but independent stretches</em>. That's why eigenvectors matter: they're the coordinate axes that make $A$ diagonal.</p></div>
+
+<div class="box ex"><p class="lab">Example 5 · computing $A^k$ painlessly</p>
+<p>For $A=\begin{bmatrix}7&2\\-4&1\end{bmatrix}$ you're told $A=PDP^{-1}$ with $P=\begin{bmatrix}1&1\\-1&-2\end{bmatrix}$, $D=\begin{bmatrix}5&0\\0&3\end{bmatrix}$. (Indeed the characteristic equation $\lambda^2-8\lambda+15=0$ gives $\lambda=3,5$.) The magic: in $A^k=(PDP^{-1})^k$, every interior $P^{-1}P$ cancels to $I$, leaving</p>
+$$A^k=PD^kP^{-1},\qquad D^k=\begin{bmatrix}5^k&0\\0&3^k\end{bmatrix}.$$
+<p>Diagonal powers are trivial (just raise each diagonal entry). With $P^{-1}=\begin{bmatrix}2&1\\-1&-1\end{bmatrix}$, multiplying out gives the closed form</p>
+$$A^k=\begin{bmatrix}2\cdot5^k-3^k & 5^k-3^k\\ 2\cdot3^k-2\cdot5^k & 2\cdot3^k-5^k\end{bmatrix}.$$
+<p>No repeated matrix multiplication — one formula valid for <em>every</em> $k\ge1$. This is the headline application of diagonalization.</p></div>
+
+<div class="box tip"><p class="lab">Tip · verify without computing $P^{-1}$</p>
+<p>To check $A=PDP^{-1}$ you don't need the inverse: just confirm $AP=PD$ (multiply both sides of $A=PDP^{-1}$ by $P$ on the right). Column by column this is exactly "$A\vec v_i=\lambda_i\vec v_i$", the eigenvector equations — a quick sanity check.</p></div>
+
+<h3 class="sub">6 · When is a matrix diagonalizable?</h3>
+
+<div class="box def"><p class="lab">Theorem · the diagonalizability criterion</p>
+<p>An $n\times n$ matrix $A$ is diagonalizable <strong>if and only if $A$ has $n$ linearly independent eigenvectors</strong>. In that case, those eigenvectors are the columns of $P$ and the corresponding eigenvalues are the diagonal of $D$.</p></div>
+
+<div class="box ex"><p class="lab">Example 6 · diagonalizing despite a repeated eigenvalue</p>
+<p>Diagonalize $A=\begin{bmatrix}1&3&3\\-3&-5&-3\\3&3&1\end{bmatrix}$.</p>
+<p><strong>Step 1 — eigenvalues:</strong> $\det(A-\lambda I)=-(\lambda-1)(\lambda+2)^2$, so $\lambda=1$ and $\lambda=-2$ (doubled).</p>
+<p><strong>Step 2 — eigenvectors:</strong> $\lambda=1$ gives $\vec v_1=\begin{bmatrix}1\\-1\\1\end{bmatrix}$; the repeated $\lambda=-2$ gives <em>two</em> independent ones $\vec v_2=\begin{bmatrix}-1\\1\\0\end{bmatrix},\vec v_3=\begin{bmatrix}-1\\0\\1\end{bmatrix}$. That's $3$ independent eigenvectors in total — enough!</p>
+<p><strong>Steps 3–4 — assemble:</strong> $P=\begin{bmatrix}1&-1&-1\\-1&1&0\\1&0&1\end{bmatrix}$, $D=\begin{bmatrix}1&0&0\\0&-2&0\\0&0&-2\end{bmatrix}$. Verify with $AP=PD$ (both equal $\begin{bmatrix}1&2&2\\-1&-2&0\\1&0&-2\end{bmatrix}$) — no need to find $P^{-1}$. So $A$ is diagonalizable.</p></div>
+
+<div class="box def"><p class="lab">Definition · algebraic vs geometric multiplicity</p>
+<ul>
+<li>The <strong>algebraic multiplicity (AM)</strong> of $\lambda$ is how many times it appears as a root of the characteristic polynomial.</li>
+<li>The <strong>geometric multiplicity (GM)</strong> of $\lambda$ is the number of independent eigenvectors for $\lambda$ (the number of free variables in $(A-\lambda I)\vec x=\mathbf 0$).</li>
+</ul>
+<p>Always $1\le\text{GM}\le\text{AM}$. The eigenvalue "demands" AM eigenvectors but only "supplies" GM of them.</p></div>
+
+<div class="box def"><p class="lab">Theorem · the clean diagonalizability test</p>
+<p>$A$ is diagonalizable $\iff$ for <em>every</em> eigenvalue, $\text{GM}=\text{AM}$. (Equivalently, the independent eigenvectors total $n$.) Since GM=AM automatically when AM=1, <strong>you only need to check the repeated eigenvalues</strong>.</p></div>
+
+<div class="box warn"><p class="lab">Trap · a repeated eigenvalue can starve you of eigenvectors</p>
+<p>Compare Example 4's matrices $B$ and $C$: both had a doubled eigenvalue. $B$ supplied <em>two</em> independent eigenvectors for it (GM=AM=2 → diagonalizable). $C$ supplied only <em>one</em> (GM=1 &lt; AM=2 → <strong>not</strong> diagonalizable, "defective"). The lesson: a repeated eigenvalue is a red flag — you must actually count its eigenvectors. It's only when GM falls short of AM that diagonalization fails.</p></div>
+
+<div class="box idea"><p class="lab">A sufficient (not necessary) shortcut</p>
+<p><strong>Theorem:</strong> eigenvectors for <em>distinct</em> eigenvalues are automatically linearly independent. <strong>Corollary:</strong> if an $n\times n$ matrix has $n$ <em>distinct</em> eigenvalues, it has $n$ independent eigenvectors and is <strong>guaranteed diagonalizable</strong> (as in Example 4's matrix $A$, with eigenvalues $1,2,3$). Caution: this is sufficient but not necessary — a matrix with repeated eigenvalues can still be diagonalizable (matrix $B$), as long as each repeated eigenvalue supplies enough eigenvectors.</p></div>
+
+<div class="box idea"><p class="lab">Why distinct eigenvalues force independence (idea)</p>
+<p>Suppose eigenvectors $\vec x_1,\dots,\vec x_k$ for distinct $\lambda_1,\dots,\lambda_k$ satisfied a dependence $c_1\vec x_1+\cdots+c_k\vec x_k=\mathbf 0$. Applying $A$ multiplies each term by its $\lambda_i$; subtracting a suitable multiple of the original relation cancels one vector and leaves a shorter relation whose coefficients carry factors $(\lambda_i-\lambda_j)\ne0$. Induction forces all $c_i=0$. So no nontrivial dependence exists — the eigenvectors are independent. $\blacksquare$</p></div>
+
+<h3 class="sub">7 · Section recap &amp; the big picture</h3>
+
+<div class="box tip"><p class="lab">The §3.5 playbook</p>
+<ul>
+<li><strong>Eigen-equation:</strong> $A\vec x=\lambda\vec x$, $\vec x\ne\mathbf 0$. $\vec x$ = eigenvector (a direction $A$ only scales), $\lambda$ = eigenvalue (the scale factor).</li>
+<li><strong>Find $\lambda$:</strong> solve the characteristic equation $\det(A-\lambda I)=0$. <strong>Find $\vec x$:</strong> for each $\lambda$, solve $(A-\lambda I)\vec x=\mathbf 0$ (report whole-number representatives; multiples are the same eigenvector).</li>
+<li><strong>Triangular/diagonal</strong> → eigenvalues are the diagonal entries, free.</li>
+<li><strong>Diagonalize</strong> if you have $n$ independent eigenvectors: $A=PDP^{-1}$ with eigenvectors as columns of $P$, eigenvalues on $D$. Then $A^k=PD^kP^{-1}$ makes powers trivial. Check via $AP=PD$.</li>
+<li><strong>Diagonalizable $\iff$ GM = AM for every eigenvalue</strong> (only repeated eigenvalues need checking). $n$ <em>distinct</em> eigenvalues guarantee it; a repeated eigenvalue short on eigenvectors (GM &lt; AM) breaks it.</li>
+</ul></div>
+
+<div class="box idea"><p class="lab">How §3.5 ties the whole chapter together</p>
+<p>Eigenvalues sit at the crossroads of everything you've learned: finding them needs <strong>determinants</strong> (§3.3); finding eigenvectors is solving a <strong>homogeneous system</strong> (§3.1); counting independent eigenvectors is a <strong>linear-independence</strong> question (§3.2); and $\lambda=0$ being an eigenvalue is exactly the statement that $A$ is <strong>singular</strong> (§3.3). Master eigenvalues and you've genuinely understood what a matrix <em>does</em> — not just how to compute with it.</p></div>
+</section>
+<div class="endnote"><strong>How to use this guide.</strong> Read it with a pen and paper. Every worked example is meant to be copied out by hand once, slowly, the computations only stick when your own hand does the row operations. The orange highlights mark the thing to look at right now; the green boxes are tips; the red boxes are traps students fall into every year. Good luck. You can do this.</div>
+</main></div></div>
+<script>
+// theme
+var root=document.documentElement,tg=document.getElementById('tg');
+function setT(t){root.setAttribute('data-theme',t);tg.textContent=t==='dark'?'Light':'Dark';try{localStorage.setItem('m2014t',t)}catch(e){}}
+try{var s=localStorage.getItem('m2014t');if(s)setT(s);else if(matchMedia('(prefers-color-scheme:dark)').matches)setT('dark')}catch(e){}
+tg.onclick=function(){setT(root.getAttribute('data-theme')==='dark'?'light':'dark')};
+// build TOC from sections
+var toc=document.getElementById('toc');
+document.querySelectorAll('main .sec').forEach(function(s){
+  var n=s.getAttribute('data-n'),t=s.getAttribute('data-t'),sub=s.getAttribute('data-s')||'';
+  var li=document.createElement('li');
+  li.innerHTML='<a href="#'+s.id+'"><span class="n">'+n+'</span><span>'+t+(sub?'<small>'+sub+'</small>':'')+'</span></a>';
+  toc.appendChild(li);
+});
+// progress bar
+var prog=document.getElementById('prog');
+addEventListener('scroll',function(){var h=document.documentElement;var p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);prog.style.setProperty('--p',Math.max(0,Math.min(1,p)))},{passive:true});
+// KaTeX render
+function render(){renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false,macros:{"\\R":"\\mathbb{R}","\\C":"\\mathbb{C}","\\vec":"\\mathbf{#1}"}})}
+if(window.renderMathInElement)render();else addEventListener('load',render);
+</script>
+</body></html>

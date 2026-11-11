@@ -14,6 +14,7 @@
   --bg:#f4f5f8; --surface:#ffffff; --ink:#161e2b; --muted:#566074; --line:#d5dae4;
   --comp:#c2410c; --comp-soft:#fdeee6; --comp-art:#eef3ef; --comp-grid:rgba(23,35,45,.07);
   --phys:#3f4fd8; --phys-soft:#e8eaff;
+  --math:#1b3a7a; --math-soft:#e6ecf8; --math-art:#eef1f7; --math-grid:rgba(27,58,122,.08);
   --shadow:0 2px 4px rgba(22,30,43,.06),0 10px 26px rgba(22,30,43,.09);
   --serif:'Fraunces',Georgia,'Times New Roman',serif;
   --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
@@ -25,6 +26,7 @@
   --bg:#0e1319; --surface:#161d26; --ink:#e8edf3; --muted:#9aa7b6; --line:#2a3441;
   --comp:#ffa24d; --comp-soft:#3a2614; --comp-art:#10171c; --comp-grid:rgba(230,237,242,.06);
   --phys:#8c9bff; --phys-soft:#232d63;
+  --math:#8fb0ee; --math-soft:#1c2a46; --math-art:#10151f; --math-grid:rgba(143,176,238,.08);
   --shadow:0 2px 4px rgba(0,0,0,.4),0 10px 26px rgba(0,0,0,.4);
   color-scheme:dark;
 }
@@ -60,10 +62,13 @@ h1{margin:34px 0 10px;font:700 clamp(2.3rem,6.4vw,3.8rem)/1.05 var(--serif);lett
 .card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
 .card.comp{--acc:var(--comp);--acc-soft:var(--comp-soft)}
 .card.phys{--acc:var(--phys);--acc-soft:var(--phys-soft)}
+.card.math{--acc:var(--math);--acc-soft:var(--math-soft)}
 .art{border-bottom:1.5px solid var(--line);padding:14px 18px}
 .art svg{display:block;width:100%;height:auto;max-height:128px}
 .art.comp{background-color:var(--comp-art);background-image:linear-gradient(var(--comp-grid) 1px,transparent 1px),linear-gradient(90deg,var(--comp-grid) 1px,transparent 1px);background-size:22px 22px;color:var(--ink)}
 .art.phys{background:#0f1740;color:#e8ebfa}
+.art.math{background-color:var(--math-art);background-image:linear-gradient(var(--math-grid) 1px,transparent 1px),linear-gradient(90deg,var(--math-grid) 1px,transparent 1px);background-size:22px 22px;color:var(--ink)}
+.card.math h2{font-family:var(--disp);font-weight:800;letter-spacing:-.01em}
 .body{display:flex;flex-direction:column;gap:12px;padding:20px 22px 22px;flex:1}
 .tag{align-self:flex-start;font:600 .74rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--acc);background:var(--acc-soft);padding:6px 10px;border-radius:5px}
 .card h2{margin:0;font-size:1.85rem;line-height:1.12;text-wrap:balance}
@@ -143,6 +148,37 @@ h1{margin:34px 0 10px;font:700 clamp(2.3rem,6.4vw,3.8rem)/1.05 var(--serif);lett
           <p>From units and the night sky to black holes and the Big Bang, in plain language, with an exam-style way of thinking and a full Test 2 preparation section.</p>
           <ul class="facts">
             <li>19 chapters</li><li>Test 2 preparation</li><li>Assignments 1 and 2 explained</li><li>Test 1 explained</li>
+          </ul>
+          <div class="go">Open the guide <span aria-hidden="true">→</span></div>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a class="card math" href="math2014/">
+        <div class="art math" aria-hidden="true">
+          <svg viewBox="0 0 240 104" role="presentation">
+            <g stroke="var(--math)" stroke-width="2.6" fill="none" stroke-linecap="round">
+              <path d="M44 24 h-10 v56 h10"/><path d="M128 24 h10 v56 h-10"/>
+            </g>
+            <line x1="112" y1="26" x2="112" y2="78" stroke="var(--math)" stroke-opacity=".5" stroke-width="1.6" stroke-dasharray="3 3"/>
+            <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="13" font-weight="700" text-anchor="middle" fill="currentColor">
+              <text x="58" y="40">1</text><text x="82" y="40">2</text><text x="120" y="40">4</text>
+              <text x="58" y="61">0</text><text x="82" y="61">1</text><text x="120" y="61">3</text>
+              <text x="58" y="82">0</text><text x="82" y="82">0</text><text x="120" y="82">2</text>
+            </g>
+            <g stroke="var(--math)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="168" y1="88" x2="210" y2="34"/><path d="M210 34 l-13 2 M210 34 l2 13"/>
+            </g>
+            <circle cx="168" cy="88" r="3.4" fill="var(--math)"/>
+            <text x="214" y="30" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12" font-weight="700" fill="currentColor">&#955;v</text>
+          </svg>
+        </div>
+        <div class="body">
+          <span class="tag">MATH2014</span>
+          <h2>Linear Algebra, Made Intuitive</h2>
+          <p>Chapter 3 from the ground up: systems, vectors, matrices, determinants, inverses, dot and cross products, and eigenvalues — every concept and every worked example explained step by step.</p>
+          <ul class="facts">
+            <li>5 sections</li><li>Every example worked</li><li>Tips &amp; traps</li><li>KaTeX matrices</li>
           </ul>
           <div class="go">Open the guide <span aria-hidden="true">→</span></div>
         </div>
