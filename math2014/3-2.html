@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-<style>
+<link rel="stylesheet" href="viz.css"><style>
 :root{
   --bg:#f3f5f8; --grid:rgba(27,42,74,.055); --surface:#ffffff; --surface-2:#e9eef6;
   --ink:#17202e; --muted:#53617a; --line:#ccd5e4;
@@ -157,6 +157,8 @@ hr.soft{border:none;border-top:1.5px dashed var(--line);margin:2.2em 0}
 <div class="box idea"><p class="lab">Intuition · a vector is an arrow; the two operations are "slide" and "stretch"</p>
 <p>Picture $\vec w$ as an arrow from the origin to the point $(w_1,w_2)$. Then <strong>scalar multiplication stretches or flips</strong> the arrow: $2\vec w$ is twice as long, same direction; $-\vec w$ is the same length pointing backwards; $0\vec w$ collapses to the origin. <strong>Addition slides</strong> one arrow onto the tip of the other. These two moves, stretch and slide, are the <em>only</em> things we ever do to vectors, and the whole section is about what you can build with them.</p></div>
 
+<figure class="viz" data-viz="vector"></figure>
+
 <div class="box ex"><p class="lab">Example 1 · scaling and combining two vectors</p>
 <p>Given $\vec u=\begin{bmatrix}1\\-2\end{bmatrix}$ and $\vec v=\begin{bmatrix}2\\-5\end{bmatrix}$, find $4\vec u$, $(-3)\vec v$, and $4\vec u+(-3)\vec v$.</p>
 <p>Scale each entry, then add entrywise:</p>
@@ -214,6 +216,8 @@ $$3\vec u_1+0\vec u_2+5\vec u_3-\vec u_4=\begin{bmatrix}-22\\20\\1\\1\\-10\\24\e
 <div class="box tip"><p class="lab">Tip · compute linear combinations entry-by-entry, with a column of scratch</p>
 <p>For a 6-entry combination, don't try to do it in your head. Write the weight times each vector's first entry in a row and sum; then the second entries; and so on. It's slow but bullet-proof. A single sign slip ruins the whole vector, and these appear constantly, so trade a little speed for accuracy.</p></div>
 
+<figure class="viz" data-viz="lincomb"></figure>
+
 <h3 class="sub">5 · The key question: is $\vec b$ a linear combination of given vectors?</h3>
 
 <p>Example 2 built vectors by choosing weights. Now reverse it: you're <em>handed</em> a target vector $\vec b$ and asked whether <em>some</em> choice of weights produces it. This "can I build $\vec b$?" question is the bridge back to §3.1.</p>
@@ -255,6 +259,8 @@ $$[\,\vec a_1\ \ \vec a_2\ \cdots\ \vec a_n\mid\vec b\,].$$
 </ul>
 <p>Every span contains $\mathbf 0$ (take all weights $0$) and is "flat" through the origin, a point, line, plane, or higher-dimensional flat. That last bullet is your first hint that some vectors can be <em>redundant</em>, which is exactly linear dependence.</p></div>
 
+<figure class="viz" data-viz="span"></figure>
+
 <h3 class="sub">7 · Linear independence: are any of my vectors redundant?</h3>
 
 <p>If one vector in a set is already reachable from the others, it adds no new directions, it's dead weight. "Linear independence" is the precise way to say "no dead weight." The cleanest test uses the zero vector.</p>
@@ -284,6 +290,8 @@ $$\alpha_1+4\alpha_2+2\alpha_3=0,\qquad 2\alpha_1+5\alpha_2+\alpha_3=0,\qquad 3\
 <p><strong>(b) A dependence relation.</strong> Using $(\alpha_1,\alpha_2,\alpha_3)=(-2,1,-1)$: $\;-2\vec v_1+\vec v_2-\vec v_3=\mathbf 0$, which rearranges to the tidy fact</p>
 $$2\vec v_1=\vec v_2-\vec v_3.$$
 <p>Check: $\vec v_2-\vec v_3=\begin{bmatrix}4-2\\5-1\\6-0\end{bmatrix}=\begin{bmatrix}2\\4\\6\end{bmatrix}=2\vec v_1$. ✓ So $\vec v_1$ really is built from the other two, that's the redundancy made explicit.</p></div>
+
+<figure class="viz" data-viz="independence"></figure>
 
 <h3 class="sub">8 · Fast rules for small or special sets</h3>
 
@@ -349,6 +357,7 @@ $$\vec v_j=\left(-\frac{c_1}{c_j}\right)\vec v_1+\cdots+\left(-\frac{c_{j-1}}{c_
 </main>
 </div>
 </div>
+<script defer src="viz.js"></script>
 <script>
 var root=document.documentElement,tg=document.getElementById('tg');
 function setT(t){root.setAttribute('data-theme',t);tg.textContent=t==='dark'?'Light':'Dark';try{localStorage.setItem('m2014t',t)}catch(e){}}

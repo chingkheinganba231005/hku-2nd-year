@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-<style>
+<link rel="stylesheet" href="viz.css"><style>
 :root{
   --bg:#f3f5f8; --grid:rgba(27,42,74,.055); --surface:#ffffff; --surface-2:#e9eef6;
   --ink:#17202e; --muted:#53617a; --line:#ccd5e4;
@@ -158,6 +158,8 @@ $$A\vec x=\lambda\vec x$$
 $$A\vec v=\begin{bmatrix}3&0\\8&-1\end{bmatrix}\begin{bmatrix}1\\2\end{bmatrix}=\begin{bmatrix}3\\6\end{bmatrix}=3\begin{bmatrix}1\\2\end{bmatrix}=3\vec v.$$
 <p>Yes — the output $(3,6)$ is exactly $3$ times the input, so $\vec v$ is an eigenvector with eigenvalue $\lambda=3$.</p></div>
 
+<figure class="viz" data-viz="eigen" data-m="2 1 1 2"></figure>
+
 <h3 class="sub">2 · Finding eigenvalues: the characteristic equation</h3>
 
 <p>Verifying is easy; <em>finding</em> eigenvalues from scratch needs one clever rearrangement. Move everything to one side: $A\vec x=\lambda\vec x$ becomes $A\vec x-\lambda\vec x=\mathbf 0$, i.e. $(A-\lambda I)\vec x=\mathbf 0$ (we insert $I$ so the "$\lambda$" becomes a matrix we can subtract).</p>
@@ -226,6 +228,8 @@ $$A^k=\begin{bmatrix}2\cdot5^k-3^k & 5^k-3^k\\ 2\cdot3^k-2\cdot5^k & 2\cdot3^k-5
 <div class="box tip"><p class="lab">Tip · verify without computing $P^{-1}$</p>
 <p>To check $A=PDP^{-1}$ you don't need the inverse: just confirm $AP=PD$ (multiply both sides of $A=PDP^{-1}$ by $P$ on the right). Column by column this is exactly "$A\vec v_i=\lambda_i\vec v_i$", the eigenvector equations — a quick sanity check.</p></div>
 
+<figure class="viz" data-viz="diagonalize" data-m="2 1 1 2"></figure>
+
 <h3 class="sub">6 · When is a matrix diagonalizable?</h3>
 
 <div class="box def"><p class="lab">Theorem · the diagonalizability criterion</p>
@@ -275,6 +279,7 @@ $$A^k=\begin{bmatrix}2\cdot5^k-3^k & 5^k-3^k\\ 2\cdot3^k-2\cdot5^k & 2\cdot3^k-5
 </main>
 </div>
 </div>
+<script defer src="viz.js"></script>
 <script>
 var root=document.documentElement,tg=document.getElementById('tg');
 function setT(t){root.setAttribute('data-theme',t);tg.textContent=t==='dark'?'Light':'Dark';try{localStorage.setItem('m2014t',t)}catch(e){}}

@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-<style>
+<link rel="stylesheet" href="viz.css"><style>
 :root{
   --bg:#f3f5f8; --grid:rgba(27,42,74,.055); --surface:#ffffff; --surface-2:#e9eef6;
   --ink:#17202e; --muted:#53617a; --line:#ccd5e4;
@@ -176,6 +176,8 @@ a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n &= b_m
 <li><strong>Be the same line</strong> → infinitely many solutions (they overlap everywhere).</li>
 </ul>
 <p>A system can <em>never</em> have, say, exactly two or exactly five solutions. It is always one, none, or infinitely many. If you ever "find two solutions", you have actually found infinitely many, go hunting for the free variable (explained below).</p></div>
+
+<figure class="viz" data-viz="linsys"></figure>
 
 <h3 class="sub">2 · The honest way first: juggling whole equations</h3>
 
@@ -594,6 +596,7 @@ $$\vec x=\begin{bmatrix}6+x_2-3x_5\\ x_2\\ 1+2x_5\\ 9-4x_5\\ x_5\end{bmatrix}\qu
 </main>
 </div>
 </div>
+<script defer src="viz.js"></script>
 <script>
 var root=document.documentElement,tg=document.getElementById('tg');
 function setT(t){root.setAttribute('data-theme',t);tg.textContent=t==='dark'?'Light':'Dark';try{localStorage.setItem('m2014t',t)}catch(e){}}

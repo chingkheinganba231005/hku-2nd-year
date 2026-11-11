@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-<style>
+<link rel="stylesheet" href="viz.css"><style>
 :root{
   --bg:#f3f5f8; --grid:rgba(27,42,74,.055); --surface:#ffffff; --surface-2:#e9eef6;
   --ink:#17202e; --muted:#53617a; --line:#ccd5e4;
@@ -185,6 +185,8 @@ $$(AB)_{ij}=a_{i1}b_{1j}+a_{i2}b_{2j}+\cdots+a_{in}b_{nj}.$$
 <div class="box idea"><p class="lab">Intuition · "inner dimensions must match; outer dimensions give the size"</p>
 <p>Write the sizes next to each other: $(m\times \underline{n})(\underline{n}\times p)$. The two inner numbers must be <strong>equal</strong> (that's what lets a row of $A$ pair up with a column of $B$), and the two outer numbers give the <strong>result's size</strong> $m\times p$. To fill entry $(i,j)$, slide row $i$ of $A$ across column $j$ of $B$, multiply the overlapping pairs, and add. Every entry of the answer is one little dot product.</p></div>
 
+<figure class="viz" data-viz="transform" data-m="1 1 0 1"></figure>
+
 <div class="box ex"><p class="lab">Example 2 · a full $2\times2$ times $2\times3$ product</p>
 <p>Compute $AB$ for $A=\begin{bmatrix}2&3\\1&-5\end{bmatrix}$ (2×2) and $B=\begin{bmatrix}4&3&9\\1&-2&3\end{bmatrix}$ (2×3). Inner dims $2=2$ ✓; result is $2\times3$.</p>
 <p>Each entry is (a row of $A$) · (a column of $B$). For instance the $(1,1)$-entry is row 1 of $A$ = $(2,3)$ dotted with column 1 of $B$ = $(4,1)$: $\;2\cdot4+3\cdot1=11$. Doing all six:</p>
@@ -203,6 +205,8 @@ $$AB=\begin{bmatrix}2\cdot4+3\cdot1 & 2\cdot3+3\cdot(-2) & 2\cdot9+3\cdot3\\[2pt
 
 <div class="box def"><p class="lab">Powers of a square matrix</p>
 <p>For square $A$ and a positive integer $k$, $A^k=\underbrace{A\,A\cdots A}_{k\text{ copies}}$. By convention $A^0=I$ (the identity), so that $A^0\vec x=\vec x$. Only square matrices have powers (you need $A$ times $A$ to be defined).</p></div>
+
+<figure class="viz" data-viz="projection"></figure>
 
 <h3 class="sub">4 · Transpose: flipping rows and columns</h3>
 
@@ -245,6 +249,8 @@ $$\det(A)=[A]_{11}\det A(1|1)-[A]_{12}\det A(1|2)+[A]_{13}\det A(1|3)-\cdots+(-1
 <p>$A=\begin{bmatrix}3&2&-1\\4&1&6\\-3&-1&2\end{bmatrix}$. Expand along row 1, each $2\times2$ minor via $ad-bc$:</p>
 $$|A|=3\underbrace{\det\begin{bmatrix}1&6\\-1&2\end{bmatrix}}_{1\cdot2-6(-1)=8}-2\underbrace{\det\begin{bmatrix}4&6\\-3&2\end{bmatrix}}_{4\cdot2-6(-3)=26}+(-1)\underbrace{\det\begin{bmatrix}4&1\\-3&-1\end{bmatrix}}_{4(-1)-1(-3)=-1}.$$
 $$=3(8)-2(26)+(-1)(-1)=24-52+1=-27.$$</p></div>
+
+<figure class="viz" data-viz="determinant" data-m="2 0.5 0.5 1.5"></figure>
 
 <h3 class="sub">6 · Expanding along <em>any</em> row or column — pick the lazy one</h3>
 
@@ -313,6 +319,8 @@ $$|A| = -110.$$
 </ol>
 <p>And then: if $A$ is nonsingular, $A\vec x=\vec b$ has the <strong>unique</strong> solution $\vec x=A^{-1}\vec b$ for every $\vec b$. (Useful shortcuts: a <em>one-sided</em> inverse suffices, if $AB=I_n$ then automatically $BA=I_n$; and $A$ is <strong>singular $\iff\det A=0$</strong>.)</p></div>
 
+<figure class="viz" data-viz="inverse"></figure>
+
 <h3 class="sub">9 · Computing $A^{-1}$ by Gauss–Jordan: $[\,A\mid I\,]\to[\,I\mid A^{-1}\,]$</h3>
 
 <p>Here's the practical recipe. Glue the identity onto $A$, row-reduce the left block to $I$, and the identity block is dragged along into $A^{-1}$. If the left block <em>can't</em> reach $I$ (a zero row appears), $A$ is singular, no inverse.</p>
@@ -347,6 +355,8 @@ $$\left[\begin{array}{ccc|ccc}1&2&0&1&0&0\\1&3&1&0&1&0\\0&1&2&0&0&1\end{array}\r
 $$x=\frac{\begin{vmatrix}d_1&b_1\\d_2&b_2\end{vmatrix}}{\begin{vmatrix}a_1&b_1\\a_2&b_2\end{vmatrix}},\qquad y=\frac{\begin{vmatrix}a_1&d_1\\a_2&d_2\end{vmatrix}}{\begin{vmatrix}a_1&b_1\\a_2&b_2\end{vmatrix}}.$$
 <p>For three unknowns it's the same pattern: a common denominator $\det A$, and each numerator swaps in the constant column for the variable's column.</p></div>
 
+<figure class="viz" data-viz="cramer"></figure>
+
 <div class="box ex"><p class="lab">Example 10 · Cramer on a 2×2 system</p>
 <p>Solve $3x+4y=-14,\ -2x-3y=11$. Denominator $\det A=\begin{vmatrix}3&4\\-2&-3\end{vmatrix}=3(-3)-4(-2)=-1$. Then</p>
 $$x=\frac{\begin{vmatrix}-14&4\\11&-3\end{vmatrix}}{-1}=\frac{(-14)(-3)-4(11)}{-1}=\frac{-2}{-1}=2,\qquad y=\frac{\begin{vmatrix}3&-14\\-2&11\end{vmatrix}}{-1}=\frac{33-28}{-1}=\frac{5}{-1}=-5.$$
@@ -377,6 +387,7 @@ $$x=\frac{-48}{-48}=1,\qquad y=\frac{-96}{-48}=2,\qquad z=\frac{-192}{-48}=4.$$
 </main>
 </div>
 </div>
+<script defer src="viz.js"></script>
 <script>
 var root=document.documentElement,tg=document.getElementById('tg');
 function setT(t){root.setAttribute('data-theme',t);tg.textContent=t==='dark'?'Light':'Dark';try{localStorage.setItem('m2014t',t)}catch(e){}}

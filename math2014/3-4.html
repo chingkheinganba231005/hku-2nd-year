@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-<style>
+<link rel="stylesheet" href="viz.css"><style>
 :root{
   --bg:#f3f5f8; --grid:rgba(27,42,74,.055); --surface:#ffffff; --surface-2:#e9eef6;
   --ink:#17202e; --muted:#53617a; --line:#ccd5e4;
@@ -196,6 +196,8 @@ $$\vec a\cdot\vec b=\lVert\vec a\rVert\,\lVert\vec b\rVert\cos\theta=4\cdot6\cdo
 $$\vec a\cdot\vec b=2(5)+2(-3)+(-1)(2)=10-6-2=2,\quad \lVert\vec a\rVert=\sqrt{4+4+1}=3,\quad \lVert\vec b\rVert=\sqrt{25+9+4}=\sqrt{38}.$$
 $$\cos\theta=\frac{\vec a\cdot\vec b}{\lVert\vec a\rVert\lVert\vec b\rVert}=\frac{2}{3\sqrt{38}}\quad\Rightarrow\quad \theta=\arccos\frac{2}{3\sqrt{38}}\approx84.8^\circ.$$</p></div>
 
+<figure class="viz" data-viz="dot"></figure>
+
 <h3 class="sub">4 · Orthogonality: the dot product's party trick</h3>
 
 <div class="box def"><p class="lab">Definition · orthogonal (perpendicular) vectors</p>
@@ -258,6 +260,8 @@ $$\lVert\vec a\times\vec b\rVert=\lVert\vec a\rVert\,\lVert\vec b\rVert\sin\thet
 <div class="box def"><p class="lab">Parallel test</p>
 <p>Two nonzero vectors are <strong>parallel</strong> $\iff\vec a\times\vec b=\mathbf 0$. (Parallel means $\theta=0$ or $\pi$, so $\sin\theta=0$, so the cross product has zero length.) Neat contrast: dot product $=0$ detects <em>perpendicular</em>; cross product $=\mathbf 0$ detects <em>parallel</em>.</p></div>
 
+<figure class="viz" data-viz="cross"></figure>
+
 <h3 class="sub">7 · Two signature applications: normals and areas</h3>
 
 <div class="box ex"><p class="lab">Example 9 · a vector perpendicular to a plane through three points</p>
@@ -307,6 +311,7 @@ $$\vec a\cdot(\vec b\times\vec c)=\det\begin{bmatrix}a_1&a_2&a_3\\b_1&b_2&b_3\\c
 </main>
 </div>
 </div>
+<script defer src="viz.js"></script>
 <script>
 var root=document.documentElement,tg=document.getElementById('tg');
 function setT(t){root.setAttribute('data-theme',t);tg.textContent=t==='dark'?'Light':'Dark';try{localStorage.setItem('m2014t',t)}catch(e){}}

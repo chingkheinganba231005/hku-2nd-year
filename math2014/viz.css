@@ -1,0 +1,64 @@
+/* ============================================================
+   viz.css — styling for the interactive linear-algebra visuals
+   Theme-aware: reads the course's CSS variables.
+   ============================================================ */
+.viz{
+  position:relative;margin:2em 0 1.7em;border:1.5px solid var(--accent);
+  border-radius:9px;background:var(--surface);
+  box-shadow:0 1px 3px rgba(0,0,0,.05);overflow:hidden;
+}
+.viz>.lab{
+  position:absolute;top:-.78em;left:14px;z-index:2;padding:2px 11px;
+  font:700 .68rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;
+  border-radius:4px;background:var(--accent);color:#fff;
+}
+:root[data-theme="dark"] .viz>.lab{color:#0f141b}
+.viz-head{padding:1.25em 1.2em .2em}
+.viz-title{font:700 1.04rem var(--f-body);margin:0 0 .2em;color:var(--ink)}
+.viz-sub{font-size:.92rem;color:var(--muted);margin:0 0 .4em}
+.viz-stage{position:relative;width:100%;touch-action:none;user-select:none;-webkit-user-select:none}
+.viz-canvas{display:block;width:100%;cursor:grab}
+.viz-canvas.grabbing{cursor:grabbing}
+.viz-readout{
+  position:absolute;top:10px;right:12px;z-index:2;pointer-events:none;
+  font:600 .8rem/1.5 var(--f-mono);color:var(--ink);
+  background:color-mix(in srgb,var(--surface) 82%,transparent);
+  border:1px solid var(--line);border-radius:6px;padding:6px 9px;
+  backdrop-filter:blur(3px);max-width:60%;
+}
+.viz-readout b{color:var(--accent)}
+.viz-readout .hot{color:var(--hot)}
+.viz-readout .ok{color:var(--ok)}
+.viz-readout .bad{color:var(--bad)}
+.viz-controls{
+  display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;
+  padding:12px 16px 14px;border-top:1.5px solid var(--line);background:var(--surface-2)
+}
+.viz-ctl{display:flex;flex-direction:column;gap:2px;min-width:132px;flex:1 1 132px}
+.viz-ctl label{font:700 .72rem var(--f-mono);color:var(--muted);letter-spacing:.03em;display:flex;justify-content:space-between;gap:8px}
+.viz-ctl label b{color:var(--accent);font-weight:700}
+.viz-ctl input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:999px;
+  background:var(--line);outline:none;margin:5px 0
+}
+.viz-ctl input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:17px;height:17px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--surface);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)
+}
+.viz-ctl input[type=range]::-moz-range-thumb{
+  width:15px;height:15px;border-radius:50%;background:var(--accent);
+  border:2px solid var(--surface);cursor:pointer
+}
+.viz-btns{display:flex;flex-wrap:wrap;gap:8px}
+.viz-btn{
+  font:700 .78rem var(--f-mono);color:#fff;background:var(--accent);
+  border:none;border-radius:6px;padding:8px 13px;cursor:pointer;min-height:36px;transition:filter .12s,transform .12s
+}
+.viz-btn:hover{filter:brightness(1.08)}
+.viz-btn:active{transform:translateY(1px)}
+.viz-btn.ghost{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
+.viz-btn.ghost:hover{border-color:var(--accent)}
+.viz-chip{display:inline-flex;gap:7px}
+.viz-cap{padding:10px 16px 14px;font-size:.9rem;color:var(--muted);border-top:1.5px solid var(--line)}
+.viz-cap b{color:var(--ink)}
+@media(max-width:560px){.viz-readout{font-size:.72rem;max-width:52%}.viz-ctl{min-width:108px;flex-basis:108px}}
